@@ -32,7 +32,7 @@ library(ecoforecastR)
 sage_raw <- read.csv("../data/ARTR_quadratCover.csv")
 sage_raw$year <- sage_raw$year+1900 # makes a calendar year
 sage_dat <- ddply(sage_raw, .(year), summarise,
-                  tot_cover = mean(totCover)/100) # converts to percent cover
+                  tot_cover = round(mean(totCover)/100)) # converts to percent cover, integer
 
 clim_dat <- read.csv("../data/idaho_climate.csv")
 
@@ -43,9 +43,8 @@ sage_climate_dat <- merge(sage_dat, clim_dat)
 ####
 ####  Fit forecasting GLM
 ####
-my_model <- list(obs="tot_cover", fixed="~ppt1+TmeanSpr1", random=NULL, n.iter=1000)
+my_model <- list(obs="tot_cover", fixed="~ppt1+TmeanSpr1", random=NULL, n.iter=5000)
 fitted_model <- fit_dlm(model=my_model, data=sage_climate_dat)
-
 predictions <- rbind(fitted_model$predict[[1]],
                      fitted_model$predict[[2]],
                      fitted_model$predict[[3]])
@@ -67,7 +66,7 @@ prediction_df <- data.frame(year = sage_climate_dat$year,
 pred_color <- "dodgerblue"
 ggplot(prediction_df, aes(x=year))+
   geom_ribbon(aes(ymax=upper_prediction, ymin=lower_prediction), fill=pred_color, color=NA, alpha=0.2)+
-  geom_line(aes(y=median_prediction), color=pred_color, size=1)+
+  geom_line(aes(y=median_prediction), color=pred_color)+
   geom_point(aes(y=observation))+
   ylab("Cover of sagebrush (%)")+
   xlab("Year")+
