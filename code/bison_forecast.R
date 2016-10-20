@@ -33,7 +33,6 @@ library(ecoforecastR)
 ####
 bison_raw <- read.csv("../data/YNP_bison_population_size.csv", row.names = 1)
 bison_dat <- bison_raw[,2:ncol(bison_raw)]
-bison_dat$count.mean <- round(bison_dat$count.mean)
 
 
 ##  Retrieve climate data from NOAA
