@@ -95,17 +95,46 @@ nens <- 1
 nsteps <- 10
 meta.ds <- list()
 meta.ds[[1]] = 1:nens
-meta.ds[[2]] = max(bison_climate_dat$year):(max(bison_climate_dat$year)+nsteps)
+meta.ds[[2]] = length(bison_climate_dat$year):(length(bison_climate_dat$year)+nsteps-1)
 meta.ds[[3]] = c("Intercept")
 newdata = array(1,dim = c(nens,nsteps,1), dimnames = "Intercept")
 
 ## just initial condition uncertainty
-FE_pred.I <- predict_dlm_lnorm(fit=fitted_model, newdata = newdata, n.iter=500,include="I", steps=nsteps, start.time = max(bison_climate_dat$year))
+FE_pred.I <- predict_dlm_lnorm(fit=fitted_model, newdata = newdata, n.iter=500,include="I", steps=nsteps, start.time = NULL)
 
 ## initial conditions + parameters
-FE_pred.IP <- predict_dlm_lnorm(fitted_model,n.iter=n.iter.fx,include=c("I","P"))
+FE_pred.IP <- predict_dlm_lnorm(fitted_model,newdata = newdata, n.iter=500,include=c("I","P"), steps=nsteps, start.time = NULL)
+
+## full uncertainty
+FE_pred.IPE <- predict_dlm_lnorm(fitted_model,newdata = newdata, n.iter=500,include=c("I","P","E"), steps=nsteps, start.time = NULL)
 
 plot_ss(meta.ds[[2]],FE_pred.I,ylab="NEE",xlab="time")
 plot_ss(meta.ds[[2]],FE_pred.IP,ylab="NEE",xlab="time")
 
+
+
+## FULL
+plot_ss(meta.ds[[2]],FE_pred.IPE,ylab="NEE",xlab="Day of Year")
+varIPE <- apply(as.matrix(FE_pred.IPE$predict),2,var)
+
+## IP
+ciIP <- apply(as.matrix(FE_pred.IP$predict),2,quantile,c(0.025,0.5,0.975))
+ciEnvelope(meta.ds[[2]],ciIP[1,],ciIP[3,],col="lightGreen")
+varIP <- apply(as.matrix(FE_pred.IP$predict),2,var)
+
+## I
+ciI <- apply(as.matrix(FE_pred.I$predict),2,quantile,c(0.025,0.5,0.975))
+ciEnvelope(meta.ds[[2]],ciI[1,],ciI[3,],col="violet")
+lines(meta.ds[[2]],ciI[2,],col="darkGreen",lwd=2)
+varI <- apply(as.matrix(FE_pred.I$predict),2,var)
+
+
+stack.cols = c("grey25","coral","lightblue","green")
+V.pred.sim.rel <- apply(rbind(varIPE,varIP,varI),2,function(x) {x/max(x)})
+plot(meta.ds[[2]],V.pred.sim.rel[1,],ylim=c(0,1),type='n',xlab="Time", ylab="Proportion of uncertainty")
+ciEnvelope(meta.ds[[2]],rep(0,ncol(V.pred.sim.rel)),V.pred.sim.rel[3,],col=stack.cols[1])
+ciEnvelope(meta.ds[[2]],V.pred.sim.rel[3,],V.pred.sim.rel[2,],col=stack.cols[2])
+ciEnvelope(meta.ds[[2]],V.pred.sim.rel[2,],V.pred.sim.rel[1,],col=stack.cols[3])
+# ciEnvelope(meta.ds[[2]],V.pred.sim.rel[2,],V.pred.sim.rel[1,],col=stack.cols[4])
+legend("topright",legend=rev(colnames(V.pred)),col=rev(stack.cols),lty=1,lwd=5)
 
