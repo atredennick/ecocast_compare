@@ -108,9 +108,6 @@ FE_pred.IP <- predict_dlm_lnorm(fitted_model,newdata = newdata, n.iter=500,inclu
 ## full uncertainty
 FE_pred.IPE <- predict_dlm_lnorm(fitted_model,newdata = newdata, n.iter=500,include=c("I","P","E"), steps=nsteps, start.time = NULL)
 
-plot_ss(meta.ds[[2]],FE_pred.I,ylab="NEE",xlab="time")
-plot_ss(meta.ds[[2]],FE_pred.IP,ylab="NEE",xlab="time")
-
 
 
 ## FULL
@@ -128,13 +125,21 @@ ciEnvelope(meta.ds[[2]],ciI[1,],ciI[3,],col="violet")
 lines(meta.ds[[2]],ciI[2,],col="darkGreen",lwd=2)
 varI <- apply(as.matrix(FE_pred.I$predict),2,var)
 
-
-stack.cols = c("grey25","coral","lightblue","green")
 V.pred.sim.rel <- apply(rbind(varIPE,varIP,varI),2,function(x) {x/max(x)})
-plot(meta.ds[[2]],V.pred.sim.rel[1,],ylim=c(0,1),type='n',xlab="Time", ylab="Proportion of uncertainty")
-ciEnvelope(meta.ds[[2]],rep(0,ncol(V.pred.sim.rel)),V.pred.sim.rel[3,],col=stack.cols[1])
-ciEnvelope(meta.ds[[2]],V.pred.sim.rel[3,],V.pred.sim.rel[2,],col=stack.cols[2])
-ciEnvelope(meta.ds[[2]],V.pred.sim.rel[2,],V.pred.sim.rel[1,],col=stack.cols[3])
-# ciEnvelope(meta.ds[[2]],V.pred.sim.rel[2,],V.pred.sim.rel[1,],col=stack.cols[4])
-legend("topright",legend=rev(colnames(V.pred)),col=rev(stack.cols),lty=1,lwd=5)
 
+
+
+####
+####  Plot the proportion of uncertainty by partition
+####
+var_rel_preds <- as.data.frame(t(V.pred.sim.rel))
+var_rel_preds$x <- 1:nrow(var_rel_preds)
+ggplot(data=var_rel_preds, aes(x=x))+
+  geom_ribbon(aes(ymin=0, ymax=varI), fill="grey35")+
+  geom_ribbon(aes(ymin=varI, ymax=varIP), fill="coral")+
+  geom_ribbon(aes(ymin=varIP, ymax=varIPE), fill="skyblue")+
+  ylab("Proportion of uncertainty")+
+  xlab("Forecast steps")+
+  scale_x_continuous(breaks=c(1:10))+
+  theme_few()
+ggsave(filename = "../figures/bison_forecast_uncertainty.png", width = 4, height = 3, units = "in", dpi=120)
