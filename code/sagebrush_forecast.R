@@ -75,3 +75,21 @@ ggsave(filename = "../figures/sage_calibration.png", width = 4, height = 3, unit
 
 
 
+####
+####  Partition Forecast Uncertainty
+####
+nens <- 1
+nsteps <- 10
+meta.ds <- list()
+meta.ds[[1]] = 1:nens
+meta.ds[[2]] = length(sage_climate_dat$year):(length(sage_climate_dat$year)+nsteps-1)
+meta.ds[[3]] = c("Intercept")
+newdata = array(1,dim = c(nens,nsteps,1), dimnames = "Intercept")
+
+## just initial condition uncertainty
+FE_pred.I <- predict_dlm_pois(fit=fitted_model, newdata = newdata, n.iter=500,include="I", steps=nsteps, start.time = NULL)
+
+
+
+
+

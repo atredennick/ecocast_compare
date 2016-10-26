@@ -92,7 +92,7 @@ ggsave(filename = "../figures/bison_calibration.png", width = 4, height = 3, uni
 ####  Partition Forecast Uncertainty
 ####
 nens <- 1
-nsteps <- 10
+nsteps <- 30
 meta.ds <- list()
 meta.ds[[1]] = 1:nens
 meta.ds[[2]] = length(bison_climate_dat$year):(length(bison_climate_dat$year)+nsteps-1)
