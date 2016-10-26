@@ -140,6 +140,6 @@ ggplot(data=var_rel_preds, aes(x=x))+
   geom_ribbon(aes(ymin=varIP, ymax=varIPE), fill="skyblue")+
   ylab("Proportion of uncertainty")+
   xlab("Forecast steps")+
-  scale_x_continuous(breaks=c(1:10))+
+  # scale_x_continuous(breaks=seq(1,nsteps,by=1))+
   theme_few()
 ggsave(filename = "../figures/bison_forecast_uncertainty.png", width = 4, height = 3, units = "in", dpi=120)
