@@ -74,7 +74,7 @@ my_model <- "
 
 
 ####
-####  Fit Bison Forecasting Model
+####  Fit Bison Forecasting Model ----------------------------------------------
 ####
 
 ##  Prepare data list
