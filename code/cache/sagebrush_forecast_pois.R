@@ -34,13 +34,12 @@ sage_raw      <- read.csv("../data/ARTR_quadratCover.csv")
 sage_raw$year <- sage_raw$year+1900 # makes a calendar year
 
 ##  Average by pasture, then mean and sd over pastures
-sage_pasture <- ddply(sage_raw, .(year, group), summarise,
-                      avg_cover = mean(totCover))
+sage_pasture <
 
-##  Division by 100 converts to percent cover
-sage_dat <- ddply(sage_pasture, .(year), summarise,
-                  tot_cover = mean(avg_cover),
-                  sd_cover = sd(avg_cover)) 
+# Division by 100 converts to percent cover
+sage_dat <- ddply(sage_raw, .(year), summarise,
+                  tot_cover = round(mean(totCover)/100),
+                  sd_cover = sd(totCover)/100) 
 
 clim_dat <- read.csv("../data/idaho_climate.csv")
 
@@ -55,8 +54,9 @@ my_model <- "
   model{
   
     #### Variance Priors
-    tau_proc ~ dunif(0,10)
-    sigma_proc <- 1/sqrt(tau_proc)
+    #tau_proc ~ dgamma(0.0001, 0.0001)
+    #sigma_proc <- 1/sqrt(tau_proc)
+    shape_p ~ dunif(0, 100)
     
     #### Fixed Effects Priors
     b0 ~ dnorm(0, 0.001)
@@ -65,13 +65,13 @@ my_model <- "
     
     #### Initial Conditions
     N0      ~ dunif(0,10)
-    Nmed[1] <- exp(b0 + b1*N0 + b2*x[1])
-    N[1]    ~ dlnorm(Nmed[1], tau_proc) 
+    Nmed[1] <- b0 + b1*N0 + b2*x[1]
+    N[1]    ~ dgamma(shape_p, shape_p / exp(Nmed[1])) 
     
     #### Process Model
     for(t in 2:n){
-      Nmed[t] <- exp(b0 + b1*N[t-1] + b2*x[t])
-      N[t]    ~ dlnorm(Nmed[t], tau_proc) 
+      Nmed[t] <- b0 + b1*N[t-1] + b2*x[t]
+      N[t]    ~ dgamma(shape_p, shape_p / exp(Nmed[t])) 
     }
     
     #### Data Model
@@ -79,7 +79,8 @@ my_model <- "
       var_obs[t] <- sd_obs[t]*sd_obs[t]
       shape[t]   <- N[t]*N[t]/var_obs[t]
       rate[t]    <- N[t]/var_obs[t]
-      Nobs[t]  ~ dgamma(shape[t], rate[t])
+      lambda[t]  ~ dgamma(shape[t], rate[t])
+      Nobs[t]    ~ dpois(lambda[t])
     }
   
   }"
@@ -94,7 +95,7 @@ mydat         <- list(Nobs = sage_climate_dat$tot_cover,
                       n = nrow(sage_climate_dat),
                       sd_obs = sage_climate_dat$sd_cover,
                       x = sage_climate_dat$ppt1)
-out_variables <- c("b0","b1","b2","N","sigma_proc")
+out_variables <- c("b0","b1","b2","N")
 
 ##  Send to JAGS
 mc3     <- jags.model(file=textConnection(my_model), data=mydat, n.chains=3)
@@ -144,7 +145,8 @@ ggplot(prediction_df, aes(x=year))+
   geom_line(aes(y=median_prediction), color=pred_color)+
   geom_errorbar(aes(ymin=lower_observation, ymax=upper_observation), width=0.5, color="grey45")+
   geom_point(aes(y=observation), size=0.5)+
-  ylab("Sagebrush cover (cm)")+
+  scale_y_continuous(breaks = seq(0,25,5))+
+  ylab("Sagebrush cover (%)")+
   xlab("Year")+
   theme_bw()+
   theme(panel.grid.major.x = element_blank(), 
