@@ -37,9 +37,9 @@ sage_raw$year <- sage_raw$year+1900 # makes a calendar year
 sage_pasture <- ddply(sage_raw, .(year, group), summarise,
                       avg_cover = mean(totCover))
 
-##  Division by 100 converts to percent cover
+##  Division by 10000 converts to proportion cover
 sage_dat <- ddply(sage_pasture, .(year), summarise,
-                  tot_cover = mean(avg_cover),
+                  tot_cover = mean(avg_cover)/10000,
                   sd_cover = sd(avg_cover)) 
 
 clim_dat <- read.csv("../data/idaho_climate.csv")
@@ -55,8 +55,9 @@ my_model <- "
   model{
   
     #### Variance Priors
-    tau_proc ~ dunif(0,10)
+    tau_proc ~ dgamma(0.0001,0.0001)
     sigma_proc <- 1/sqrt(tau_proc)
+    sd_obs ~ dgamma(0.0001,0.0001)
     
     #### Fixed Effects Priors
     b0 ~ dnorm(0, 0.001)
@@ -65,21 +66,22 @@ my_model <- "
     
     #### Initial Conditions
     N0      ~ dunif(0,10)
-    Nmed[1] <- exp(b0 + b1*N0 + b2*x[1])
+    Nmed[1] <- exp(b0 + b1*N0)
     N[1]    ~ dlnorm(Nmed[1], tau_proc) 
     
     #### Process Model
-    for(t in 2:n){
-      Nmed[t] <- exp(b0 + b1*N[t-1] + b2*x[t])
+    for(t in 2:npreds){
+      Nmed[t] <- exp(b0 + b1*N[t-1])
       N[t]    ~ dlnorm(Nmed[t], tau_proc) 
     }
     
     #### Data Model
+    var_obs <- sd_obs*sd_obs
     for(t in 1:n){
-      var_obs[t] <- sd_obs[t]*sd_obs[t]
-      shape[t]   <- N[t]*N[t]/var_obs[t]
-      rate[t]    <- N[t]/var_obs[t]
-      Nobs[t]  ~ dgamma(shape[t], rate[t])
+      #var_obs[t] <- sd_obs[t]*sd_obs[t]
+      shape[t]   <- N[t]*N[t]/var_obs
+      rate[t]    <- N[t]/var_obs
+      Nobs[t]  ~ dbeta(shape[t], rate[t])
     }
   
   }"
@@ -92,8 +94,9 @@ my_model <- "
 ##  Prepare data list
 mydat         <- list(Nobs = sage_climate_dat$tot_cover, 
                       n = nrow(sage_climate_dat),
-                      sd_obs = sage_climate_dat$sd_cover,
-                      x = sage_climate_dat$ppt1)
+                      #sd_obs = sage_climate_dat$sd_cover,
+                      x = c(sage_climate_dat$ppt1, rep(mean(sage_climate_dat$ppt1),10)),
+                      npreds = nrow(sage_climate_dat)+10)
 out_variables <- c("b0","b1","b2","N","sigma_proc")
 
 ##  Send to JAGS
@@ -117,10 +120,10 @@ predictions        <- rbind(fitted_model$predict[[1]],
 median_predictions <- apply(predictions, MARGIN = 2, FUN = "median")
 upper_predictions  <- apply(predictions, MARGIN = 2, FUN = function(x){quantile(x, probs = 0.975)})
 lower_predictions  <- apply(predictions, MARGIN = 2, FUN = function(x){quantile(x, probs = 0.025)})
-prediction_df      <- data.frame(year = sage_climate_dat$year,
-                                 observation = sage_climate_dat$tot_cover,
-                                 upper_observation = sage_climate_dat$tot_cover+sage_climate_dat$sd_cover,
-                                 lower_observation = sage_climate_dat$tot_cover-sage_climate_dat$sd_cover,
+prediction_df      <- data.frame(year = c(sage_climate_dat$year, (max(sage_climate_dat$year)+1):(max(sage_climate_dat$year)+10)),
+                                 observation = c(sage_climate_dat$tot_cover,rep(NA,10)),
+                                 upper_observation = c(sage_climate_dat$tot_cover+sage_climate_dat$sd_cover,rep(NA,10)),
+                                 lower_observation = c(sage_climate_dat$tot_cover-sage_climate_dat$sd_cover,rep(NA,10)),
                                  median_prediction = median_predictions,
                                  upper_prediction = upper_predictions,
                                  lower_prediction = lower_predictions)
@@ -151,5 +154,5 @@ ggplot(prediction_df, aes(x=year))+
         panel.grid.minor.x = element_blank(),
         panel.grid.minor.y = element_blank(),
         panel.grid.major.y = element_line(linetype="dotted", color="grey65"))
-ggsave(filename = "../figures/sagebrush_calibration.png", width = 4, height = 3, units = "in", dpi=120)
+# ggsave(filename = "../figures/sagebrush_calibration.png", width = 4, height = 3, units = "in", dpi=120)
 
