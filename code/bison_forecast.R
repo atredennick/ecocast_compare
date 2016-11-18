@@ -16,6 +16,7 @@ rm(list=ls(all.names = TRUE))
 ####
 library(ggplot2)
 library(ggthemes)
+library(gridExtra)
 library(reshape2)
 library(plyr)
 library(rjags)
@@ -59,34 +60,31 @@ my_model <- "
 
     #### Variance Priors
     tau_proc ~ dgamma(0.0001, 0.0001)
-    tau_obs ~ dgamma(0.0001, 0.0001)
     sigma_proc <- 1/sqrt(tau_proc)
     
     #### Fixed Effects Priors
-    r ~ dnorm(0,0.001)
-    K ~ dnorm(0,0.001)
+    r ~ dunif(0,5)
+    K ~ dunif(1,10000)
     
     #### Initial Conditions
     N0 ~ dunif(1,1000)
-    #Nmed[1] <- log(max(1, N0 + r * N0 * (1 - N0 / K)))
-    Nmed[1] <- K+r*N0
-    N[1] ~ dnorm(Nmed[1], tau_proc)
+    Nmed[1] <- log(max(1, N0 + r * N0 * (1 - N0 / K)))
+    N[1] ~ dlnorm(Nmed[1], tau_proc)
     
     #### Process Model
     for(t in 2:npreds){
-      Nmed[t] <- K+r*N[t-1]
-      N[t] ~ dnorm(Nmed[t], tau_proc) 
+      Nmed[t] <- log(max(1, N[t-1] + r * N[t-1] * (1 - N[t-1] / K)))
+      N[t] ~ dlnorm(Nmed[t], tau_proc) 
     }
     
     #### Data Model
     ##  SD observations
     for(t in 1:n){
-#       var_obs[t] <- sd_obs[t]*sd_obs[t]
-#       shape[t] <- N[t]*N[t]/var_obs[t]
-#       rate[t] <- N[t]/var_obs[t]
-#       lambda[t] ~ dgamma(shape[t], rate[t])
-#       Nobs[t] ~ dpois(lambda[t])
-      Nobs[t] ~ dlnorm(N[t], tau_obs)
+      var_obs[t] <- sd_obs[t]*sd_obs[t]
+      shape[t] <- N[t]*N[t]/var_obs[t]
+      rate[t] <- N[t]/var_obs[t]
+      lambda[t] ~ dgamma(shape[t], rate[t])
+      Nobs[t] ~ dpois(lambda[t])
     }
 
   }"
@@ -119,9 +117,9 @@ out$params   <- mat2mcmc.list(mfit[,-pred.cols])
 fitted_model <- out
 
 ## Collate predictions
-predictions        <- exp(rbind(fitted_model$predict[[1]],
+predictions        <- rbind(fitted_model$predict[[1]],
                             fitted_model$predict[[2]],
-                            fitted_model$predict[[3]]))
+                            fitted_model$predict[[3]])
 median_predictions <- apply(predictions, MARGIN = 2, FUN = "median")
 upper_predictions  <- apply(predictions, MARGIN = 2, FUN = function(x){quantile(x, probs = 0.975)})
 lower_predictions  <- apply(predictions, MARGIN = 2, FUN = function(x){quantile(x, probs = 0.025)})
@@ -145,7 +143,7 @@ prediction_df      <- data.frame(year = c(bison_dat$year, (max(bison_dat$year)+1
 ####
 pred_color <- "#CF4C26"
 obs_color  <- "#0A9AB8"
-ggplot(subset(prediction_df, year<2011), aes(x=year))+
+calibration_plot <- ggplot(prediction_df, aes(x=year))+
   geom_ribbon(aes(ymax=upper_prediction, ymin=lower_prediction), fill=pred_color, color=NA, alpha=0.2)+
   geom_line(aes(y=median_prediction), color=pred_color)+
   geom_errorbar(aes(ymin=lower_observation, ymax=upper_observation), width=0.5, color=obs_color, size=0.2)+
@@ -163,8 +161,9 @@ ggplot(subset(prediction_df, year<2011), aes(x=year))+
 ####
 ##  Function for the ecological process (population growth)
 iterate_process <- function(Nnow, r, K, sd_proc) { 
-  Ntmp <- K+r*log(Nnow)
-  N    <- rnorm(length(Nnow), Ntmp, sd_proc)
+  Ntmp <- Nnow + r * Nnow * (1 - Nnow / K)
+  Ntmp[which(Ntmp < 1)] <- 1
+  N    <- rlnorm(length(Nnow), log(Ntmp), sd_proc)
 }
 
 
@@ -181,7 +180,7 @@ forecasts      <- matrix(data = NA, nrow = num_iters, ncol = forecast_steps)
 
 for(t in 1:forecast_steps){
   x <- iterate_process(Nnow = x, r = r, K = K, sd_proc = 0)
-  forecasts[,t] <- exp(x)
+  forecasts[,t] <- x
 }
 varI <- apply(forecasts,2,var)
 
@@ -196,7 +195,7 @@ forecasts      <- matrix(data = NA, nrow = num_iters, ncol = forecast_steps)
 
 for(t in 1:forecast_steps){
   x <- iterate_process(Nnow = x, r = r, K = K, sd_proc = 0)
-  forecasts[,t] <- exp(x)
+  forecasts[,t] <- x
 }
 varIP <- apply(forecasts,2,var)
 
@@ -207,13 +206,12 @@ params         <- as.matrix(fitted_model$params)
 sample_params  <- sample.int(nrow(params), size = num_iters, replace = TRUE)
 K              <- params[sample_params,1]
 r              <- params[sample_params,2]
-tau_proc       <- params[sample_params,3]
-sd_proc        <- 1/sqrt(tau_proc)
+sd_proc       <- params[sample_params,3]
 forecasts      <- matrix(data = NA, nrow = num_iters, ncol = forecast_steps)
 
 for(t in 1:forecast_steps){
   x <- iterate_process(Nnow = x, r = r, K = K, sd_proc = sd_proc)
-  forecasts[,t] <- exp(x)
+  forecasts[,t] <- x
 }
 varIPE <- apply(forecasts,2,var)
 
@@ -225,14 +223,22 @@ V.pred.sim.rel <- apply(rbind(varIPE,varIP,varI),2,function(x) {x/max(x)})
 ####
 ####  Plot the proportion of uncertainty by partition
 ####
-var_rel_preds <- as.data.frame(t(V.pred.sim.rel))
+var_rel_preds <- as.data.frame(t(V.pred.sim.rel*100))
 var_rel_preds$x <- 1:nrow(var_rel_preds)
-ggplot(data=var_rel_preds, aes(x=x))+
-  geom_ribbon(aes(ymin=0, ymax=varI), fill="grey35")+
-  geom_ribbon(aes(ymin=varI, ymax=varIP), fill="coral")+
-  geom_ribbon(aes(ymin=varIP, ymax=varIPE), fill="skyblue")+
-  ylab("Proportion of uncertainty")+
+my_cols <- c("#0A4D5B", "#139AB8", "#39B181")
+variance_plot <- ggplot(data=var_rel_preds, aes(x=x))+
+  geom_ribbon(aes(ymin=0, ymax=varI), fill=my_cols[1])+
+  geom_ribbon(aes(ymin=varI, ymax=varIP), fill=my_cols[2])+
+  geom_ribbon(aes(ymin=varIP, ymax=varIPE), fill=my_cols[3])+
+  ylab("Percent of uncertainty")+
   xlab("Forecast steps")+
-  # scale_x_continuous(breaks=seq(1,nsteps,by=1))+
-  theme_few()
-# ggsave(filename = "../figures/bison_forecast_uncertainty.png", width = 4, height = 3, units = "in", dpi=120)
+  scale_x_continuous(breaks=seq(2,forecast_steps,by=2), labels=paste(seq(2,forecast_steps,by=2), "yrs"))+
+  scale_y_continuous(labels=paste0(seq(0,100,25),"%"))+
+  my_theme
+
+
+
+
+png("../figures/bison_combined.png", width = 4, height = 6, units = "in", res = 300)
+out_plot <- grid.arrange(calibration_plot, variance_plot, ncol=1)
+dev.off()
