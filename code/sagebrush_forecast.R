@@ -28,6 +28,23 @@ library(ecoforecastR)
 
 
 ####
+####  Set Up My Plotting Theme -------------------------------------------------
+####
+my_theme <- theme_bw()+
+  theme(panel.grid.major.x = element_blank(), 
+        panel.grid.minor.x = element_blank(),
+        panel.grid.minor.y = element_blank(),
+        panel.grid.major.y = element_line(color="white"),
+        panel.background   = element_rect(fill = "#EFEFEF"),
+        axis.text          = element_text(size=10, color="grey35", family = "Arial Narrow"),
+        axis.title         = element_text(size=12, family = "Arial Narrow", face = "bold"),
+        panel.border       = element_blank(),
+        axis.line.x        = element_line(color="black"),
+        axis.line.y        = element_line(color="black"))
+
+
+
+####
 ####  Load Data, Aggregate to Yearly Values ------------------------------------
 ####
 sage_raw      <- read.csv("../data/ARTR_quadratCover.csv")
@@ -39,7 +56,7 @@ sage_pasture <- ddply(sage_raw, .(year, group), summarise,
 
 ##  Division by 10000 converts to proportion cover
 sage_dat <- ddply(sage_pasture, .(year), summarise,
-                  tot_cover = mean(avg_cover)/10000,
+                  tot_cover = mean(avg_cover),
                   sd_cover = sd(avg_cover)) 
 
 clim_dat <- read.csv("../data/idaho_climate.csv")
@@ -57,31 +74,32 @@ my_model <- "
     #### Variance Priors
     tau_proc ~ dgamma(0.0001,0.0001)
     sigma_proc <- 1/sqrt(tau_proc)
-    sd_obs ~ dgamma(0.0001,0.0001)
+    #sd_obs ~ dgamma(0.0001,0.0001)
     
     #### Fixed Effects Priors
     b0 ~ dnorm(0, 0.001)
     b1 ~ dnorm(0, 0.001)
-    b2 ~ dnorm(0, 0.001)
     
     #### Initial Conditions
     N0      ~ dunif(0,10)
-    Nmed[1] <- exp(b0 + b1*N0)
-    N[1]    ~ dlnorm(Nmed[1], tau_proc) 
+    log(lambda[1]) <- b0 + b1*x[1]
+    z[1] <- lambda[1]*N0
+    N[1]    ~ dlnorm(log(z[1]), tau_proc) 
     
     #### Process Model
     for(t in 2:npreds){
-      Nmed[t] <- exp(b0 + b1*N[t-1])
-      N[t]    ~ dlnorm(Nmed[t], tau_proc) 
+      log(lambda[t]) <- b0 + b1*x[t]
+      z[t] <- lambda[t]*N0
+      N[t]    ~ dlnorm(log(z[t]), tau_proc)
     }
     
     #### Data Model
-    var_obs <- sd_obs*sd_obs
+    #var_obs <- sd_obs*sd_obs
     for(t in 1:n){
-      #var_obs[t] <- sd_obs[t]*sd_obs[t]
-      shape[t]   <- N[t]*N[t]/var_obs
-      rate[t]    <- N[t]/var_obs
-      Nobs[t]  ~ dbeta(shape[t], rate[t])
+      var_obs[t] <- sd_obs[t]*sd_obs[t]
+      shape[t]   <- N[t]*N[t]/var_obs[t]
+      rate[t]    <- N[t]/var_obs[t]
+      Nobs[t]  ~ dgamma(shape[t], rate[t])
     }
   
   }"
@@ -94,10 +112,10 @@ my_model <- "
 ##  Prepare data list
 mydat         <- list(Nobs = sage_climate_dat$tot_cover, 
                       n = nrow(sage_climate_dat),
-                      #sd_obs = sage_climate_dat$sd_cover,
+                      sd_obs = sage_climate_dat$sd_cover,
                       x = c(sage_climate_dat$ppt1, rep(mean(sage_climate_dat$ppt1),10)),
                       npreds = nrow(sage_climate_dat)+10)
-out_variables <- c("b0","b1","b2","N","sigma_proc")
+out_variables <- c("b0","b1","N","sigma_proc")
 
 ##  Send to JAGS
 mc3     <- jags.model(file=textConnection(my_model), data=mydat, n.chains=3)
@@ -141,18 +159,15 @@ if(VERBOSE==TRUE){
 ####
 ####  Plot the Calibration Data and Predictions --------------------------------
 ####
-pred_color <- "dodgerblue"
+pred_color <- "#CF4C26"
+obs_color  <- "#0A9AB8"
 ggplot(prediction_df, aes(x=year))+
   geom_ribbon(aes(ymax=upper_prediction, ymin=lower_prediction), fill=pred_color, color=NA, alpha=0.2)+
   geom_line(aes(y=median_prediction), color=pred_color)+
-  geom_errorbar(aes(ymin=lower_observation, ymax=upper_observation), width=0.5, color="grey45")+
-  geom_point(aes(y=observation), size=0.5)+
+  geom_errorbar(aes(ymin=lower_observation, ymax=upper_observation), width=0.5, color=obs_color)+
+  geom_point(aes(y=observation), size=0.5, color=obs_color)+
   ylab("Sagebrush cover (cm)")+
   xlab("Year")+
-  theme_bw()+
-  theme(panel.grid.major.x = element_blank(), 
-        panel.grid.minor.x = element_blank(),
-        panel.grid.minor.y = element_blank(),
-        panel.grid.major.y = element_line(linetype="dotted", color="grey65"))
+  my_theme
 # ggsave(filename = "../figures/sagebrush_calibration.png", width = 4, height = 3, units = "in", dpi=120)
 
