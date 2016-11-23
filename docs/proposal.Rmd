@@ -1,0 +1,87 @@
+---
+fontsize: 11pt
+geometry: margin=1in
+header-includes:
+  - \usepackage{amsmath}
+  - \usepackage{setspace}
+  - \usepackage{rotating}
+  - \usepackage[dvipsnames]{xcolor}
+  - \usepackage{times}
+  - \definecolor{mycol}{gray}{0.1}
+  - \color{mycol}
+  - \usepackage{enumitem}
+  - \setlist[description]{topsep=30pt,itemsep=5pt,font={\mdseries\sffamily\color{MidnightBlue}}}
+layout: 11pt
+linkcolor: black
+output:
+  pdf_document:
+    fig_caption: yes
+    keep_tex: no
+    number_sections: true
+urlcolor: black
+---
+
+
+\begin{description}
+\item[Date:] \today
+\item[Descriptive Title:] Synthesizing time series of plant and animal populations to understand the limits to ecological predictions
+\item[Short Title:] Limits to Ecological Forecasting
+\item[PI Contact Information:] ~\\
+\vspace{-3.8em}
+\begin{description}
+ \item[\textcolor{mycol}{Andrew Tredennick}] (atredenn@gmail.com; 970-443-1599) \\ Utah State University \\ 5230 Old Main Hill, Logan, UT 84332
+ \item[\textcolor{mycol}{Mevin Hooten}] (Mevin.Hooten@colostate.edu; phone number) \\ United States Geological Survey \\ Colorado State University \\ address
+ \item[\textcolor{mycol}{Peter Adler}] (peter.adler@usu.edu; phone number) \\ Utah State University \\ 5230 Old Main Hill, Logan, UT 84332
+\end{description}
+\item[Project Summary:] Forecasting the impacts of global climate change is a major challenge facing ecologists and land managers in the 21\textsuperscript{st} century. For plant populations, the challenge lies in adequately representing internal population dynamics and external environmental forcing. Traditionally, plant population modelers have relied on demographic data that are difficult to collect, but time series of plant percent cover are an untapped resource for population modeling and forecasting. We propose to convene a diverse group of ecologists with expertise in plant population monitoring and modeling to build dynamic forecasting models based on percent cover time series from across the United States. Using the ecological forecacst horizon as a unifying comparative framework, we will discover where and when plant populations are predictable, and when they are not. Furthermore, for every data set that we use, we will make yearly forecasts of plant population trajectories up to the year 2100 under projected climate change. The data we use will be compiled into a publicly available database, population forecasts will be archived for future validation, and all computer code will be made publicly available.
+\item[Proposed Start and End Dates:] October 2017 to September 2019, with two 4-day meetings at the Powell Center
+\item[Proposed Data Release Date:] September 2019
+\item[Total Requested Budget:] \$XX0,000
+\item[Is this a resubmission?] No
+\item[Conflicts of Interest with Reviewers:] None
+\item[Keywords:] climate and land use change; ecosystems
+\end{description}
+
+\newpage{}
+
+\section{Problem Statement}
+A fundamental challenge facing society is to predict the impacts of global environmental changes such as nitrogen deposition, climate change, and habitat fragmentation on ecosystems.
+Each of these global change drivers have now exceeded their historical ranges of variability, meaning we are entering a no-analog world in which we can no longer look to the past to predict the future.
+We can, however, look to the past to parameterize models that allow us to *forecast* the future states of ecological systems.
+Ecologists are in an excellent position to meet this forecasting challenge because we have spent decades gaining understanding of the processes that regulate populations, communities, and ecosystems.
+But, we currently lack a systematic understanding of the limits to ecological forecasts and whether those limits are surmountable.
+
+To understand the "forecasting problem" in ecology, Dietz (*forthcoming*) proposed a first-principles approach to partitioning forecast uncertainty.
+Consider a dynamical model designed to predict some state *y* in the future ($y_{t+1}$) based on the current state ($y_{t+1}$), an external covariate ($x$), parameters ($\theta$), and process error ($\epsilon$).
+We can then write a general form of the model as:
+
+\begin{align}
+y_{t+1} = f(y_t, x_t|\theta) + \epsilon,
+\end{align}
+
+which states that $y$ at time $t+1$ is a function of $y$ and $x$ at time $t$ conditional on the model parameters ($\theta$) plus process error ($\epsilon$).
+Using a Taylor Expansion, Dietz shows that forecast variance ($Var[y_{t+1}]$) is:
+
+\begin{align}
+Var[y_{t+1}] = \underbrace{\left(\frac{\delta f}{\delta y} \right)^2}_{\text{stability}} 
+               \underbrace{\vphantom{ \left(\frac{\delta f}{\delta y} \right)^2 } Var[y_t]}_{\text{IC uncert.}} +
+               \underbrace{\vphantom{ \left(\frac{\delta f}{\delta y} \right)^2 }\left(\frac{\delta f}{\delta x} \right)^2}_{\text{driver sens.}} 
+               \underbrace{\vphantom{ \left(\frac{\delta f}{\delta y} \right)^2 } Var[x_t]}_{\text{driver uncert.}} +
+               \underbrace{\vphantom{ \left(\frac{\delta f}{\delta y} \right)^2 }\left(\frac{\delta f}{\delta \theta} \right)^2}_{\text{param sens.}}
+               \underbrace{\vphantom{ \left(\frac{\delta f}{\delta y} \right)^2 } Var[\theta]}_{\text{param. uncert.}} +
+               \underbrace{\vphantom{ \left(\frac{\delta f}{\delta y} \right)^2 } Var[\epsilon]}_{\text{process error}},
+\end{align}
+
+where each additive term follows a pattern of *sensitivity* times *variance*.
+Thus, the variance attributable to any particular factor is a function of how sensitive the model is to the factor and the variance of that factor.
+For example, large sensitivity to the covariate $x$ can be compensated for if the uncertainty of the covariate is low.
+
+\section{Proposed Activities}
+PIs Tredennick, Hooten, and Adler have led several efforts to forecast the response of plant populations to climate change.
+Our failures to produce forecasts with reasonable levels of uncertainty, and our inability to attribute that uncertainty to specific causes, has motivated this proposal.
+We seek to (1) assemble a database of all publicly available time series of plant and animal abundance, (2) use those data to fit forecasting models, and (3) partition the forecast uncertainty from those models to better understand the limits to ecological forecasting.
+Along the way, as mentioned above, we will test fundamental hypotheses in ecology about chaos and density-dependence under a novel framework.
+We have learned that collating large datasets and rigorously fitting statistical population models requires dedicated effort.
+We therefore request funding for a Powell Fellow (PI Tredennick) to lead all aspects of our proposed work.
+
+\subsection{Data Synthesis}
