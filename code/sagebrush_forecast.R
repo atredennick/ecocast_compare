@@ -110,10 +110,12 @@ my_model <- "
 ####  Fit Sagebrush Forecasting Model ------------------------------------------
 ####
 ##  Prepare data list
+newppt <- sample(sage_climate_dat$ppt1, size = 10, replace = TRUE)
+newppt <- newppt-(0.1*newppt)
 mydat         <- list(Nobs = sage_climate_dat$tot_cover, 
                       n = nrow(sage_climate_dat),
                       sd_obs = sage_climate_dat$sd_cover,
-                      x = c(sage_climate_dat$ppt1, rep(mean(sage_climate_dat$ppt1),10)),
+                      x = c(sage_climate_dat$ppt1, newppt),
                       npreds = nrow(sage_climate_dat)+10)
 out_variables <- c("b0","b1","N","sigma_proc")
 
