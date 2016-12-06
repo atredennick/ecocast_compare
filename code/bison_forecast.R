@@ -240,6 +240,6 @@ variance_plot <- ggplot(data=var_rel_preds, aes(x=x))+
 
 
 
-png("../figures/bison_combined.png", width = 4, height = 6, units = "in", res = 300)
+png("../figures/bison_combined.png", width = 4, height = 6, units = "in", res = 120)
 out_plot <- grid.arrange(calibration_plot, variance_plot, ncol=1)
 dev.off()
