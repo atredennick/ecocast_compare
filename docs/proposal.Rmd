@@ -1,5 +1,7 @@
 ---
-fontsize: 11pt
+bibliography: ~/Dropbox/Bibliography/ecocast.bib
+csl: components/ecology.csl
+fontsize: 12pt
 geometry: margin=1in
 header-includes:
   - \usepackage{amsmath}
@@ -11,7 +13,7 @@ header-includes:
   - \color{mycol}
   - \usepackage{enumitem}
   - \setlist[description]{topsep=30pt,itemsep=5pt,font={\mdseries\sffamily\color{MidnightBlue}}}
-layout: 11pt
+layout: 12pt
 linkcolor: black
 output:
   pdf_document:
@@ -77,7 +79,7 @@ Thus, the variance attributable to any particular factor is a function of how se
 For example, large sensitivity to the covariate $x$ can be compensated for if the uncertainty of the covariate is low.
 
 \section{Proposed Activities}
-PIs Tredennick, Hooten, and Adler have led several efforts to forecast the response of plant populations to climate change.
+PIs Tredennick, Hooten, and Adler have led several efforts to forecast the response of plant populations to climate change [@Tredennick2016Ecos; @Tredennick2016MEE].
 Our failures to produce forecasts with reasonable levels of uncertainty, and our inability to attribute that uncertainty to specific causes, has motivated this proposal.
 We seek to (1) assemble a database of all publicly available time series of plant and animal abundance, (2) use those data to fit forecasting models, and (3) partition the forecast uncertainty from those models to better understand the limits to ecological forecasting.
 Along the way, as mentioned above, we will test fundamental hypotheses in ecology about chaos and density-dependence under a novel framework.
@@ -85,3 +87,6 @@ We have learned that collating large datasets and rigorously fitting statistical
 We therefore request funding for a Powell Fellow (PI Tredennick) to lead all aspects of our proposed work.
 
 \subsection{Data Synthesis}
+
+
+# References
