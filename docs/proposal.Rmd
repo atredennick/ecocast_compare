@@ -190,20 +190,17 @@ Doing so would also allow us to determine the relative contribution of driver er
 +-----------------------------+-----------------------------+---------------------------------+------------------------+
 | Name                        | Affiliation                 | Expertise                       | Associated Dataset     |
 +=============================+=============================+=================================+========================+
-| Andrew Tredennick*$^\dagger$| Utah State University\      | Data management/synthesis,\     |  n/a                   |
+| Andrew Tredennick*$^{1,2}$  | Utah State University\      | Data management/synthesis,\     |  n/a                   |
 |                             | \phantom{}                  | population forecasting          |                        |
 +-----------------------------+-----------------------------+---------------------------------+------------------------+
 | Mevin Hooten                | U.S. Geological Survey &\   | hierarchial Bayesian models,\   |   Sandhill crane       |
-|                             | Colorado State University   | statistical forecasting         |                        |
+|                             | Colorado State University\  | statistical forecasting         |                        |
 +-----------------------------+-----------------------------+---------------------------------+------------------------+
-| Peter Adler                 | Utah State University\      | population ecology/modeling,\   |   Idaho sagebrush      |
+| Peter Adler*                | Utah State University\      | population ecology/modeling,\   |   Idaho sagebrush      |
 |                             | \phantom{}                  | data synthesis                  |                        |
 +-----------------------------+-----------------------------+---------------------------------+------------------------+
 | Deborah Peters              | New Mexico State University\| data management, aridlands,\    |   Jornada plants       |
 |                             |                             | data synthesis                  |                        |
-+-----------------------------+-----------------------------+---------------------------------+------------------------+
-| Brittany Teller             |  Utah State University\     | data management, statistics,\   |   Idaho sagebrush      |
-|                             | \phantom{}                  | detecting climate drivers       |                        |
 +-----------------------------+-----------------------------+---------------------------------+------------------------+
 | Michael Dietze              |  Boston University\         | ecological forecasting,\         |   n/a                  |
 |                             | \phantom{}                  | partitioning uncertainty        |                        |
@@ -212,12 +209,19 @@ Doing so would also allow us to determine the relative contribution of driver er
 |                             | \phantom{}                  | state space models              |                        |
 +-----------------------------+-----------------------------+---------------------------------+------------------------+
 | Kimberly A. Kaufeld         | North Carolina State\       | Bayesian analysis,\             |   n/a                  |
-|                             | University                  | spatio-temporal statistics      |                        |
+|                             | University\                 | spatio-temporal statistics      |                        |
 +-----------------------------+-----------------------------+---------------------------------+------------------------+
+| Jennifer Williams           | University of British\      | Bayesian analysis,\             |   n/a                  |
+|                             | Columbia                    | population modeling             |                        |
++-----------------------------+-----------------------------+---------------------------------+------------------------+
+
+Table: List of participants.
 
 \vspace{-2em}
 *Confirmed participant   
-$^\dagger$Powell Center Fellow
+$^1$Powell Center Fellow
+
+
 
 \normalsize
 --->
