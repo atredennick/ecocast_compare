@@ -183,17 +183,21 @@ We could improve the process model by including external climate covariates, whi
 Doing so would also allow us to determine the relative contribution of driver error to forecast uncertainty through time.
 
 \section{Participants}
+We have assembled a diverse working group, with gender and career stage diversity.
+We will also advertise two travel awards for participation in our working group: one for a postdoc to participate and one for a graduate student to participate.
+The travel awards will be advertised on ESA's SEEDS\footnote{http://esa.org/seeds/} and Inclusive Ecology\footnote{http://www.esa.org/inclusive-ecology/} webpages to ensure we receive applications from underrepresented minorities.
 
 <!---
+
 \footnotesize
 
 +-----------------------------+-----------------------------+---------------------------------+------------------------+
 | Name                        | Affiliation                 | Expertise                       | Associated Dataset     |
 +=============================+=============================+=================================+========================+
-| Andrew Tredennick*$^{1,2}$  | Utah State University\      | Data management/synthesis,\     |  n/a                   |
+|Andrew Tredennick*$^{1,2,3}$ | Utah State University\      | Data management/synthesis,\     |  n/a                   |
 |                             | \phantom{}                  | population forecasting          |                        |
 +-----------------------------+-----------------------------+---------------------------------+------------------------+
-| Mevin Hooten                | U.S. Geological Survey &\   | hierarchial Bayesian models,\   |   Sandhill crane       |
+| Mevin Hooten*               | U.S. Geological Survey &\   | hierarchial Bayesian models,\   |   Sandhill crane       |
 |                             | Colorado State University\  | statistical forecasting         |                        |
 +-----------------------------+-----------------------------+---------------------------------+------------------------+
 | Peter Adler*                | Utah State University\      | population ecology/modeling,\   |   Idaho sagebrush      |
@@ -212,18 +216,43 @@ Doing so would also allow us to determine the relative contribution of driver er
 |                             | University\                 | spatio-temporal statistics      |                        |
 +-----------------------------+-----------------------------+---------------------------------+------------------------+
 | Jennifer Williams           | University of British\      | Bayesian analysis,\             |   n/a                  |
-|                             | Columbia                    | population modeling             |                        |
+|                             | Columbia\                   | population modeling             |                        |
++-----------------------------+-----------------------------+---------------------------------+------------------------+
+| Ethan White                 | University of Florida\      | ecological forecasting,\        |   BBS \& Portal Data   |
+|                             | \phantom{}                  | data synthesis                  |                        |
++-----------------------------+-----------------------------+---------------------------------+------------------------+
+| Graduate Student            | \phantom{}\                 | \phantom{}\                     |   n/a                  |
++-----------------------------+-----------------------------+---------------------------------+------------------------+
+| Postdoctoral Scholar        | \phantom{}                  | \phantom{}                      |   n/a                  |
 +-----------------------------+-----------------------------+---------------------------------+------------------------+
 
 Table: List of participants.
 
 \vspace{-2em}
 *Confirmed participant   
-$^1$Powell Center Fellow
-
+$^1$Powell Center Fellow  
+$^2$Technical liaison to Powell Center computing staff  
+$^3$Party responsible for adherence to Powell Center Data and Information Policy
 
 
 \normalsize
+
 --->
 
+\section{Time Table of Activities}
+\begin{description}
+
+\item[October to December 2017] Monthly PI Skype meetings to prepare for first meeting. Begin email exchanges to confirm participants. Write \texttt{R} scripts to download, clean, and aggregate data in Table 1. Refine YNP bison example for first meeting.
+\item[January 2018] First meeting for four days at Powell Center: Identify other appropriate data sets. Decide on model structures for each data set and identify climate data availability. Form two-person analysis teams for each data set. Go through YNP bison analysis as an exemplar. Define manuscripts.
+\item[February to December 2018] Bi-monthly PI Skype meetings. Continue and finalize data set aquisition (including climate data) and aggregate into single database for analysis teams. Analysis teams, with the PC Fellow, identify appropriate climate drivers for their system and begin fitting state-space models. PC Fellow writes generalizable \texttt{R} functions for analysis teams to use for forecast partitioning. PC Fellow will have at least one Skype meeting with each analysis team during this period. Write first drafts of manuscripts.
+\item[January 2019] Second meeting for four days at Powell Center: Analysis teams present results for feedback from the working group. Finalize data base and identify any outstanding issues. Evaluate manuscript drafts and form writing teams. Create a \textsc{GitHub} repository for individual forecasts.
+\item[February to June 2019] Finalize data base and forecast repository. Finalize all forecasts and forecast partitions. Continue writing manuscripts. PC Fellow will have at least one Skype meeting with each analysis team during this period.
+\item[July to September 2019] Complete manuscripts and submit for publication. Release database and forecast repository to Powell Center for permanent archiving. Write a blog post for Dynamic Ecology\footnote{http://dynamicecology.wordpress.com/} on the limits to ecological forecasting, introduce to database and forecast repositry, and pose a forecasting challenge.
+
+\end{description}
+
+\section{Anticipated Results and Benefits}
+
+
 # References
+\footnotesize{}
