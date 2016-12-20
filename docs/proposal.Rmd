@@ -41,7 +41,7 @@ urlcolor: black
  \item[\textcolor{mycol}{Mevin Hooten}] (Mevin.Hooten@colostate.edu) \\ United States Geological Survey \\ Colorado State University \\ address
  \item[\textcolor{mycol}{Peter Adler}] (peter.adler@usu.edu) \\ Utah State University \\ 5230 Old Main Hill, Logan, UT 84332
 \end{description}
-\item[Project Summary:] Forecasting the impacts of global climate change is a major challenge facing ecologists and land managers in the 21\textsuperscript{st} century. For plant populations, the challenge lies in adequately representing internal population dynamics and external environmental forcing. Traditionally, plant population modelers have relied on demographic data that are difficult to collect, but time series of plant percent cover are an untapped resource for population modeling and forecasting. We propose to convene a diverse group of ecologists with expertise in plant population monitoring and modeling to build dynamic forecasting models based on percent cover time series from across the United States. Using the ecological forecacst horizon as a unifying comparative framework, we will discover where and when plant populations are predictable, and when they are not. Furthermore, for every data set that we use, we will make yearly forecasts of plant population trajectories up to the year 2100 under projected climate change. The data we use will be compiled into a publicly available database, population forecasts will be archived for future validation, and all computer code will be made publicly available.
+\item[Project Summary:] Forecasting the impacts of global climate change is a major challenge facing ecologists and land managers in the 21\textsuperscript{st} century. For plant populations, the challenge lies in adequately representing internal population dynamics and external environmental forcing. Traditionally, plant population modelers have relied on demographic data that are difficult to collect, but time series of plant percent cover are an untapped resource for population modeling and forecasting. We propose to convene a diverse group of ecologists with expertise in plant and animal population monitoring and modeling to build dynamic forecasting models.
 \item[Proposed Start and End Dates:] October 2017 to September 2019, with two 4-day meetings at the Powell Center
 \item[Proposed Data Release Date:] September 2019
 \item[Total Requested Budget:] \$XX0,000
@@ -214,6 +214,9 @@ The travel awards will be advertised on ESA's SEEDS\footnote{http://esa.org/seed
 +-----------------------------+-----------------------------+---------------------------------+------------------------+
 | Kimberly A. Kaufeld         | North Carolina State\       | Bayesian analysis,\             |   n/a                  |
 |                             | University\                 | spatio-temporal statistics      |                        |
++-----------------------------+-----------------------------+---------------------------------+------------------------+
+| Erin M. Schliep             | University of Missourt\     | Bayesian analysis,\             |   n/a                  |
+|                             | \phantom{}\                 | spatio-temporal statistics      |                        |
 +-----------------------------+-----------------------------+---------------------------------+------------------------+
 | Jennifer Williams           | University of British\      | Bayesian analysis,\             |   n/a                  |
 |                             | Columbia\                   | population modeling             |                        |
