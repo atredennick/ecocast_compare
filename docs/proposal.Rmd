@@ -55,6 +55,12 @@ urlcolor: black
 \pagenumbering{arabic}
 
 \section{Problem Statement}
+\vspace{-2em}
+\small{}
+\phantom{}\hspace{8em}\textit{``...ecologists do not predict because when we do it reveals how little\\\phantom{}\hspace{8em}we understand about the natural world.''}  --\textit{Houlahan et al. 2016}
+
+\normalsize{}
+\vspace{1em}
 A fundamental challenge facing society is to predict the impacts of global environmental changes such as nitrogen deposition, climate change, and habitat fragmentation on ecosystems.
 Each of these global change drivers have now exceeded their historical ranges of variability [@Steffen2015], meaning we are entering a no-analog world in which we can no longer look to the past to predict the future.
 We can, however, look to the past to parameterize models that allow us to *forecast* the future states of ecological systems [@Clark2001].
@@ -85,6 +91,24 @@ Var[y_{t+1}] = \underbrace{\left(\frac{\delta f}{\delta y} \right)^2}_{\text{sta
 where each additive term follows a pattern of *sensitivity* times *variance*.
 Thus, the variance attributable to any particular factor is a function of how sensitive the model is to the factor and the variance of that factor.
 For example, large sensitivity to the covariate $x$ can be compensated for if the uncertainty of the covariate is low.
+
+\section{Hypotheses}
+All forecasts are uncertain, and reducing forecast error hinges upon knowing the source of uncertainty.
+The premise of this proposal is that ecological characteristics of organisms (e.g., life history) are related to sources of forecast uncertainty.
+Specifically, we pose three hypotheses:
+\begin{description}
+
+\item[H1.] \textbf{The contribution of initial conditions error to forecast uncertainty is greater for fast growing populations than for slow growing populations.} Fast growing populations are more likely to exhibit chaotic or near-chaotic dynamics, which inflates forecast error due to initial conditions uncertainty. We will compare forecast partitions for \emph{Bison bison} (slow growing population) and \emph{Dipodomys} spp. (fast growing populations) to test this hypothesis.
+
+\item[H2.] \textbf{The contribution of driver error to forecast uncertainty is greater for species that ``predict'' than for species that ``bet-hedge'' against environmental conditions.} In variable environments, plants have developed two main strategies for maintaining fitness despite changing conditions: (i) bet-hedging, where germination is low but constant, and (ii) predictive germination, where germination is cued by the environment. Bet-hedgers should be insensitive to environmental drivers, so their forecast uncertainties should not be driven by driver error. We will compare forecast partitions for winter annual plants that span a spectrum from bet-hedgers to predictors to test this hypothesis.
+
+\item[H3.] \textbf{The contribution of process error to forecast uncertainty increases with the number of trophic links.} We are using population models, which ignore trophic interactions. Therefore, if trophic interactions are important and/or plentiful, our models will poorly represent the process. We will compare forecast partitions for all data sets to test this hypothesis.
+
+\end{description}
+
+Our hypotheses are motivated by recent reviews of ecological forecasting [@Petchey2015; @Houlahan2016] that suggest research should be organized around understanding the effects of ecological processes and variables on forecast uncertainty.
+By testing our hypotheses, we will gain a systematic understanding of what sources of uncertainty dominate ecological forecasts and how those sources relate to ecological characteristics.
+We note that these three hypotheses are likely just a starting point, as we anticipate the working group will generate additional hypotheses.
 
 \section{Proposed Activities}
 PIs Tredennick, Hooten, and Adler have led several efforts to forecast the response of plant populations to climate change [@Tredennick2016Ecos; @Tredennick2016MEE].
@@ -128,6 +152,7 @@ This is a preliminary data processing workflow, and we anticipate working closel
 | Plant | *Eriastrum diffusum* (Miniature Woollystar)* | 14 | Ernest et al. (2015) |
 | Plant | *Artemisia* spp. (Sagebrush spp.) | 27 | Homer et al. (2013) |
 | Plant | *Artemisia scopulorum* (Alpine Sagewort)* | 11 | http://niwot.colorado.edu/ |
+| Plant | Winter annuals (Desert Lab LTREB) | 30 | Gremer and Venable (2014) |
 
 Table: Publicly-available abundance time series for plants and animals. Animal abundance is the number of individuals in a given area. Plant abundance is percent cover or biomass.
 
@@ -178,14 +203,10 @@ This set of forecasts allows us to partition the relative variance of different 
 
 For our forecasts of Yellowstone bison abundance, process error dominates forecast uncertainty at all horizons (Fig. 1B).
 Parameter error is relatively constant throughout the forecast horizons.
-Initial condition uncertainty decays very quickly, indicating strong internal population regulation and the lack of chaotic dynamics.
-In this respect, forecasting bison abundance is a very different problem then forecasting weather.
-Weather forecasts are limited by certainty in initial conditions because the weather system is chaotic.
-Therefore, resources are allocated to constantly updating weather observations.
-On the contrary, bison population dynamics appear to not be chaotic, so updating population estimates more than yearly would not help forecast certainty.
-Rather, our analysis suggests that the forecast is limited by the process model.
+Initial condition uncertainty decays very quickly, indicating strong internal population regulation and the lack of chaotic dynamics, which is consistent with our **Hypothesis H1**.
+Our analysis suggests that the forecast is limited by the process model.
 We could improve the process model by including external climate covariates, which we plan to do as part of this proposal.
-Doing so would also allow us to determine the relative contribution of driver error to forecast uncertainty through time.
+Doing so will also allow us to determine the relative contribution of driver error to forecast uncertainty through time.
 
 \section{Participants}
 We have assembled a diverse working group, with gender and career stage diversity.
@@ -193,7 +214,7 @@ We will also advertise two travel awards for participation in our working group:
 The travel awards will be advertised on ESA's SEEDS\footnote{http://esa.org/seeds/} and Inclusive Ecology\footnote{http://www.esa.org/inclusive-ecology/} webpages to ensure we receive applications from underrepresented minorities.
 
 
-<!---
+
 \footnotesize
 
 +-----------------------------+-----------------------------+---------------------------------+------------------------+
@@ -208,8 +229,8 @@ The travel awards will be advertised on ESA's SEEDS\footnote{http://esa.org/seed
 | Peter Adler*                | Utah State University\      | population ecology/modeling,\   |   Idaho sagebrush      |
 |                             | \phantom{}                  | data synthesis                  |                        |
 +-----------------------------+-----------------------------+---------------------------------+------------------------+
-| Deborah Peters              | New Mexico State University\| data management, aridlands,\    |   Jornada plants       |
-|                             |                             | data synthesis                  |                        |
+| Jennifer Gremer             | University of California,\  | plant population modeling\      |   Winter annuals       |
+|                             | Davis\                      | data management                 |                        |
 +-----------------------------+-----------------------------+---------------------------------+------------------------+
 | Michael Dietze              |  Boston University\         | ecological forecasting,\         |   n/a                  |
 |                             | \phantom{}                  | partitioning uncertainty        |                        |
@@ -217,14 +238,8 @@ The travel awards will be advertised on ESA's SEEDS\footnote{http://esa.org/seed
 | N. Thompson Hobbs           | Colorado State University\  | population ecology,\            |   Yellowstone bison    |
 |                             | \phantom{}                  | state space models              |                        |
 +-----------------------------+-----------------------------+---------------------------------+------------------------+
-| Kimberly A. Kaufeld         | North Carolina State\       | Bayesian analysis,\             |   n/a                  |
-|                             | University\                 | spatio-temporal statistics      |                        |
-+-----------------------------+-----------------------------+---------------------------------+------------------------+
-| Erin M. Schliep             | University of Missouri\     | Bayesian analysis,\             |   n/a                  |
-|                             | \phantom{}                  | spatio-temporal statistics      |                        |
-+-----------------------------+-----------------------------+---------------------------------+------------------------+
-| Jennifer Williams           | University of British\      | Bayesian analysis,\             |   n/a                  |
-|                             | Columbia\                   | population modeling             |                        |
+| Emily Farrer                | Tulan University\           | population modeling,\           |   Niwot plants         |
+|                             | \phantom{}                  | Bayesian analysis               |                        |
 +-----------------------------+-----------------------------+---------------------------------+------------------------+
 | Ethan White                 | University of Florida\      | ecological forecasting,\        |   BBS \& Portal Data   |
 |                             | \phantom{}                  | data synthesis                  |                        |
@@ -244,7 +259,7 @@ $^3$Party responsible for adherence to Powell Center Data and Information Policy
 
 
 \normalsize
---->
+
 
 
 \section{Time Table of Activities}
