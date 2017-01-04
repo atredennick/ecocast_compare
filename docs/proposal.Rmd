@@ -15,6 +15,13 @@ header-includes:
   - \usepackage{wrapfig}
   - \usepackage[font={footnotesize,it}]{caption}
   - \usepackage{floatrow}
+  - \usepackage{mathptmx}
+  - \usepackage{titlesec}
+  - \titleformat{\section}{\normalfont\fontsize{14}{15}\bfseries}{\thesection}{1 em}{}
+  - \titleformat{\subsection}{\normalfont\fontsize{12}{15}\bfseries}{\thesubsection}{1 em}{}
+  - \titlespacing{\section}{0pt}{\parskip}{-\lineskip}
+  - \titlespacing{\subsection}{0pt}{\parskip}{-\parskip}
+  - \titlespacing{\subsubsection}{0pt}{\parskip}{-\parskip}
 layout: 12pt
 linkcolor: black
 output:
@@ -38,7 +45,7 @@ urlcolor: black
 \vspace{-1.5em}
 \begin{description}
  \item[\textcolor{mycol}{Andrew Tredennick}] (atredenn@gmail.com; 970-443-1599) \\ Utah State University \\ 5230 Old Main Hill, Logan, UT 84332
- \item[\textcolor{mycol}{Mevin Hooten}] (Mevin.Hooten@colostate.edu) \\ United States Geological Survey \\ Colorado State University \\ address
+ \item[\textcolor{mycol}{Mevin Hooten}] (Mevin.Hooten@colostate.edu) \\ United States Geological Survey \\ Colorado State University \\ Fort Collins, CO 80523
  \item[\textcolor{mycol}{Peter Adler}] (peter.adler@usu.edu) \\ Utah State University \\ 5230 Old Main Hill, Logan, UT 84332
 \end{description}
 \item[Project Summary:] Forecasting the impacts of global climate change is a major challenge facing ecologists and land managers in the 21\textsuperscript{st} century. For plant populations, the challenge lies in adequately representing internal population dynamics and external environmental forcing. Traditionally, plant population modelers have relied on demographic data that are difficult to collect, but time series of plant percent cover are an untapped resource for population modeling and forecasting. We propose to convene a diverse group of ecologists with expertise in plant and animal population monitoring and modeling to build dynamic forecasting models.
@@ -55,29 +62,34 @@ urlcolor: black
 \pagenumbering{arabic}
 
 \section{Problem Statement}
-\vspace{-2em}
+\vspace{-1em}
 \small{}
 \phantom{}\hspace{8em}\textit{``...ecologists do not predict because when we do it reveals how little\\\phantom{}\hspace{8em}we understand about the natural world.''}  --\textit{Houlahan et al. 2016}
 
 \normalsize{}
-\vspace{1em}
+\vspace{0.5em}
 A fundamental challenge facing society is to predict the impacts of global environmental changes such as nitrogen deposition, climate change, and habitat fragmentation on ecosystems.
 Each of these global change drivers have now exceeded their historical ranges of variability [@Steffen2015], meaning we are entering a no-analog world in which we can no longer look to the past to predict the future.
 We can, however, look to the past to parameterize models that allow us to *forecast* the future states of ecological systems [@Clark2001].
 Ecologists are in an excellent position to meet this forecasting challenge because we have spent decades gaining understanding of the processes that regulate populations, communities, and ecosystems.
 But, we currently lack a systematic understanding of the limits to ecological forecasts and whether those limits are surmountable.
 
-To understand the "forecasting problem" in ecology, @Dietze2017 proposes a first-principles approach to partitioning forecast uncertainty.
+Making poor forecasts is inevitable as ecology matures as a more predictive science.
+The key is to learn from our failures so that forecasts become more accurate over time.
+The success story of weather forecasting tells us that basic research on the contributions to forecast uncertainty is essential [@Bauer2015].
+In ecology, a powerful approach is to combine our detailed knowledge of organisms and ecosystem processes with emerging knowledge on forecast uncertainty [@Petchey2015]. 
+
+@Dietze2017 proposes a first-principles approach to partitioning forecast uncertainty.
 Consider a dynamical model designed to predict some state *y* in the future ($y_{t+1}$) based on the current state ($y_{t+1}$), an external covariate ($x$), parameters ($\theta$), and process error ($\epsilon$).
 We can then write a general form of the model as:
-
+\vspace{-2em}
 \begin{align}
 y_{t+1} = f(y_t, x_t|\theta) + \epsilon,
 \end{align}
-
+\vspace{-2em}
 which states that $y$ at time $t+1$ is a function of $y$ and $x$ at time $t$ conditional on the model parameters ($\theta$) plus process error ($\epsilon$).
 Using a Taylor expansion "delta method", @Dietze2017 shows that forecast variance ($Var[y_{t+1}]$) is:
-
+\vspace{-1em}
 \begin{align}
 Var[y_{t+1}] = \underbrace{\left(\frac{\delta f}{\delta y} \right)^2}_{\text{stability}} 
                \underbrace{\vphantom{ \left(\frac{\delta f}{\delta y} \right)^2 } Var[y_t]}_{\text{IC uncert.}} +
@@ -87,10 +99,15 @@ Var[y_{t+1}] = \underbrace{\left(\frac{\delta f}{\delta y} \right)^2}_{\text{sta
                \underbrace{\vphantom{ \left(\frac{\delta f}{\delta y} \right)^2 } Var[\theta]}_{\text{param. uncert.}} +
                \underbrace{\vphantom{ \left(\frac{\delta f}{\delta y} \right)^2 } Var[\epsilon]}_{\text{process error}},
 \end{align}
-
+\vspace{-1em}
 where each additive term follows a pattern of *sensitivity* times *variance*.
 Thus, the variance attributable to any particular factor is a function of how sensitive the model is to the factor and the variance of that factor.
 For example, large sensitivity to the covariate $x$ can be compensated for if the uncertainty of the covariate is low.
+
+The goal of this project is to synthesize forecasts of plant and animal populations to advance our fundamental knowledge on the limits to ecological forecasts.
+We will convene a diverse group of population ecologists to partition forecast uncertainty for several species and systematically link sources of uncertainty to characteritics of the focal populations (e.g., life history traits).
+Along the way, we will develop the first ever repository of ecological forecasts and a publicly-available data base of abundance time series.
+The data base will become a go-to resource for teaching and research, and will be used for a forecasting challenge. 
 
 \section{Hypotheses}
 All forecasts are uncertain, and reducing forecast error hinges upon knowing the source of uncertainty.
@@ -169,25 +186,22 @@ The particular details of each model may vary, but our general approach will be 
 State-space models are well-suited for ecological forecasting because they inherently incorporate and propogate the sources of uncertainty we seek to partition: process error, observation error, and parameter error.
 State-space models also explicitly acknowledge that our observations are imperfect, meaning that the state we want to estimate (e.g., abundance of elk in Rocky Mountain National Park) is unknowable, or *latent*.
 A typical state-space model takes the form:
-
+\vspace{-2em}
 \begin{align}
-y_t &\sim \mathcal{N}(z_t, \sigma_{obs.}) \\
-z_t &\sim \mathcal{N}(\mu_t, \sigma_{proc.}) \\
+y_t &\sim \text{Normal}(z_t, \sigma_{obs.}) \\
+z_t &\sim \text{Normal}(\mu_t, \sigma_{proc.}) \\
 \mu_t &= \alpha + \beta_1 z_{t-1} + \beta_2 x_{t-1},
 \end{align}
-
+\vspace{-2em}
 where $y_t$ is the observed state at time *t*, $z_t$ is the latent state at time *t*, $mu_t$ is the determinstic prediction of the state at time *t* given the regression parameters $\alpha$, $\beta_1$, and $\beta_2$, and $x_{t-1}$ is a climate covariate at time *t-1*.
 The two error terms represent observation error ($\sigma_{obs.}$) and process error ($\sigma_{obs.}$).
 The model is *dynamic* because the future state ($z_t$) depends on the previous state ($z_{t-1}$).
-For clarity we show the data and process models (Eqs. 3 and 4, respectively) with normal likelihoods ($\mathcal{N}$), but these distributions will vary depending on the particular data generating process [@Hobbs2015].
+For clarity we show the data and process models (Eqs. 3 and 4, respectively) with normal likelihoods, but these distributions will vary depending on the particular data generating process [@Hobbs2015].
 
 \subsubsection{An Example: Yellowstone Bison}
 Yellowstone National Park uses an adaptive management program to regulate the size of its bison (*Bison bison*) population, which requires a model that uses historical data to forecast probable outcomes from management decisions.
 Long-range forecasts of bison abundance, those greater than five years, suffer from large uncertainty; to the point where the forecasts cover almost every possible outcome [@Hobbs2015EcolMon].
 Forecast uncertainty will always increase with time, but the rate of increase can be reduced if we can target specific sources of uncertainty.
-Do we need to better estimate initial conditions?
-Or, is effort better spent developing a better model of population growth?
-We can answer these questions by partitioning forecast uncertainty.
 
 \begin{wrapfigure}[23]{r}{0.45\textwidth}
   \centering
@@ -195,18 +209,15 @@ We can answer these questions by partitioning forecast uncertainty.
   \caption{An example state space model fit and forecast (A) and example of forecast error partitioning (B). In (A), points are observed counts and errorbars show the observed standard deviation; solid line is the median of the posterior distribution of the number of bison in Yellowstone and shaded area shows the 0.025 and 0.975 quantiles from the posterior distribution. Within-sample estimates are constrained by data, whereas the forecasts (past 2010) are not. Panel (B) shows the relative contribution of each source of forecast error over time.}
 \end{wrapfigure}
 
-We used annual counts of the Yellowston bison from 1975 to 2010 to fit a population growth model using a state space approach.
-Proper distributions were used for the data and likelihood models to account for the data being greater than 0 and integers.
+We used annual counts of the Yellowston bison from 1975 to 2010 to fit a population growth model using a state-space approach (Equations 3-5).
 After fitting the model, we made annual forecasts for 10 years into the future with all uncertainty propagated (Fig. 1A).
-We made those same forecasts with (i) just initial condition uncertainty, (ii) initial condition and parameter uncertainty, and (iii) initial condition, parameter, and process uncertainty.
+We made those same forecasts with (*i*) just initial condition uncertainty, (*ii*) initial condition and parameter uncertainty, and (*iii*) initial condition, parameter, and process uncertainty.
 This set of forecasts allows us to partition the relative variance of different sources, taking a numerical approach that is analagous to analytical approach shown in Equation 2.
 
 For our forecasts of Yellowstone bison abundance, process error dominates forecast uncertainty at all horizons (Fig. 1B).
 Parameter error is relatively constant throughout the forecast horizons.
 Initial condition uncertainty decays very quickly, indicating strong internal population regulation and the lack of chaotic dynamics, which is consistent with our **Hypothesis H1**.
-Our analysis suggests that the forecast is limited by the process model.
-We could improve the process model by including external climate covariates, which we plan to do as part of this proposal.
-Doing so will also allow us to determine the relative contribution of driver error to forecast uncertainty through time.
+The next step is to compare Fig. 1B to similar results from a fast-growing population, as planned for this proposal.
 
 \section{Participants}
 We have assembled a diverse working group, with gender and career stage diversity.
