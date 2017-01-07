@@ -48,7 +48,7 @@ urlcolor: black
  \item[\textcolor{mycol}{Mevin Hooten}] (Mevin.Hooten@colostate.edu) \\ United States Geological Survey \\ Colorado State University \\ Fort Collins, CO 80523
  \item[\textcolor{mycol}{Peter Adler}] (peter.adler@usu.edu) \\ Utah State University \\ 5230 Old Main Hill, Logan, UT 84332
 \end{description}
-\item[Project Summary:] Forecasting the impacts of global climate change is a major challenge facing ecologists and land managers in the 21\textsuperscript{st} century. For plant populations, the challenge lies in adequately representing internal population dynamics and external environmental forcing. Traditionally, plant population modelers have relied on demographic data that are difficult to collect, but time series of plant percent cover are an untapped resource for population modeling and forecasting. We propose to convene a diverse group of ecologists with expertise in plant and animal population monitoring and modeling to build dynamic forecasting models.
+\item[Project Summary:] Forecasting the impacts of global environmental change is a major challenge facing ecologists and land managers in the 21\textsuperscript{st} century. More here...
 \item[Proposed Start and End Dates:] October 2017 to September 2019, with two 4-day meetings at the Powell Center
 \item[Proposed Data Release Date:] September 2019
 \item[Total Requested Budget:] \$XX0,000
@@ -115,11 +115,11 @@ The premise of this proposal is that ecological characteristics of organisms (e.
 Specifically, we pose three hypotheses:
 \begin{description}
 
-\item[H1.] \textbf{The contribution of initial conditions error to forecast uncertainty is greater for fast growing populations than for slow growing populations.} Fast growing populations are more likely to exhibit chaotic or near-chaotic dynamics, which inflates forecast error due to initial conditions uncertainty. We will compare forecast partitions for \emph{Bison bison} (slow growing population) and \emph{Dipodomys} spp. (fast growing populations) to test this hypothesis.
+\item[H1.] \textbf{The contribution of initial conditions error to forecast uncertainty is greater for fast growing populations than for slow growing populations.} Fast growing populations are more likely to exhibit chaotic or near-chaotic dynamics, which inflates forecast error due to initial conditions uncertainty. To test this hypothesis we will partition forecasts and regress the proportion of uncertainty attributable to initial conditions against estimated population growth rates.
 
 \item[H2.] \textbf{The contribution of driver error to forecast uncertainty is greater for species that ``predict'' than for species that ``bet-hedge'' against environmental conditions.} In variable environments, plants have developed two main strategies for maintaining fitness despite changing conditions: (i) bet-hedging, where germination is low but constant, and (ii) predictive germination, where germination is cued by the environment. Bet-hedgers should be insensitive to environmental drivers, so their forecast uncertainties should not be driven by driver error. We will compare forecast partitions for winter annual plants that span a spectrum from bet-hedgers to predictors to test this hypothesis.
 
-\item[H3.] \textbf{The contribution of process error to forecast uncertainty increases with the number of trophic links.} We are using population models, which ignore trophic interactions. Therefore, if trophic interactions are important and/or plentiful, our models will poorly represent the process. We will compare forecast partitions for all data sets to test this hypothesis.
+\item[H3.] \textbf{The contribution of process error to forecast uncertainty increases with the number of ``specialist'' trophic links.} We are using population models, which ignore trophic interactions. Therefore, if trophic interactions are important and/or plentiful, our models will poorly represent the process. We will compare forecast partitions for all data sets to test this hypothesis.
 
 \end{description}
 
@@ -148,12 +148,12 @@ These criteria will include, but are not limited to, cut-offs for length of time
 Our goal is to assemble a database equally represented by plant and animal species.
 
 \subsubsection{Data Sources and Formatting}
-We have already identified six publicly-available time series of plant and animal abundance, some of which contain data on multiple species (Table 1).
+We have already identified nine publicly-available time series of plant and animal abundance, some of which contain data on multiple species (Table 1).
 The working group will identify the best data sets from this preliminary list and we will add more as feasible (depending on work load and quality of the data sets).
 All abundance data sets will be combined into a single database that can be queried using standard SQL software (e.g., SQLite).
 The abundance data will be linked to a second database of climate or climate-related (e.g., snow depth) covariates.
 The working group will identify which studies have associated climate data, and for the remainder we will extract climate data from gridded data products (e.g., PRISM).
-We will work with study area experts, some of whom will be in the working group, to decide on appropriate climate covariates for each population time series.
+We will work with study area experts, many of whom will be in the working group, to decide on appropriate climate covariates for each population time series.
 This is a preliminary data processing workflow, and we anticipate working closely with Powell Center experts to synthesize our data sets into a single data base.
 
 
@@ -179,8 +179,17 @@ Table: Publicly-available abundance time series for plants and animals. Animal a
 
 \normalsize
 
+\newpage{}
+
 \subsection{Analysis}
 \subsubsection{Dynamic Forecasting Models}
+
+\begin{wrapfigure}[30]{r}{0.45\textwidth}
+  \centering
+     \includegraphics[height=4in]{../figures/bison_combined.png}
+  \caption{An example state space model fit and forecast (A) and example of forecast error partitioning (B). In (A), points are observed counts and errorbars show the observed standard deviation; solid line is the median of the posterior distribution of the number of bison in Yellowstone and shaded area shows the 0.025 and 0.975 quantiles from the posterior distribution. Within-sample estimates are constrained by data, whereas the forecasts (past 2010) are not. Panel (B) shows the relative contribution of each source of forecast error over time.}
+\end{wrapfigure}
+
 With our assmebled time series, we will be in the position to fit dynamic statistical models for each represented species.
 The particular details of each model may vary, but our general approach will be to fit Bayesian hierarchical state-space models.
 State-space models are well-suited for ecological forecasting because they inherently incorporate and propogate the sources of uncertainty we seek to partition: process error, observation error, and parameter error.
@@ -203,12 +212,6 @@ Yellowstone National Park uses an adaptive management program to regulate the si
 Long-range forecasts of bison abundance, those greater than five years, suffer from large uncertainty; to the point where the forecasts cover almost every possible outcome [@Hobbs2015EcolMon].
 Forecast uncertainty will always increase with time, but the rate of increase can be reduced if we can target specific sources of uncertainty.
 
-\begin{wrapfigure}[23]{r}{0.45\textwidth}
-  \centering
-     \includegraphics[height=4in]{../figures/bison_combined.png}
-  \caption{An example state space model fit and forecast (A) and example of forecast error partitioning (B). In (A), points are observed counts and errorbars show the observed standard deviation; solid line is the median of the posterior distribution of the number of bison in Yellowstone and shaded area shows the 0.025 and 0.975 quantiles from the posterior distribution. Within-sample estimates are constrained by data, whereas the forecasts (past 2010) are not. Panel (B) shows the relative contribution of each source of forecast error over time.}
-\end{wrapfigure}
-
 We used annual counts of the Yellowston bison from 1975 to 2010 to fit a population growth model using a state-space approach (Equations 3-5).
 After fitting the model, we made annual forecasts for 10 years into the future with all uncertainty propagated (Fig. 1A).
 We made those same forecasts with (*i*) just initial condition uncertainty, (*ii*) initial condition and parameter uncertainty, and (*iii*) initial condition, parameter, and process uncertainty.
@@ -220,11 +223,9 @@ Initial condition uncertainty decays very quickly, indicating strong internal po
 The next step is to compare Fig. 1B to similar results from a fast-growing population, as planned for this proposal.
 
 \section{Participants}
-We have assembled a diverse working group, with gender and career stage diversity.
-We will also advertise two travel awards for participation in our working group: one for a postdoc to participate and one for a graduate student to participate.
-The travel awards will be advertised on ESA's SEEDS\footnote{http://esa.org/seeds/} and Inclusive Ecology\footnote{http://www.esa.org/inclusive-ecology/} webpages to ensure we receive applications from underrepresented minorities.
-
-
+We have assembled a diverse working group, with gender and career stage diversity (Table 2).
+Of the 10 listed participants, four are women and three are early career scientists.
+The proposed Powell Center Fellow is Andrew Tredennick.
 
 \footnotesize
 
@@ -232,33 +233,36 @@ The travel awards will be advertised on ESA's SEEDS\footnote{http://esa.org/seed
 | Name                        | Affiliation                 | Expertise                       | Associated Dataset     |
 +=============================+=============================+=================================+========================+
 |Andrew Tredennick*$^{1,2,3}$ | Utah State University\      | Data management/synthesis,\     |  n/a                   |
-|                             | \phantom{}                  | population forecasting          |                        |
+|                             |                             | population forecasting          |                        |
 +-----------------------------+-----------------------------+---------------------------------+------------------------+
-| Mevin Hooten*               | U.S. Geological Survey &\   | hierarchial Bayesian models,\   |   Sandhill crane       |
-|                             | Colorado State University\  | statistical forecasting         |                        |
+| Mevin Hooten*               | U.S. Geological Survey\     | Bayesian modeling,\             |   Sandhill crane       |
+|                             |                             | statistical forecasting         |                        |
 +-----------------------------+-----------------------------+---------------------------------+------------------------+
 | Peter Adler*                | Utah State University\      | population ecology/modeling,\   |   Idaho sagebrush      |
-|                             | \phantom{}                  | data synthesis                  |                        |
+|                             |                             | data synthesis                  |                        |
++-----------------------------+-----------------------------+---------------------------------+------------------------+
+| Lauren Buckley              | University of Washington\   | ecological forecasting\         |   *Anolis* spp.        |
+|                             |                             | climate change                  |                        |
++-----------------------------+-----------------------------+---------------------------------+------------------------+
+| Michael Dietze              |  Boston University\         | ecological forecasting,\        |   n/a                  |
+|                             |                             | partitioning uncertainty        |                        |
++-----------------------------+-----------------------------+---------------------------------+------------------------+
+| Emily Farrer                | Tulane University\          | population modeling,\           |   Niwot plants         |
+|                             |                             | Bayesian analysis               |                        |
 +-----------------------------+-----------------------------+---------------------------------+------------------------+
 | Jennifer Gremer             | University of California,\  | plant population modeling\      |   Winter annuals       |
-|                             | Davis\                      | data management                 |                        |
+|                             | Davis                       | data management                 |                        |
 +-----------------------------+-----------------------------+---------------------------------+------------------------+
-| Michael Dietze              |  Boston University\         | ecological forecasting,\         |   n/a                  |
-|                             | \phantom{}                  | partitioning uncertainty        |                        |
+| Janneke HillRisLambers      | University of Washington    | plant population modeling,\     |   CA annual plants     |
+|                             |                             | climate change                  |                        |
 +-----------------------------+-----------------------------+---------------------------------+------------------------+
 | N. Thompson Hobbs           | Colorado State University\  | population ecology,\            |   Yellowstone bison    |
-|                             | \phantom{}                  | state space models              |                        |
-+-----------------------------+-----------------------------+---------------------------------+------------------------+
-| Emily Farrer                | Tulan University\           | population modeling,\           |   Niwot plants         |
-|                             | \phantom{}                  | Bayesian analysis               |                        |
+|                             |                             | state space models              |                        |
 +-----------------------------+-----------------------------+---------------------------------+------------------------+
 | Ethan White                 | University of Florida\      | ecological forecasting,\        |   BBS \& Portal Data   |
-|                             | \phantom{}                  | data synthesis                  |                        |
+|                             |                             | data synthesis                  |                        |
 +-----------------------------+-----------------------------+---------------------------------+------------------------+
-| Graduate Student            | \phantom{}\                 | \phantom{}\                     |   n/a                  |
-+-----------------------------+-----------------------------+---------------------------------+------------------------+
-| Postdoctoral Scholar        | \phantom{}                  | \phantom{}                      |   n/a                  |
-+-----------------------------+-----------------------------+---------------------------------+------------------------+
+
 
 Table: List of participants.
 
@@ -281,11 +285,19 @@ $^3$Party responsible for adherence to Powell Center Data and Information Policy
 \item[February to December 2018] Bi-monthly PI Skype meetings. Continue and finalize data set aquisition (including climate data) and aggregate into single database for analysis teams. Analysis teams, with the PC Fellow, identify appropriate climate drivers for their system and begin fitting state-space models. PC Fellow writes generalizable \texttt{R} functions for analysis teams to use for forecast partitioning. PC Fellow will have at least one Skype meeting with each analysis team during this period. Write first drafts of manuscripts.
 \item[January 2019] \textit{Second meeting for four days at Powell Center}: Analysis teams present results for feedback from the working group. Finalize data base and identify any outstanding issues. Evaluate manuscript drafts and form writing teams. Create a \textsc{GitHub} repository for individual forecasts.
 \item[February to June 2019] Finalize data base and forecast repository. Finalize all forecasts and forecast partitions. Continue writing manuscripts. PC Fellow will have at least one Skype meeting with each analysis team during this period.
-\item[July to September 2019] Complete manuscripts and submit for publication. Release database and forecast repository to Powell Center for permanent archiving. Write a blog post for Dynamic Ecology\footnote{http://dynamicecology.wordpress.com/} on the limits to ecological forecasting, introduce to database and forecast repositry, and pose a forecasting challenge.
+\item[July to September 2019] Complete manuscripts and submit for publication. Release database and forecast repository to Powell Center for permanent archiving. Write a blog post for Dynamic Ecology\footnote{http://dynamicecology.wordpress.com/} on the limits to ecological forecasting, introduce to database and forecast repository, and pose a forecasting challenge.
 
 \end{description}
 
 \section{Anticipated Results and Benefits}
+The greatest benefit of this project will be the conceptual advance of linking ecological theory to sources of forecast uncertainty.
+We anticipate our research associated with this project will catalyze a new area of research on ecological forecasting.
+The assembled data base of plant and animal abundance time series will be an invaluable resource for teaching and research, and the repository of population forecasts will provide new opportunities to validate, and improve, forecasts.
+We expect to produce at least three publications:
+
+1. A synthesis paper testing our hypotheses using all the data sets aimed at *PNAS* or *Ecology Letters*.
+2. A data paper for *Ecology* or *Scientific Data* describing the assembled data base and forecast repository.
+3. Several in-depth papers on forecasts of specific populations aimed at top-tier applied journals such as *Ecological Applications* and *Journal of Applied Ecology*.
 
 
 # References
