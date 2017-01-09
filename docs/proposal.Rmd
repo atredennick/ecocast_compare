@@ -199,10 +199,10 @@ A typical state-space model takes the form:
 \begin{align}
 y_t &\sim \text{Normal}(z_t, \sigma_{obs.}) \\
 z_t &\sim \text{Normal}(\mu_t, \sigma_{proc.}) \\
-\mu_t &= \alpha + \beta_1 z_{t-1} + \beta_2 x_{t-1},
+\mu_t &= f(\boldsymbol{\theta_p},z_{t-1},\bold{x}),
 \end{align}
 \vspace{-2em}
-where $y_t$ is the observed state at time *t*, $z_t$ is the latent state at time *t*, $mu_t$ is the determinstic prediction of the state at time *t* given the regression parameters $\alpha$, $\beta_1$, and $\beta_2$, and $x_{t-1}$ is a climate covariate at time *t-1*.
+where $y_t$ is the observed state at time *t*, $z_t$ is the latent state at time *t*, $\mu_t$ is the determinstic prediction of the state at time *t* given estimated parameters ($\boldsymbol{\theta_p}$), the latent state *z* at time t-1, and **x** is a vector climate covariates.
 The two error terms represent observation error ($\sigma_{obs.}$) and process error ($\sigma_{obs.}$).
 The model is *dynamic* because the future state ($z_t$) depends on the previous state ($z_{t-1}$).
 For clarity we show the data and process models (Eqs. 3 and 4, respectively) with normal likelihoods, but these distributions will vary depending on the particular data generating process [@Hobbs2015].
@@ -244,22 +244,22 @@ The proposed Powell Center Fellow is Andrew Tredennick.
 | Lauren Buckley              | University of Washington\   | ecological forecasting\         |   *Anolis* spp.        |
 |                             |                             | climate change                  |                        |
 +-----------------------------+-----------------------------+---------------------------------+------------------------+
-| Michael Dietze              |  Boston University\         | ecological forecasting,\        |   n/a                  |
+| Michael Dietze*             |  Boston University\         | ecological forecasting,\        |   n/a                  |
 |                             |                             | partitioning uncertainty        |                        |
 +-----------------------------+-----------------------------+---------------------------------+------------------------+
-| Emily Farrer                | Tulane University\          | population modeling,\           |   Niwot plants         |
+| Emily Farrer*               | Tulane University\          | population modeling,\           |   Niwot plants         |
 |                             |                             | Bayesian analysis               |                        |
 +-----------------------------+-----------------------------+---------------------------------+------------------------+
-| Jennifer Gremer             | University of California,\  | plant population modeling\      |   Winter annuals       |
+| Jennifer Gremer*            | University of California,\  | plant population modeling\      |   Winter annuals       |
 |                             | Davis                       | data management                 |                        |
 +-----------------------------+-----------------------------+---------------------------------+------------------------+
-| Janneke HillRisLambers      | University of Washington    | plant population modeling,\     |   CA annual plants     |
+| Janneke HillRisLambers*     | University of Washington    | plant population modeling,\     |   CA annual plants     |
 |                             |                             | climate change                  |                        |
 +-----------------------------+-----------------------------+---------------------------------+------------------------+
-| N. Thompson Hobbs           | Colorado State University\  | population ecology,\            |   Yellowstone bison    |
+| N. Thompson Hobbs*          | Colorado State University\  | population ecology,\            |   Yellowstone bison    |
 |                             |                             | state space models              |                        |
 +-----------------------------+-----------------------------+---------------------------------+------------------------+
-| Ethan White                 | University of Florida\      | ecological forecasting,\        |   BBS \& Portal Data   |
+| Ethan White*                | University of Florida\      | ecological forecasting,\        |   BBS \& Portal Data   |
 |                             |                             | data synthesis                  |                        |
 +-----------------------------+-----------------------------+---------------------------------+------------------------+
 
