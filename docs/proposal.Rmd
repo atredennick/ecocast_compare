@@ -163,18 +163,19 @@ This is a preliminary data processing workflow, and we anticipate working closel
 | ---- | --------------------- | ------------- |  --------------- |
 | Animal | *Bison bison* (American Bison) | 35 |  Hobbs et al. (2015) |
 | Animal | *Grus canadensis* (Sandhill Crane) | 42 |  Gerber et al. (2015) |
-| Animal | Several (Breeding Bird Survey)* | 47 |  http://www.pwrc.usgs.gov/bbs/ |
+| Animal | Breeding birds* | 47 |  http://www.pwrc.usgs.gov/bbs/ |
 | Animal | *Dipodomys* spp. (Kangaroo rats)* | 39 | Ernest et al. (2015) |
+| Animal | Grasshopper spp.* | 10 (with weekly census) | http://ghopclimate.colorado.edu |
 | Plant | *Artemisia tripartita* (Threetip Sagebrush) | 22 |  Zachmann et al. (2010) |
 | Plant | *Eriastrum diffusum* (Miniature Woollystar)* | 14 | Ernest et al. (2015) |
 | Plant | *Artemisia* spp. (Sagebrush spp.) | 27 | Homer et al. (2013) |
-| Plant | *Artemisia scopulorum* (Alpine Sagewort)* | 11 | http://niwot.colorado.edu/ |
-| Plant | Winter annuals (Desert Lab LTREB) | 30 | Gremer and Venable (2014) |
+| Plant | Alpine tundra plants* | 11 | http://niwot.colorado.edu/ |
+| Plant | Winter annuals (Desert Lab LTREB)* | 30 | Gremer and Venable (2014) |
 
-Table: Publicly-available abundance time series for plants and animals. Animal abundance is the number of individuals in a given area. Plant abundance is percent cover or biomass.
+Table: Publicly-available abundance time series for plants and animals.
 
 \vspace{-2em}
-*These datasets contain observations for many species, not just the one listed as an example.
+*These datasets contain observations for many species.
 
 
 \normalsize
@@ -241,7 +242,7 @@ The proposed Powell Center Fellow is Andrew Tredennick.
 | Peter Adler*                | Utah State University\      | population ecology/modeling,\   |   Idaho sagebrush      |
 |                             |                             | data synthesis                  |                        |
 +-----------------------------+-----------------------------+---------------------------------+------------------------+
-| Lauren Buckley              | University of Washington\   | ecological forecasting\         |   *Anolis* spp.        |
+| Lauren Buckley*             | University of Washington\   | ecological forecasting\         |   Grasshopper spp.     |
 |                             |                             | climate change                  |                        |
 +-----------------------------+-----------------------------+---------------------------------+------------------------+
 | Michael Dietze*             |  Boston University\         | ecological forecasting,\        |   n/a                  |
@@ -301,4 +302,3 @@ We expect to produce at least three publications:
 
 
 # References
-\footnotesize{}
