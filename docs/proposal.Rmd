@@ -1,5 +1,7 @@
 ---
 bibliography: ~/Dropbox/Bibliography/ecocast.bib
+nocite: | 
+  @DelMoral2010 @Gremer2014
 csl: components/ecology.csl
 fontsize: 12pt
 geometry: margin=1in
@@ -120,7 +122,7 @@ Specifically, we pose three hypotheses motivated by recent reviews of ecological
 
 \item[H1.] \textbf{The contribution of initial conditions error to forecast uncertainty is greater for fast growing populations than for slow growing populations.} Fast growing populations are more likely to exhibit chaotic or near-chaotic dynamics, which inflate forecast error due to initial conditions uncertainty. To test this hypothesis we will partition forecasts and regress the proportion of uncertainty attributable to initial conditions against estimated intrinsic population growth rates.
 
-\item[H2.] \textbf{The contribution of driver error to forecast uncertainty is greater for species that ``predict'' than for species that ``bet-hedge'' against environmental conditions.} In variable environments, annual plants have developed two main strategies for maintaining fitness despite changing conditions: (i) bet-hedging, where germination is low but constant, and (ii) predictive germination, where germination rates, cued by the environment, vary substantially from year to year. Bet-hedgers should be insensitive to environmental drivers, so their forecast uncertainties should not be driven by driver error. We will compare forecast partitions for winter annual plants that span a spectrum from bet-hedgers to predictors [@Gremer2014] to test this hypothesis. We also anticipate applying this approach to our other focal datasets by quantifying variation of annual vital rates to determine where species lie on the bet-hedging spectrum.
+\item[H2.] \textbf{The contribution of driver error to forecast uncertainty is greater for species that ``predict'' than for species that ``bet-hedge'' against environmental conditions.} In variable environments, annual plants have developed two main strategies for maintaining fitness despite changing conditions: (i) bet-hedging, where germination is low but constant, and (ii) predictive germination, where germination rates, cued by the environment, vary substantially from year to year. Bet-hedgers should be insensitive to environmental drivers, so their forecast uncertainties should not be driven by driver error. We will compare forecast partitions for winter annual plants that span a spectrum from bet-hedgers to predictors (Gremer et al. 2014) to test this hypothesis. We also anticipate applying this approach to our other focal datasets by quantifying variation of annual vital rates to determine where species lie on the bet-hedging spectrum.
 
 \item[H3.] \textbf{The contribution of process error to forecast uncertainty increases with the number of ``specialist'' trophic links.} We are using single-species population models in which trophic interactions are implicit, not explicit. Therefore, if trophic interactions are important our models will poorly represent the process. We will compare forecast partitions for all data sets to test this hypothesis.
 
@@ -172,6 +174,7 @@ This is a preliminary data processing workflow, and we anticipate working closel
 | Plant | *Artemisia* spp. (Sagebrush spp.) | 27 | Homer et al. (2013) |
 | Plant | Alpine tundra plants* | 11 | http://niwot.colorado.edu/ |
 | Plant | Winter annuals (Desert Lab LTREB)* | 30 | Gremer and Venable (2014) |
+| Plant | Mt. St. Helens plants* | 30 | del Moral (2010) | 
 
 Table: Publicly-available abundance time series for plants and animals.
 
@@ -256,7 +259,7 @@ The proposed Powell Center Fellow is Andrew Tredennick.
 | Jennifer Gremer*            | University of California,\  | plant population modeling\      |   Winter annuals       |
 |                             | Davis                       | data management                 |                        |
 +-----------------------------+-----------------------------+---------------------------------+------------------------+
-| Janneke HillRisLambers*     | University of Washington    | plant population modeling,\     |   CA annual plants     |
+| Janneke HillRisLambers*     | University of Washington    | plant population modeling,\     |  Mt. St. Helens plants |
 |                             |                             | climate change                  |                        |
 +-----------------------------+-----------------------------+---------------------------------+------------------------+
 | N. Thompson Hobbs*$^\dagger$| Colorado State University\  | population ecology,\            |   Yellowstone bison    |
@@ -307,6 +310,7 @@ In addition, we expect to produce several publications, including:
 1. A synthesis paper testing our hypotheses using all the data sets aimed at *PNAS* or *Ecology Letters*.
 2. A forum-style paper on the limits to ecological forecasting, how to overcome them, and the usefulness of even uncertain forecasts for ecosystem management for *Ecological Applications* or *Frontiers in Ecology and the Environment*.
 3. Several in-depth papers on forecasts of specific populations aimed at top-tier applied journals such as *Ecological Applications* and *Journal of Applied Ecology*.
+
 
 
 # References
