@@ -225,7 +225,7 @@ The next step is to compare Fig. 1B to similar results from a fast-growing popul
 
 \section{Participants}
 We have assembled a diverse working group, with gender and career stage diversity (Table 2).
-Of the 10 listed participants, four are women and three are early career scientists.
+Of the 12 listed participants, four are women and five are early career scientists.
 The proposed Powell Center Fellow is Andrew Tredennick.
 
 \footnotesize
@@ -236,7 +236,7 @@ The proposed Powell Center Fellow is Andrew Tredennick.
 |Andrew Tredennick*$^{1,2,3}$ | Utah State University\      | Data management/synthesis,\     |  n/a                   |
 |                             |                             | population forecasting          |                        |
 +-----------------------------+-----------------------------+---------------------------------+------------------------+
-| Mevin Hooten*               | U.S. Geological Survey\     | Bayesian modeling,\             |   Sandhill crane       |
+| Mevin Hooten*$^\dagger$     | U.S. Geological Survey\     | Bayesian modeling,\             |   Sea otter            |
 |                             |                             | statistical forecasting         |                        |
 +-----------------------------+-----------------------------+---------------------------------+------------------------+
 | Peter Adler*                | Utah State University\      | population ecology/modeling,\   |   Idaho sagebrush      |
@@ -248,6 +248,9 @@ The proposed Powell Center Fellow is Andrew Tredennick.
 | Michael Dietze*             |  Boston University\         | ecological forecasting,\        |   n/a                  |
 |                             |                             | partitioning uncertainty        |                        |
 +-----------------------------+-----------------------------+---------------------------------+------------------------+
+| George Esslinger*           | U.S. Geological Survey\     | population modeling,\           |   Sea otter            |
+|                             | Alaska Science Center       | GIS analysis                    |                        |
++-----------------------------+-----------------------------+---------------------------------+------------------------+
 | Emily Farrer*               | Tulane University\          | population modeling,\           |   Niwot plants         |
 |                             |                             | Bayesian analysis               |                        |
 +-----------------------------+-----------------------------+---------------------------------+------------------------+
@@ -257,18 +260,22 @@ The proposed Powell Center Fellow is Andrew Tredennick.
 | Janneke HillRisLambers*     | University of Washington    | plant population modeling,\     |   CA annual plants     |
 |                             |                             | climate change                  |                        |
 +-----------------------------+-----------------------------+---------------------------------+------------------------+
-| N. Thompson Hobbs*          | Colorado State University\  | population ecology,\            |   Yellowstone bison    |
+| N. Thompson Hobbs*$^\dagger$| Colorado State University\  | population ecology,\            |   Yellowstone bison    |
 |                             |                             | state space models              |                        |
 +-----------------------------+-----------------------------+---------------------------------+------------------------+
 | Ethan White*                | University of Florida\      | ecological forecasting,\        |   BBS \& Portal Data   |
 |                             |                             | data synthesis                  |                        |
++-----------------------------+-----------------------------+---------------------------------+------------------------+
+| Perry Williams*$^\dagger$   | Colorado State University\  | spatiotemporal modeling,\       |   Sea otter            |
+|                             |                             | population forecasts            |                        |
 +-----------------------------+-----------------------------+---------------------------------+------------------------+
 
 
 Table: List of participants.
 
 \vspace{-2em}
-*Confirmed participant   
+*Confirmed participant  
+$^\dagger$Local (Ft. Collins) participant  
 $^1$Powell Center Fellow  
 $^2$Technical liaison to Powell Center computing staff  
 $^3$Party responsible for adherence to Powell Center Data and Information Policy
