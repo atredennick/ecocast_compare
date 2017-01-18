@@ -51,7 +51,7 @@ urlcolor: black
 \item[Project Summary:] Forecasting the impacts of global environmental change is a major challenge facing ecologists and land managers in the 21\textsuperscript{st} century. More here...
 \item[Proposed Start and End Dates:] October 2017 to September 2019, with two 4-day meetings at the Powell Center
 \item[Proposed Data Release Date:] September 2019
-\item[Total Requested Budget:] \$130,801 (\$23,565 in year 1; \$107,236 in year 2)
+\item[Total Requested Budget:] \$130,801 (Year 1 \$23,565; Year 2 \$107,236)
 \item[Is this a resubmission?] No
 \item[Conflicts of Interest with Reviewers:] None
 \item[Keywords:] climate and land use change; ecosystems
