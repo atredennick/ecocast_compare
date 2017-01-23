@@ -152,7 +152,7 @@ The assembled database will contain yearly abundance estimates coupled with envi
 However, we will also contribute our assembled database to other synthetic databases where appropriate.
 
 \subsubsection{Data Sources and Formatting}
-We have already identified nine publicly-available time series of plant and animal abundance, some of which contain data on multiple species (Table 1).
+We have already identified eleven publicly-available time series of plant and animal abundance, some of which contain data on multiple species (Table 1).
 The working group will identify the best data sets from this preliminary list and we will add more as feasible (depending on work load and quality of the data sets).
 All abundance data sets will be combined into a single database that can be queried using standard SQL software (e.g., SQLite).
 The abundance data will be linked to a second database of climate or climate-related (e.g., snow depth) covariates.
