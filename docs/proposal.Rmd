@@ -43,7 +43,7 @@ urlcolor: black
 \begin{description}
 \item[Date:] \today
 \item[Descriptive Title:] Synthesizing time series of plant and animal populations to understand the limits to ecological forecasts
-\item[Short Title:] Limits to Ecological Forecasting
+\item[Short Title:] Ecological Forecasting
 \item[PI Contact Information:] ~\\
 \vspace{-1.5em}
 \begin{description}
@@ -232,6 +232,7 @@ The next step in testing **H1** is to compare Fig. 1B to results from fast-growi
 We have assembled a diverse working group, with gender and career stage diversity (Table 2).
 Of the 12 listed participants, four are women and five are early career scientists.
 The proposed Powell Center Fellow is Andrew Tredennick.
+PI Tredennick has expertise in Bayesian hierarchical modeling, data management, and forecasting.
 
 \footnotesize
 
