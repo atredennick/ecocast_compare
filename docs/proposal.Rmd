@@ -84,7 +84,7 @@ The success of meteorological forecasting tells us that basic research on the ca
 In ecology, a powerful approach is to combine our detailed knowledge of organisms and ecosystem processes with emerging knowledge on forecast uncertainty [@Petchey2015]. 
 
 @Dietze2017 proposed a first-principles approach to partitioning forecast uncertainty.
-Consider a dynamical model designed to predict some state *y* in the future ($y_{t+1}$) based on the current state ($y_{t+1}$), an environmental driver(s) ($x$), parameters ($\theta$), and process error ($\epsilon$).
+Consider a dynamical model designed to predict some state *y* in the future ($y_{t+1}$) based on the current state ($y_{t}$), an environmental driver(s) ($x$), parameters ($\theta$), and process error ($\epsilon$).
 We can then write a general form of the model as:
 \vspace{-2em}
 \begin{align}
@@ -191,7 +191,7 @@ Table: Publicly-available abundance time series for plants and animals.
 \subsubsection{Dynamic Forecasting Models}
 With our assembled time series, we will be in the position to fit dynamic statistical models for each represented species.
 The particular details of each model may vary, but our general approach will be to fit Bayesian hierarchical state-space models.
-State-space models are well-suited for ecological forecasting because they inherently incorporate and propogate the sources of uncertainty we seek to partition: process unceratinty, observation uncertainty, and parameter uncertainty.
+State-space models are well-suited for ecological forecasting because they inherently incorporate and propogate the sources of uncertainty we seek to partition: process uncertainty, observation uncertainty, and parameter uncertainty.
 State-space models also explicitly acknowledge that our observations are imperfect, meaning that the state we want to estimate (e.g., abundance of elk in Rocky Mountain National Park) is unknowable, or *latent*.
 A typical state-space model takes the form:
 \vspace{-2em}
@@ -201,14 +201,14 @@ z_t &\sim \text{Normal}(\mu_t, \sigma_{proc.}) \\
 \mu_t &= f(\boldsymbol{\theta_p},z_{t-1},\bold{x}),
 \end{align}
 \vspace{-2em}
-where $y_t$ is the observed state at time *t*, $z_t$ is the latent state at time *t*, $\mu_t$ is the determinstic prediction of the state at time *t* given estimated parameters ($\boldsymbol{\theta_p}$) for the specified model function [*f()*], the latent state *z* at time t-1, and **x** is a vector of environmental covariates.
+where $y_t$ is the observed state at time *t*, $z_t$ is the latent state at time *t*, $\mu_t$ is the determinstic prediction of the state at time *t* given estimated parameters ($\boldsymbol{\theta_p}$) for the specified model function [*f()*], the latent state *z* at time *t*-1, and **x** is a vector of environmental covariates.
 The two error terms represent observation error ($\sigma_{obs.}$) and process error ($\sigma_{proc.}$).
 The model is *dynamic* because the future state ($z_t$) depends on the previous state ($z_{t-1}$).
 For simplicity we show the data and process models (Eqs. 3 and 4, respectively) with normal likelihoods, but these distributions will vary depending on the particular data generating process [@Hobbs2015].
 
 \subsubsection{An Example: Yellowstone Bison}
 Yellowstone National Park uses an adaptive management program to regulate the size of its bison (*Bison bison*) population, which requires a model that uses historical data to forecast probable outcomes of management decisions.
-Long-range forecasts of bison abundance, those greater than five years, are so uncertaint that the forecasts cover almost every possible outcome [@Hobbs2015EcolMon].
+Long-range forecasts of bison abundance, those greater than five years, are so uncertain that the forecasts cover almost every possible outcome [@Hobbs2015EcolMon].
 Forecast uncertainty will always increase with time, but the rate of increase can be reduced if we can target specific sources of uncertainty.
 
 \begin{wrapfigure}[30]{r}{0.45\textwidth}
@@ -253,7 +253,7 @@ The proposed Powell Center Fellow is Andrew Tredennick.
 | Michael Dietze*             |  Boston University\         | ecological forecasting,\        |   n/a                  |
 |                             |                             | partitioning uncertainty        |                        |
 +-----------------------------+-----------------------------+---------------------------------+------------------------+
-| George Esslinger*           | U.S. Geological Survey\     | population modeling,\           |   Sea otter            |
+| George Esslinger*           | U.S. Geological Survey\     | population monitoring,\         |   Sea otter            |
 |                             | Alaska Science Center       | GIS analysis                    |                        |
 +-----------------------------+-----------------------------+---------------------------------+------------------------+
 | Emily Farrer*               | Tulane University\          | population modeling,\           |   Niwot plants         |
