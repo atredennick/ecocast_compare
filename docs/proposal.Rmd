@@ -31,6 +31,7 @@ output:
     fig_caption: yes
     keep_tex: no
     number_sections: true
+subparagraph: true
 urlcolor: black
 ---
 <!---
@@ -165,14 +166,14 @@ This is a preliminary data processing workflow, and we anticipate working closel
 \footnotesize
 
 | Taxa | Species (common name) | Length (yrs.) | Citation/Website |
-| ---- | --------------------- | ------------- |  --------------- |
+| ----- | ----------------------------- | ------------------- |  ------------------------- |
 | Animal | *Bison bison* (American Bison) | 35 |  Hobbs et al. (2015) |
 | Animal | *Enhydra lutris* (Sea otter) | 20 |  Williams et al. (2017) |
 | Animal | Breeding birds* | 47 |  http://www.pwrc.usgs.gov/bbs/ |
 | Animal | *Dipodomys* spp. (Kangaroo rats)* | 39 | Ernest et al. (2015) |
 | Animal | Grasshopper spp.* | 10 (with weekly census) | http://ghopclimate.colorado.edu |
 | Plant | Sagebrush steppe perennial plants* | 22 |  Zachmann et al. (2010) |
-| Plant | *Eriastrum diffusum* (Miniature Woollystar)* | 14 | Ernest et al. (2015) |
+| Plant | AZ desert annuals* | 14 | Ernest et al. (2015) |
 | Plant | *Artemisia* spp. (Sagebrush spp.) | 27 | Homer et al. (2013) |
 | Plant | Alpine tundra plants* | 11 | http://niwot.colorado.edu/ |
 | Plant | Winter annuals (Desert Lab LTREB)* | 30 | Gremer and Venable (2014) |
