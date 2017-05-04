@@ -98,24 +98,25 @@
 
 \pagenumbering{roman}
 
+\begin{centering}
+
+\textbf{RCN: \emph{EcoCast RCN}: A Network to Understand the Limits to Ecological Forecasts}
+
+\end{centering}
+
+\vspace{2em}
+
 \begin{description}
-\item[Date:] \today
-\item[Descriptive Title:] Synthesizing time series of plant and animal populations to understand the limits to ecological forecasts
-\item[Short Title:] Ecological Forecasting
-\item[PI Contact Information:] ~\\
-\vspace{-1.5em}
+\item[Project Overview:] The central goal of the \emph{EcoCast RCN} is to understand the limits to ecological forecasts based on core ecological theory. To do so, the network will synthesize time series of plant and animal abundance to test hypotheses about the relationships among the drivers of forecast uncertainty and species' life history. The network will have three in-person meetings to formalize hypotheses, collate available data, design statistical forecasting models, and prepare publications. Work between meetings will be spearheaded by a postdoctoral fellow. The \emph{EcoCast RCN} steering committee consists of leaders in the emerging field of ecological forecasting:
 \begin{description}
- \item[\textcolor{mycol}{Andrew Tredennick}] (atredenn@gmail.com; 970-443-1599) \\ Utah State University \\ 5230 Old Main Hill, Logan, UT 84332
- \item[\textcolor{mycol}{Mevin Hooten}] (Mevin.Hooten@colostate.edu) \\ United States Geological Survey \\ Colorado State University \\ Fort Collins, CO 80523
- \item[\textcolor{mycol}{Peter Adler}] (peter.adler@usu.edu) \\ Utah State University \\ 5230 Old Main Hill, Logan, UT 84332
+\item[Peter Adler,] Utah State University \vspace{-0.5em}
+\item[Andrew Tredennick,] Utah State University \vspace{-0.5em}
+\item[Mevin Hooten,] Colorado State University \& USGS \vspace{-0.5em}
+\item[Michael Dietze,] Boston University \vspace{-0.5em}
+\item[Ethan White,] University of Florida
 \end{description}
-\item[Project Summary:] Forecasting the impacts of global environmental change is a major challenge facing ecologists and land managers in the 21\textsuperscript{st} century. Unfortunately, our knowledge of the limits to ecological forecasts lags behind our deep understanding of ecological systems. Fortunately, emerging theory on partitioning forecast uncertainty provides an opportunity to better understand the limits to ecological forecasts. We propose to convene a diverse working group of quantitative ecologists, each with detailed knowledge of a particular study system, to develop forecasting models of plant and animal populations. As a team, we will partition the forecast uncertainty for each focal population to test fundamental hypotheses about the relationship between particular sources of uncertainty and ecological characteristics. We will develop a forecast repository and a synthetic database of population time series coupled with environmental covariates that will be ideal for teaching and research. We anticipate our work will catalyze a new research area in ecology focused on identifying the boundaries of ecological forecasts based on ecological theory. 
-\item[Proposed Start and End Dates:] October 2017 to September 2019, with two 4-day meetings at the Powell Center
-\item[Proposed Data Release Date:] September 2019
-\item[Total Requested Budget:] \$130,801 (Year 1 \$23,565; Year 2 \$107,236)
-\item[Is this a resubmission?] No
-\item[Conflicts of Interest with Reviewers:] None
-\item[Keywords:] climate and land use change; ecosystems
+\item[Intellectual Merit:] Forecasting the impacts of global environmental change is a major challenge facing ecologists and land managers in the 21\textsuperscript{st} century. Unfortunately, our knowledge of the limits to ecological forecasts lags behind our deep understanding of ecological systems. Fortunately, emerging theory on partitioning forecast uncertainty provides an opportunity to better understand the limits to ecological forecasts. The \emph{EcoCast RCN} will convene a diverse group of quantitative ecologists, each with detailed knowledge of particular study systems, to develop forecasting models of plant and animal populations. Network teams will partition the forecast uncertainty for each focal population to test fundamental hypotheses about the relationship between particular sources of uncertainty and ecological characteristics. Network research will catalyze a new research area in ecology focused on identifying the boundaries of ecological forecasts based on ecological theory. 
+\item[Broader Impacts:] The network will develop a forecast repository and a synthetic database of population time series coupled with environmental covariates that will be ideal for teaching and research.
 \end{description}
 
 \newpage{}
@@ -165,7 +166,7 @@ y_{t+1} = f(y_t, x_t|\theta) + \epsilon,
 
 which states that \(y\) at time \(t+1\) is a function of \(y\) and \(x\)
 at time \(t\) conditional on the model parameters (\(\theta\)) plus
-process error (\(\epsilon\)).
+process error (\(\epsilon\)). Using a Taylor expansion ``delta method'',
 Dietze (2017) showed that forecast variance (\(Var[y_{t+1}]\)) is:
 \vspace{-1em}
 
@@ -187,17 +188,25 @@ factor and the variance of that factor. For example, large sensitivity
 to the covariate \(x\) can be offset if the uncertainty of the covariate
 is low. Knowing the relative size of these uncertainties is important to
 guide future research on ecological processes, data collection schemes,
-and the application of forecasting models to applied questions. 
-Understanding how sources of forecast uncertainty
+and the application of forecasting models to applied questions. For
+example, knowing that a large proportion of forecast uncertainty stems
+from uncertainty in projections of the covariate \emph{x} means that
+excluding the covariate may be the best choice when making forecasts.
+Understanding how, and if, sources of forecast uncertainty
 systematically covary with ecological characteristics will allow us to
-identify the potential limits to forecasts based on ecological theory.
+identify the potential limits to forecasts based on our deep
+understanding of ecological systems.
 
 The goal of this project is to synthesize forecasts of plant and animal
 populations to advance our fundamental knowledge of the limits to
 ecological forecasts. We will convene a diverse group of population
 ecologists to partition forecast uncertainty for several species and
 systematically link sources of uncertainty to characteristics of the
-focal populations (e.g., life history traits).
+focal populations (e.g., life history traits). Along the way, we will
+develop a repository of ecological forecasts and a publicly-available
+database of abundance time series with environmental covariates. The
+database will become a go-to resource for teaching and research on
+ecological forecasting.
 
 \section{Hypotheses}
 
@@ -218,10 +227,9 @@ hypotheses motivated by recent reviews of ecological forecasting
 
 \end{description}
 
-Testing our hypotheses requires applying a standardized analytical approach to
-a synthetic data set representative of many species -- an activity that can only
-be done at the Powell Center as a working group.
-These three hypotheses are just a starting point,
+By testing our hypotheses, we will gain a systematic understanding of
+what sources of uncertainty dominate ecological forecasts for different
+types of populations. These three hypotheses are just a starting point,
 as the working group will generate additional hypotheses.
 
 \section{Proposed Activities}
@@ -240,29 +248,46 @@ statistical population models requires dedicated effort. We therefore
 request funding for a Powell Fellow (PI Tredennick) to lead all aspects
 of our proposed work.
 
-\subsection{Data Synthesis}
-We have identified several potential data
+\subsection{Data Synthesis}\subsubsection{Time Series Selection}
+
+The first goal of this project is to assemble a database of plant and
+animal abundance time series. We have identified several potential data
 sets (Table 1) and we anticipate our working group members (Table 2)
-will be able to identify more based on their professional networks. One of our first tasks as a working group will be to develop
+will be able to identify more based on their professional networks. Our
+forecasting approach requires data sets of sufficient length to fit
+dynamic statistical models that include environmental covariates.
+Therefore, one of our first tasks as a working group will be to develop
 a set of criteria for selecting data. These criteria will include, but
-are not limited to, cut-offs for length of time series, availability of suitable climate and other
+are not limited to, cut-offs for length of time series (probably
+\textasciitilde{}10 years), availability of suitable climate and other
 environmental data, and the number of replicate observations within a
 time period. Our goal is to assemble a database with equal
 representation of plant and animal species.
 
 The assembled database will contain yearly abundance estimates coupled
 with environmental covariates, setting it apart from other population
-time series that do not include potential drivers (e.g., Global
-Population Dynamics Database). 
- All abundance data sets will
+time series that do not include potential drivers (e.g., The Global
+Population Dynamics Database and BioTIME). We will also contribute our
+assembled database to other synthetic databases where appropriate.
+
+\subsubsection{Data Sources and Formatting}
+
+We have already identified eleven publicly-available time series of
+plant and animal abundance, some of which contain data on multiple
+species (Table 1). The working group will identify the best data sets
+from this preliminary list and we will add more as feasible (depending
+on work load and quality of the data sets). All abundance data sets will
 be combined into a single database that can be queried using standard
-SQL software. The abundance data will be linked to a
-second database of environmental
-covariates. We will extract climate
-data as needed from gridded data products (e.g., PRISM). We will work with study
-area experts (Table 2) to decide on
-appropriate climate covariates for each time series. This is
-a preliminary data processing workflow; we will work with Powell Center experts to synthesize our data sets.
+SQL software (e.g., SQLite). The abundance data will be linked to a
+second database of climate or climate-related (e.g., snow depth)
+covariates. The working group will identify which studies have
+associated climate data, and for the remainder we will extract climate
+data from gridded data products (e.g., PRISM). We will work with study
+area experts, many of whom will be in the working group, to decide on
+appropriate climate covariates for each population time series. This is
+a preliminary data processing workflow, and we anticipate working
+closely with Powell Center experts to synthesize our data sets into a
+single database.
 
 \footnotesize
 
@@ -403,14 +428,16 @@ del Moral (2010)\strut
 
 \subsection{Analysis}\subsubsection{Dynamic Forecasting Models}
 
-Using the assembled abundance time series, we will fit
-Bayesian hierarchical state-space models, which are
+With our assembled time series, we will be in the position to fit
+dynamic statistical models for each represented species. The particular
+details of each model may vary, but our general approach will be to fit
+Bayesian hierarchical state-space models. State-space models are
 well-suited for ecological forecasting because they inherently
-incorporate and propagate the sources of uncertainty we seek to
+incorporate and propogate the sources of uncertainty we seek to
 partition: process uncertainty, observation uncertainty, and parameter
 uncertainty. State-space models also explicitly acknowledge that our
 observations are imperfect, meaning that the state we want to estimate
-(e.g., abundance of bison in Yellowstone) is unknowable,
+(e.g., abundance of elk in Rocky Mountain National Park) is unknowable,
 or \emph{latent}. A typical state-space model takes the form:
 \vspace{-2em}
 
@@ -419,12 +446,6 @@ y_t &\sim \text{Normal}(z_t, \sigma_{obs.}) \\
 z_t &\sim \text{Normal}(\mu_t, \sigma_{proc.}) \\
 \mu_t &= f(\boldsymbol{\theta_p},z_{t-1},\bold{x}),
 \end{align}\vspace{-2em}
-
-\begin{wrapfigure}[30]{r}{0.45\textwidth}
-  \centering
-     \includegraphics[height=4in]{../figures/bison_combined.png}
-  \caption{An example state space model fit and forecast (A) and example of forecast uncertainty partitioning (B). In (A), points are observed counts and errorbars show the observed standard deviation; solid line is the median of the posterior distribution of the number of bison in Yellowstone and shaded area shows the 0.025 and 0.975 quantiles from the posterior distribution. Within-sample estimates are constrained by data, whereas the forecasts (past 2010) are not. Panel (B) shows the relative contribution of each source of forecast uncertainty over time.}
-\end{wrapfigure}
 
 where \(y_t\) is the observed state at time \emph{t}, \(z_t\) is the
 latent state at time \emph{t}, \(\mu_t\) is the determinstic prediction
@@ -442,7 +463,22 @@ depending on the particular data generating process (Hobbs \& Hooten
 
 \subsubsection{An Example: Yellowstone Bison}
 
-We used annual counts of the Yellowstone bison (\emph{Bison bison}) from 1975 to 2010 to fit a
+Yellowstone National Park uses an adaptive management program to
+regulate the size of its bison (\emph{Bison bison}) population, which
+requires a model that uses historical data to forecast probable outcomes
+of management decisions. Long-range forecasts of bison abundance, those
+greater than five years, are so uncertain that the forecasts cover
+almost every possible outcome (Hobbs et al. 2015). Forecast uncertainty
+will always increase with time, but the rate of increase can be reduced
+if we can target specific sources of uncertainty.
+
+\begin{wrapfigure}[30]{r}{0.45\textwidth}
+  \centering
+     \includegraphics[height=4in]{../figures/bison_combined.png}
+  \caption{An example state space model fit and forecast (A) and example of forecast uncertainty partitioning (B). In (A), points are observed counts and errorbars show the observed standard deviation; solid line is the median of the posterior distribution of the number of bison in Yellowstone and shaded area shows the 0.025 and 0.975 quantiles from the posterior distribution. Within-sample estimates are constrained by data, whereas the forecasts (past 2010) are not. Panel (B) shows the relative contribution of each source of forecast uncertainty over time.}
+\end{wrapfigure}
+
+We used annual counts of the Yellowston bison from 1975 to 2010 to fit a
 population growth model using a state-space approach (Equations 3-5).
 After fitting the model, we made annual forecasts for 10 years into the
 future with all uncertainty propagated (Fig. 1A). We made those same
@@ -454,7 +490,8 @@ different sources, taking a numerical approach that is analagous to the
 analytical approach shown in Equation 2.
 
 The key result is that process uncertainty dominates forecast
-uncertainty at all horizons (Fig. 1B). Initial condition
+uncertainty at all horizons (Fig. 1B). Parameter uncertainty is
+relatively constant throughout the forecast horizons. Initial condition
 uncertainty decays very quickly, indicating strong internal population
 regulation and the lack of chaotic dynamics, which is consistent with
 our \textbf{Hypothesis H1}. The next step in testing \textbf{H1} is to
@@ -465,7 +502,8 @@ compare Fig. 1B to results from fast-growing populations.
 We have assembled a diverse working group, with gender and career stage
 diversity (Table 2). Of the 12 listed participants, four are women and
 five are early career scientists. The proposed Powell Center Fellow is
-Andrew Tredennick.
+Andrew Tredennick. PI Tredennick has expertise in Bayesian hierarchical
+modeling, data management, and forecasting.
 
 \footnotesize
 
@@ -642,12 +680,12 @@ Information Policy
 
 \section{Time Table of Activities}\begin{description}
 
-\item[October to December 2017] Monthly PI Skype meetings to prepare for first meeting. Begin email exchanges to confirm participants. Write \texttt{R} scripts to download, clean, and aggregate data.
-\item[January 2018] \textit{First meeting at Powell Center}: Identify other appropriate data sets. Decide on model structures for each data set and identify environmental covariates. Form two-person analysis teams for each data set. Go through bison analysis example. Define manuscripts.
-\item[February to December 2018] Bi-monthly PI Skype meetings. Continue and finalize data set acquisition and aggregate into single database for analysis teams. Analysis teams, with the PC Fellow, identify appropriate environmental drivers for their system and begin fitting models. PC Fellow writes generalizable \texttt{R} functions for analysis teams. PC Fellow has Skype meetings with each analysis team as needed to complete analyses. Write first drafts of manuscripts.
-\item[January 2019] \textit{Second meeting at Powell Center}: Analysis teams present results for feedback. Finalize database and identify any outstanding issues. Evaluate manuscript drafts and form writing teams. Create a \textsc{GitHub} repository for forecasts.
+\item[October to December 2017] Monthly PI Skype meetings to prepare for first meeting. Begin email exchanges to confirm participants. Write \texttt{R} scripts to download, clean, and aggregate data in Table 1. Refine YNP bison example for first meeting.
+\item[January 2018] \textit{First meeting for four days at Powell Center}: Identify other appropriate data sets. Decide on model structures for each data set and identify climate data availability. Form two-person analysis teams for each data set. Go through YNP bison analysis example. Define manuscripts.
+\item[February to December 2018] Bi-monthly PI Skype meetings. Continue and finalize data set aquisition (including climate data) and aggregate into single database for analysis teams. Analysis teams, with the PC Fellow, identify appropriate climate drivers for their system and begin fitting state-space models. PC Fellow writes generalizable \texttt{R} functions for analysis teams to use for forecast partitioning. PC Fellow will have Skype meetings with each analysis team (as many as possible to complete analyses). Write first drafts of manuscripts.
+\item[January 2019] \textit{Second meeting for four days at Powell Center}: Analysis teams present results for feedback from the working group. Finalize database and identify any outstanding issues. Evaluate manuscript drafts and form writing teams. Create a \textsc{GitHub} repository for forecasts.
 \item[February to June 2019] Finalize database and forecast repository. Finalize all forecasts and forecast partitions. Continue writing manuscripts. PC Fellow will have at least one Skype meeting with each analysis team during this period.
-\item[July to September 2019] Complete manuscripts and submit for publication. Release database and forecast repository to Powell Center for permanent archiving. In addition to peer-reviewed papers, write a blog post for Dynamic Ecology\footnote{http://dynamicecology.wordpress.com/} on the limits to ecological forecasting to reach an even broader audience.
+\item[July to September 2019] Complete manuscripts and submit for publication. Release database and forecast repository to Powell Center for permanent archiving. In addition to peer-reviewed papers, write a blog post for Dynamic Ecology\footnote{http://dynamicecology.wordpress.com/} on the limits to ecological forecasting to reach an even broader audience. The blog post will introduce the database and forecast repository, and pose a forecasting challenge for non-working group members to apply different methods in an effort to "beat" our forecast skill.
 
 \end{description}
 
@@ -686,7 +724,7 @@ including:
   \emph{Journal of Applied Ecology}.
 \end{enumerate}
 
-\section{Literature Cited}\label{references}
+\section*{References}\label{references}
 \addcontentsline{toc}{section}{References}
 
 \hypertarget{refs}{}

@@ -40,24 +40,25 @@ urlcolor: black
 
 \pagenumbering{roman}
 
+\begin{centering}
+
+\textbf{RCN: \emph{EcoCast RCN}: A Network to Understand the Limits to Ecological Forecasts}
+
+\end{centering}
+
+\vspace{2em}
+
 \begin{description}
-\item[Date:] \today
-\item[Descriptive Title:] Synthesizing time series of plant and animal populations to understand the limits to ecological forecasts
-\item[Short Title:] Ecological Forecasting
-\item[PI Contact Information:] ~\\
-\vspace{-1.5em}
+\item[Project Overview:] The central goal of the \emph{EcoCast RCN} is to understand the limits to ecological forecasts based on core ecological theory. To do so, the network will synthesize time series of plant and animal abundance to test hypotheses about the relationships among the drivers of forecast uncertainty and species' life history. The network will have three in-person meetings to formalize hypotheses, collate available data, design statistical forecasting models, and prepare publications. Work between meetings will be spearheaded by a postdoctoral fellow. The \emph{EcoCast RCN} steering committee consists of leaders in the emerging field of ecological forecasting:
 \begin{description}
- \item[\textcolor{mycol}{Andrew Tredennick}] (atredenn@gmail.com; 970-443-1599) \\ Utah State University \\ 5230 Old Main Hill, Logan, UT 84332
- \item[\textcolor{mycol}{Mevin Hooten}] (Mevin.Hooten@colostate.edu) \\ United States Geological Survey \\ Colorado State University \\ Fort Collins, CO 80523
- \item[\textcolor{mycol}{Peter Adler}] (peter.adler@usu.edu) \\ Utah State University \\ 5230 Old Main Hill, Logan, UT 84332
+\item[Peter Adler,] Utah State University \vspace{-0.5em}
+\item[Andrew Tredennick,] Utah State University \vspace{-0.5em}
+\item[Mevin Hooten,] Colorado State University \& USGS \vspace{-0.5em}
+\item[Michael Dietze,] Boston University \vspace{-0.5em}
+\item[Ethan White,] University of Florida
 \end{description}
-\item[Project Summary:] Forecasting the impacts of global environmental change is a major challenge facing ecologists and land managers in the 21\textsuperscript{st} century. Unfortunately, our knowledge of the limits to ecological forecasts lags behind our deep understanding of ecological systems. Fortunately, emerging theory on partitioning forecast uncertainty provides an opportunity to better understand the limits to ecological forecasts. We propose to convene a diverse working group of quantitative ecologists, each with detailed knowledge of a particular study system, to develop forecasting models of plant and animal populations. As a team, we will partition the forecast uncertainty for each focal population to test fundamental hypotheses about the relationship between particular sources of uncertainty and ecological characteristics. We will develop a forecast repository and a synthetic database of population time series coupled with environmental covariates that will be ideal for teaching and research. We anticipate our work will catalyze a new research area in ecology focused on identifying the boundaries of ecological forecasts based on ecological theory. 
-\item[Proposed Start and End Dates:] October 2017 to September 2019, with two 4-day meetings at the Powell Center
-\item[Proposed Data Release Date:] September 2019
-\item[Total Requested Budget:] \$130,801 (Year 1 \$23,565; Year 2 \$107,236)
-\item[Is this a resubmission?] No
-\item[Conflicts of Interest with Reviewers:] None
-\item[Keywords:] climate and land use change; ecosystems
+\item[Intellectual Merit:] Forecasting the impacts of global environmental change is a major challenge facing ecologists and land managers in the 21\textsuperscript{st} century. Unfortunately, our knowledge of the limits to ecological forecasts lags behind our deep understanding of ecological systems. Fortunately, emerging theory on partitioning forecast uncertainty provides an opportunity to better understand the limits to ecological forecasts. The \emph{EcoCast RCN} will convene a diverse group of quantitative ecologists, each with detailed knowledge of particular study systems, to develop forecasting models of plant and animal populations. Network teams will partition the forecast uncertainty for each focal population to test fundamental hypotheses about the relationship between particular sources of uncertainty and ecological characteristics. Network research will catalyze a new research area in ecology focused on identifying the boundaries of ecological forecasts based on ecological theory. 
+\item[Broader Impacts:] The network will develop a forecast repository and a synthetic database of population time series coupled with environmental covariates that will be ideal for teaching and research.
 \end{description}
 
 \newpage{}
