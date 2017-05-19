@@ -1,7 +1,7 @@
-##  R script to fit a population growth model for YNP,
+##  R script to fit a population growth model for YNP bison,
 ##  forecast 10 new years, and partition the forecast variance.
 ##
-##  Based on Dietze et al. (forthcoming)
+##  Based on "Ecological Forecasting" by M. Dietze (2017)
 ##
 ##  Author:       Andrew Tredennick (atredenn@gmail.com)
 ##  Date created: October 19, 2016
