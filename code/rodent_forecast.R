@@ -67,8 +67,7 @@ plot_info <- read.csv("../data/PortalData/SiteandMethods/Portal_plot_treatments.
 
 rodents <- rodents %>%
   left_join(moons, by = c("period" = "Period")) %>%
-  rename(census_date = CensusDate) %>%
-  separate(census_date, c("year","month","day"))
+  separate(CensusDate, c("year","month","day"))
 
 pp_data <- rodents %>%
   filter(species=="PP", plot!=10) %>%
@@ -135,6 +134,11 @@ model{
     lambda[t] ~ dgamma(shape[t], rate[t])
     Nobs[t] ~ dpois(lambda[t])
   }
+
+  #### Derived parameters
+  for(t in 2:n){
+    growth_rate[t] = N[t] / N[t-1]
+  }
 }
 "
 
@@ -149,7 +153,7 @@ mydat         <- list(Nobs = round(pp_agg$avg_abundance),
                       n = nrow(pp_agg),
                       sd_obs = pp_agg$sdv_abundance,
                       npreds = nrow(pp_agg)+10)
-out_variables <- c("r","K","sigma_proc","N")
+out_variables <- c("r","K","sigma_proc","N")#,"growth_rate")
 
 ##  Send to JAGS
 mc3     <- jags.model(file=textConnection(my_model), data=mydat, n.chains=3)
@@ -164,6 +168,10 @@ chain.col    <- which(colnames(mfit)=="CHAIN")
 out$predict  <- mat2mcmc.list(mfit[,c(chain.col,pred.cols)])
 out$params   <- mat2mcmc.list(mfit[,-pred.cols])
 fitted_model <- out
+
+post_quants <- summary(fitted_model$params)$quantile
+lambdas <- post_quants[grep("growth_rate",rownames(post_quants)),3]
+mean_lambda <- mean(lambdas)
 
 ## Collate predictions
 pp_agg$year <- as.numeric(pp_agg$year)
@@ -185,23 +193,6 @@ prediction_df      <- data.frame(year = c(pp_agg$year, (max(pp_agg$year)+1):(max
 # plot(fitted_model$params)
 # gelman.diag(fitted_model$params)
 # heidel.diag(fitted_model$params)
-
-
-
-####
-####  PLOT CALIBRATION AND FORECASTS ----
-####
-pred_color <- "#CF4C26"
-obs_color  <- "#0A9AB8"
-calibration_plot <- ggplot(prediction_df, aes(x=year))+
-  geom_ribbon(aes(ymax=upper_prediction, ymin=lower_prediction), fill=pred_color, color=NA, alpha=0.2)+
-  geom_line(aes(y=median_prediction), color=pred_color)+
-  geom_errorbar(aes(ymin=lower_observation, ymax=upper_observation), width=0.5, color=obs_color, size=0.2)+
-  geom_point(aes(y=observation), color=obs_color, size=0.5)+
-  geom_vline(aes(xintercept=max(pp_agg$year)), linetype=2,color="grey55")+
-  ylab("Number of desert pocket mice")+
-  xlab("Year")+
-  my_theme
 
 
 
@@ -256,7 +247,7 @@ params         <- as.matrix(fitted_model$params)
 sample_params  <- sample.int(nrow(params), size = num_iters, replace = TRUE)
 K              <- params[sample_params,1]
 r              <- params[sample_params,2]
-sd_proc       <- params[sample_params,3]
+sd_proc        <- params[sample_params,3]
 forecasts      <- matrix(data = NA, nrow = num_iters, ncol = forecast_steps)
 
 for(t in 1:forecast_steps){
@@ -267,6 +258,25 @@ varIPE <- apply(forecasts,2,var)
 
 
 V.pred.sim.rel <- apply(rbind(varIPE,varIP,varI),2,function(x) {x/max(x)})
+
+
+####
+####  PLOT CALIBRATION AND FORECASTS ----
+####
+pred_color <- "#CF4C26"
+obs_color  <- "#0A9AB8"
+calibration_plot <- ggplot(prediction_df, aes(x=year))+
+  geom_ribbon(aes(ymax=upper_prediction, ymin=lower_prediction), fill=pred_color, color=NA, alpha=0.2)+
+  geom_line(aes(y=median_prediction), color=pred_color)+
+  geom_errorbar(aes(ymin=lower_observation, ymax=upper_observation), width=0.5, color=obs_color, size=0.2)+
+  geom_point(aes(y=observation), color=obs_color, size=0.5)+
+  geom_vline(aes(xintercept=max(pp_agg$year)), linetype=2,color="grey55")+
+  annotate(geom="text", x=1988, y=80,
+           label=paste0("growth rate = ",round(mean_lambda,2)),
+           size=4, family = "Arial Narrow")+
+  ylab("Number of desert pocket mice")+
+  xlab("Year")+
+  my_theme
 
 
 

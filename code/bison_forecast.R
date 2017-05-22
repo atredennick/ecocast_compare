@@ -10,6 +10,9 @@
 
 rm(list=ls(all.names = TRUE))
 
+## Set working dir to source file location
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path)) # only works in RStudio
+
 
 ####
 ####  Load libraries
@@ -87,6 +90,11 @@ my_model <- "
       Nobs[t] ~ dpois(lambda[t])
     }
 
+    #### Derived parameters
+    for(t in 2:n){
+      growth_rate[t] = N[t] / N[t-1]
+    }
+
   }"
 
 
@@ -100,7 +108,7 @@ mydat         <- list(Nobs = round(bison_dat$count.mean),
                       n = nrow(bison_dat),
                       sd_obs = bison_dat$count.sd,
                       npreds = nrow(bison_dat)+10)
-out_variables <- c("r","K","sigma_proc","N")
+out_variables <- c("r","K","sigma_proc","N")#,"growth_rate")
 
 ##  Send to JAGS
 mc3     <- jags.model(file=textConnection(my_model), data=mydat, n.chains=3)
@@ -115,6 +123,10 @@ chain.col    <- which(colnames(mfit)=="CHAIN")
 out$predict  <- mat2mcmc.list(mfit[,c(chain.col,pred.cols)])
 out$params   <- mat2mcmc.list(mfit[,-pred.cols])
 fitted_model <- out
+
+post_quants <- summary(fitted_model$params)$quantile
+lambdas <- post_quants[grep("growth_rate",rownames(post_quants)),3]
+mean_lambda <- mean(lambdas)
 
 ## Collate predictions
 predictions        <- rbind(fitted_model$predict[[1]],
@@ -138,20 +150,7 @@ prediction_df      <- data.frame(year = c(bison_dat$year, (max(bison_dat$year)+1
 
 
 
-####
-####  Plot the calibration data and predictions
-####
-pred_color <- "#CF4C26"
-obs_color  <- "#0A9AB8"
-calibration_plot <- ggplot(prediction_df, aes(x=year))+
-  geom_ribbon(aes(ymax=upper_prediction, ymin=lower_prediction), fill=pred_color, color=NA, alpha=0.2)+
-  geom_line(aes(y=median_prediction), color=pred_color)+
-  geom_errorbar(aes(ymin=lower_observation, ymax=upper_observation), width=0.5, color=obs_color, size=0.2)+
-  geom_point(aes(y=observation), color=obs_color, size=0.5)+
-  geom_vline(aes(xintercept=max(bison_dat$year)), linetype=2,color="grey55")+
-  ylab("Number of bison")+
-  xlab("Year")+
-  my_theme
+
 # ggsave(filename = "../figures/bison_calibration.png", width = 4, height = 3, units = "in", dpi=120)
 
 
@@ -218,6 +217,25 @@ varIPE <- apply(forecasts,2,var)
 
 
 V.pred.sim.rel <- apply(rbind(varIPE,varIP,varI),2,function(x) {x/max(x)})
+
+
+####
+####  Plot the calibration data and predictions
+####
+pred_color <- "#CF4C26"
+obs_color  <- "#0A9AB8"
+calibration_plot <- ggplot(prediction_df, aes(x=year))+
+  geom_ribbon(aes(ymax=upper_prediction, ymin=lower_prediction), fill=pred_color, color=NA, alpha=0.2)+
+  geom_line(aes(y=median_prediction), color=pred_color)+
+  geom_errorbar(aes(ymin=lower_observation, ymax=upper_observation), width=0.5, color=obs_color, size=0.2)+
+  geom_point(aes(y=observation), color=obs_color, size=0.5)+
+  geom_vline(aes(xintercept=max(bison_dat$year)), linetype=2,color="grey55")+
+  annotate(geom="text", x=1988, y=6100,
+           label=paste0("population growth rate = ",round(mean_lambda,2)),
+           size=4, family = "Arial Narrow")+
+  ylab("Number of bison")+
+  xlab("Year")+
+  my_theme
 
 
 
