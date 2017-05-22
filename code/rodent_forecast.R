@@ -14,30 +14,49 @@ rm(list=ls(all.names = TRUE))
 ####
 ####  LOAD LIBRARIES ----
 ####
-library(RCurl)
+# library(devtools)
+# install_github("atredennick/ecoforecastR") # get MY latest version
+# install_github("weecology/PortalDataSummaries") # get Weecology summarizing package
 library(tidyverse)
 library(dplyr)
 library(ggthemes)
 library(rjags)
 library(coda)
-# library(devtools)
-# install_github("atredennick/ecoforecastR") # get MY latest version
 library(ecoforecastR)
+library(PortalDataSummaries)
 
 
 
 ####
 ####  READ IN AND FORMAT DATA ----
 ####
-github_url   <- "https://raw.githubusercontent.com/weecology/PortalData/master/"
-rodent_url   <- paste0(github_url,"Rodents/Portal_rodent.csv")
-plots_url    <- paste0(github_url,"SiteandMethods/Portal_plots.csv")
-rodents      <- read.csv(text=getURL(rodent_url))
-portal_plots <- read.csv(text=getURL(plots_url))
+rodents <- abundance(path = "../data", 
+                     incomplete = FALSE,
+                     length = "longterm", 
+                     shape="flat",
+                     level = "Plot")
 
+moons <- read.csv("../data/PortalData/Rodents/moon_dates.csv") %>%
+  select(Period, CensusDate)
 
-rodents_agg <- rodents %>%
-  mutate(num_inds = 1) %>%
-  group_by(yr,plot,species) %>%
-  summarise(total_inds = sum(num_inds)) %>%
+plot_info <- read.csv("../data/PortalData/SiteandMethods/Portal_plot_treatments.csv")
+
+rodents <- rodents %>%
+  left_join(moons, by = c("period" = "Period")) %>%
+  rename(census_date = CensusDate) %>%
+  separate(census_date, c("year","month","day"))
+
+pp_data <- rodents %>%
+  filter(species=="PP")
+
+pp_agg <- pp_data %>%
+  group_by(year,plot) %>%
+  summarise(avg_abundance = mean(abundance),
+            sdv_abundance = sd(abundance)) %>%
   ungroup()
+
+ggplot(pp_agg, aes(x=as.numeric(year), y=avg_abundance, color=as.factor(plot))) +
+  geom_line()+
+  geom_point()
+
+
