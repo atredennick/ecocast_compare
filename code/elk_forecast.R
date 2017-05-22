@@ -1,4 +1,4 @@
-##  R script to fit a population growth model for YNP bison,
+##  R script to fit a population growth model for RMNP Elk,
 ##  forecast 10 new years, and partition the forecast variance.
 ##
 ##  Based on "Ecological Forecasting" by M. Dietze (2017)
@@ -17,15 +17,13 @@ setwd(dirname(rstudioapi::getActiveDocumentContext()$path)) # only works in RStu
 ####
 ####  Load libraries
 ####
-library(ggplot2)
+library(tidyverse)
+library(dplyr)
 library(ggthemes)
 library(gridExtra)
-library(reshape2)
-library(plyr)
+library(viridis)
 library(rjags)
 library(coda)
-# library(devtools)
-# install_github("atredennick/ecoforecastR") # get latest version
 library(ecoforecastR)
 
 
@@ -50,9 +48,11 @@ my_theme <- theme_bw()+
 ####
 ####  Load Data ----------------------------------------------------------------
 ####
-bison_raw <- read.csv("../data/YNP_bison_population_size.csv", row.names = 1)
-bison_dat <- bison_raw
-bison_dat[which(is.na(bison_dat$count.sd)==TRUE),"count.sd"] <- mean(bison_dat$count.sd,na.rm = T)
+bison_raw <- read.csv("../data/RMNP_Elk_Ketz.csv")
+bison_dat <- bison_raw %>%
+  select(-X) %>%
+  filter(is.na(estimate)==F)
+
 
 
 
@@ -68,7 +68,7 @@ my_model <- "
     
     #### Fixed Effects Priors
     r ~ dunif(0,2)
-    K ~ dunif(500,10000)
+    K ~ dunif(100,2000)
     
     #### Initial Conditions
     N0 ~ dunif(1,1000)
@@ -100,16 +100,16 @@ my_model <- "
 ####
 
 ##  Prepare data list
-mydat         <- list(Nobs = round(bison_dat$count.mean), 
+mydat         <- list(Nobs = round(bison_dat$estimate), 
                       n = nrow(bison_dat),
-                      sd_obs = bison_dat$count.sd,
+                      sd_obs = bison_dat$se*4,
                       npreds = nrow(bison_dat)+10)
 out_variables <- c("r","K","sigma_proc","N")
 
 ##  Send to JAGS
 mc3     <- jags.model(file=textConnection(my_model), data=mydat, n.chains=3)
            update(mc3, n.iter = 10000)
-mc3.out <- coda.samples(model=mc3, variable.names=out_variables, n.iter=50000)
+mc3.out <- coda.samples(model=mc3, variable.names=out_variables, n.iter=10000)
 
 ## Split output
 out          <- list(params=NULL, predict=NULL, model=my_model,data=mydat)
@@ -136,9 +136,9 @@ median_predictions <- apply(predictions, MARGIN = 2, FUN = "median")
 upper_predictions  <- apply(predictions, MARGIN = 2, FUN = function(x){quantile(x, probs = 0.975)})
 lower_predictions  <- apply(predictions, MARGIN = 2, FUN = function(x){quantile(x, probs = 0.025)})
 prediction_df      <- data.frame(year = c(bison_dat$year, (max(bison_dat$year)+1):(max(bison_dat$year)+10)),
-                                 observation = c(bison_dat$count.mean,rep(NA,10)),
-                                 upper_observation = c(bison_dat$count.mean+bison_dat$count.sd,rep(NA,10)),
-                                 lower_observation = c(bison_dat$count.mean-bison_dat$count.sd,rep(NA,10)),
+                                 observation = c(bison_dat$estimate,rep(NA,10)),
+                                 upper_observation = c(bison_dat$estimate+bison_dat$se,rep(NA,10)),
+                                 lower_observation = c(bison_dat$estimate-bison_dat$se,rep(NA,10)),
                                  median_prediction = median_predictions,
                                  upper_prediction = upper_predictions,
                                  lower_prediction = lower_predictions)
@@ -220,7 +220,7 @@ calibration_plot <- ggplot(prediction_df, aes(x=year))+
   geom_errorbar(aes(ymin=lower_observation, ymax=upper_observation), width=0.5, color=obs_color, size=0.2)+
   geom_point(aes(y=observation), color=obs_color, size=0.5)+
   geom_vline(aes(xintercept=max(bison_dat$year)), linetype=2,color="grey55")+
-  annotate(geom="text", x=1988, y=6100,
+  annotate(geom="text", x=1988, y=1500,
            label=paste0("population growth rate = ",round(exp(param_summary[2,3]),2)),
            size=4, family = "Arial Narrow")+
   ylab("Number of bison")+

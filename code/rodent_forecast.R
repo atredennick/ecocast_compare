@@ -111,11 +111,11 @@ model{
   sigma_proc <- 1/sqrt(tau_proc)
 
   #### Fixed Effects Priors
-  r ~ dunif(0,5)
-  K ~ dunif(1,100)
+  r ~ dunif(0,1)
+  K ~ dunif(1,200)
 
   #### Initial Conditions
-  N0 ~ dunif(1,100)
+  N0 ~ dunif(1,200)
   Nmed[1] <- log(max(1, N0 + r * N0 * (1 - N0 / K)))
   N[1] ~ dlnorm(Nmed[1], tau_proc)
 
@@ -135,10 +135,6 @@ model{
     Nobs[t] ~ dpois(lambda[t])
   }
 
-  #### Derived parameters
-  for(t in 2:n){
-    growth_rate[t] = N[t] / N[t-1]
-  }
 }
 "
 
@@ -153,7 +149,7 @@ mydat         <- list(Nobs = round(pp_agg$avg_abundance),
                       n = nrow(pp_agg),
                       sd_obs = pp_agg$sdv_abundance,
                       npreds = nrow(pp_agg)+10)
-out_variables <- c("r","K","sigma_proc","N")#,"growth_rate")
+out_variables <- c("r","K","sigma_proc","N")
 
 ##  Send to JAGS
 mc3     <- jags.model(file=textConnection(my_model), data=mydat, n.chains=3)
@@ -169,9 +165,13 @@ out$predict  <- mat2mcmc.list(mfit[,c(chain.col,pred.cols)])
 out$params   <- mat2mcmc.list(mfit[,-pred.cols])
 fitted_model <- out
 
-post_quants <- summary(fitted_model$params)$quantile
-lambdas <- post_quants[grep("growth_rate",rownames(post_quants)),3]
-mean_lambda <- mean(lambdas)
+par(mfrow=c(1,3))
+plot(density(mfit[,"r"]),xlab=expression(italic("r")), main="")
+lines(density(runif(nrow(mfit),0,2), adjust=2),lty=2)
+plot(density(mfit[,"K"]),xlab=expression(italic("K")), main="")
+lines(density(runif(nrow(mfit),1,200), adjust=2),lty=2)
+plot(density(mfit[,"sigma_proc"]),xlab=expression(sigma[p]), main="")
+lines(density(1/sqrt(rgamma(nrow(mfit),0.0001,0.0001)), adjust=2),lty=2)
 
 ## Collate predictions
 pp_agg$year <- as.numeric(pp_agg$year)
@@ -272,7 +272,7 @@ calibration_plot <- ggplot(prediction_df, aes(x=year))+
   geom_point(aes(y=observation), color=obs_color, size=0.5)+
   geom_vline(aes(xintercept=max(pp_agg$year)), linetype=2,color="grey55")+
   annotate(geom="text", x=1988, y=80,
-           label=paste0("growth rate = ",round(mean_lambda,2)),
+           label=paste0("population growth rate = ",round(exp(param_summary[2,3]),2)),
            size=4, family = "Arial Narrow")+
   ylab("Number of desert pocket mice")+
   xlab("Year")+
