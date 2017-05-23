@@ -87,25 +87,13 @@ abund_data <- nsim %>%
 ggplot(abund_data, aes(x=year, y=mean_abundance))+
   geom_line()+
   geom_errorbar(aes(ymin=mean_abundance-sdev_abundance, ymax=mean_abundance+sdev_abundance))+
-  geom_point()
-
-
-
-
-
-
-
-####
-####  Load Data ----------------------------------------------------------------
-####
-bison_raw <- read.csv("../data/YNP_bison_population_size.csv", row.names = 1)
-bison_dat <- bison_raw
-bison_dat[which(is.na(bison_dat$count.sd)==TRUE),"count.sd"] <- mean(bison_dat$count.sd,na.rm = T)
+  geom_point()+
+  my_theme
 
 
 
 ####
-####  JAGS State-Space Model ---------------------------------------------------
+####  JAGS State-Space Model ----
 ####
 my_model <- "  
   model{
@@ -116,7 +104,7 @@ my_model <- "
     
     #### Fixed Effects Priors
     r ~ dunif(0,2)
-    K ~ dunif(500,10000)
+    K ~ dunif(100,10000)
     
     #### Initial Conditions
     N0 ~ dunif(1,1000)
@@ -144,20 +132,19 @@ my_model <- "
 
 
 ####
-####  Fit Bison Forecasting Model ----------------------------------------------
+####  FIT FORECASTING MODEL ----
 ####
-
 ##  Prepare data list
-mydat         <- list(Nobs = round(bison_dat$count.mean), 
-                      n = nrow(bison_dat),
-                      sd_obs = bison_dat$count.sd,
-                      npreds = nrow(bison_dat)+10)
+mydat         <- list(Nobs = round(abund_data$mean_abundance), 
+                      n = nrow(abund_data),
+                      sd_obs = abund_data$sdev_abundance,
+                      npreds = nrow(abund_data)+10)
 out_variables <- c("r","K","sigma_proc","N")
 
 ##  Send to JAGS
 mc3     <- jags.model(file=textConnection(my_model), data=mydat, n.chains=3)
            update(mc3, n.iter = 10000)
-mc3.out <- coda.samples(model=mc3, variable.names=out_variables, n.iter=50000)
+mc3.out <- coda.samples(model=mc3, variable.names=out_variables, n.iter=10000)
 
 ## Split output
 out          <- list(params=NULL, predict=NULL, model=my_model,data=mydat)
@@ -168,13 +155,13 @@ out$predict  <- mat2mcmc.list(mfit[,c(chain.col,pred.cols)])
 out$params   <- mat2mcmc.list(mfit[,-pred.cols])
 fitted_model <- out
 
-par(mfrow=c(1,3))
-plot(density(mfit[,"r"]),xlab=expression(italic("r")), main="")
-lines(density(runif(nrow(mfit),0,2), adjust=2),lty=2)
-plot(density(mfit[,"K"]),xlab=expression(italic("K")), main="")
-lines(density(runif(nrow(mfit),500,10000), adjust=2),lty=2)
-plot(density(mfit[,"sigma_proc"]),xlab=expression(sigma[p]), main="")
-lines(density(1/sqrt(rgamma(nrow(mfit),0.0001,0.0001)), adjust=2),lty=2)
+# par(mfrow=c(1,3))
+# plot(density(mfit[,"r"]),xlab=expression(italic("r")), main="")
+# lines(density(runif(nrow(mfit),0,2), adjust=2),lty=2)
+# plot(density(mfit[,"K"]),xlab=expression(italic("K")), main="")
+# lines(density(rnorm(nrow(mfit),2000,1/sqrt(0.00001)), adjust=2),lty=2)
+# plot(density(mfit[,"sigma_proc"]),xlab=expression(sigma[p]), main="")
+# lines(density(1/sqrt(rgamma(nrow(mfit),0.0001,0.0001)), adjust=2),lty=2)
 
 ## Collate predictions
 predictions        <- rbind(fitted_model$predict[[1]],
@@ -183,10 +170,10 @@ predictions        <- rbind(fitted_model$predict[[1]],
 median_predictions <- apply(predictions, MARGIN = 2, FUN = "median")
 upper_predictions  <- apply(predictions, MARGIN = 2, FUN = function(x){quantile(x, probs = 0.975)})
 lower_predictions  <- apply(predictions, MARGIN = 2, FUN = function(x){quantile(x, probs = 0.025)})
-prediction_df      <- data.frame(year = c(bison_dat$year, (max(bison_dat$year)+1):(max(bison_dat$year)+10)),
-                                 observation = c(bison_dat$count.mean,rep(NA,10)),
-                                 upper_observation = c(bison_dat$count.mean+bison_dat$count.sd,rep(NA,10)),
-                                 lower_observation = c(bison_dat$count.mean-bison_dat$count.sd,rep(NA,10)),
+prediction_df      <- data.frame(year = c(abund_data$year, (max(abund_data$year)+1):(max(abund_data$year)+10)),
+                                 observation = c(abund_data$mean_abundance,rep(NA,10)),
+                                 upper_observation = c(abund_data$mean_abundance+abund_data$sdev_abundance,rep(NA,10)),
+                                 lower_observation = c(abund_data$mean_abundance-abund_data$sdev_abundance,rep(NA,10)),
                                  median_prediction = median_predictions,
                                  upper_prediction = upper_predictions,
                                  lower_prediction = lower_predictions)
@@ -208,7 +195,7 @@ iterate_process <- function(Nnow, r, K, sd_proc) {
 ##    the final year, but use mean parameter values and no process error.
 forecast_steps <- 10
 num_iters      <- 1000
-x              <- sample(predictions[,nrow(bison_dat)], num_iters, replace = TRUE)
+x              <- sample(predictions[,nrow(abund_data)], num_iters, replace = TRUE)
 param_summary  <- summary(fitted_model$params)$quantile
 K              <- param_summary[1,3]
 r              <- param_summary[2,3]
@@ -223,7 +210,7 @@ varI <- apply(forecasts,2,var)
 
 
 ##  Initial conditions and parameter uncertainty
-x              <- sample(predictions[,nrow(bison_dat)], num_iters, replace = TRUE)
+x              <- sample(predictions[,nrow(abund_data)], num_iters, replace = TRUE)
 params         <- as.matrix(fitted_model$params)
 sample_params  <- sample.int(nrow(params), size = num_iters, replace = TRUE)
 K              <- params[sample_params,1]
@@ -239,7 +226,7 @@ varIP <- apply(forecasts,2,var)
 
 
 ##  Initial conditions, parameter, and process uncertainty
-x              <- sample(predictions[,nrow(bison_dat)], num_iters, replace = TRUE)
+x              <- sample(predictions[,nrow(abund_data)], num_iters, replace = TRUE)
 params         <- as.matrix(fitted_model$params)
 sample_params  <- sample.int(nrow(params), size = num_iters, replace = TRUE)
 K              <- params[sample_params,1]
@@ -267,10 +254,10 @@ calibration_plot <- ggplot(prediction_df, aes(x=year))+
   geom_line(aes(y=median_prediction), color=pred_color)+
   geom_errorbar(aes(ymin=lower_observation, ymax=upper_observation), width=0.5, color=obs_color, size=0.2)+
   geom_point(aes(y=observation), color=obs_color, size=0.5)+
-  geom_vline(aes(xintercept=max(bison_dat$year)), linetype=2,color="grey55")+
-  annotate(geom="text", x=1988, y=6100,
-           label=paste0("population growth rate = ",round(exp(param_summary[2,3]),2)),
-           size=4, family = "Arial Narrow")+
+  geom_vline(aes(xintercept=max(abund_data$year)), linetype=2,color="grey55")+
+  # annotate(geom="text", x=1988, y=6100,
+  #          label=paste0("population growth rate = ",round(exp(param_summary[2,3]),2)),
+  #          size=4, family = "Arial Narrow")+
   ylab("Number of bison")+
   xlab("Year")+
   my_theme
@@ -296,6 +283,6 @@ variance_plot <- ggplot(data=var_rel_preds, aes(x=x))+
 
 
 
-png("../figures/bison_combined.png", width = 4, height = 6, units = "in", res = 120)
+# png("../figures/bison_combined.png", width = 4, height = 6, units = "in", res = 120)
 out_plot <- grid.arrange(calibration_plot, variance_plot, ncol=1)
-dev.off()
+# dev.off()
