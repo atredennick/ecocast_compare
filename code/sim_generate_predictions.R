@@ -9,6 +9,10 @@
 ##  Author:       Andrew Tredennick (atredenn@gmail.com)
 ##  Date created: May 23, 2017
 ##
+##  NOTES: looks like initial conditions uncertainty propagation has a lot to 
+##        do with how well we know carrying capacity, which usually has to do
+##        with how much time the population spends there in the time series and
+##        how quickly it approaches.
 
 ##  Clear the workspace
 rm(list=ls(all.names = TRUE))
@@ -76,7 +80,7 @@ sim_logistic <- function(timesteps=40,num_observations=4,N0=500,r=0.18,
 ####
 ####  SIMULATE LOGISTIC MODEL AND SAVE OUTPUT AS "DATA" ----
 ####
-nsim <- sim_logistic(r=0.18)
+nsim <- sim_logistic(r=1.5,N0=20)
 
 abund_data <- nsim %>%
   group_by(year) %>%
@@ -155,13 +159,13 @@ out$predict  <- mat2mcmc.list(mfit[,c(chain.col,pred.cols)])
 out$params   <- mat2mcmc.list(mfit[,-pred.cols])
 fitted_model <- out
 
-# par(mfrow=c(1,3))
-# plot(density(mfit[,"r"]),xlab=expression(italic("r")), main="")
-# lines(density(runif(nrow(mfit),0,2), adjust=2),lty=2)
-# plot(density(mfit[,"K"]),xlab=expression(italic("K")), main="")
-# lines(density(rnorm(nrow(mfit),2000,1/sqrt(0.00001)), adjust=2),lty=2)
-# plot(density(mfit[,"sigma_proc"]),xlab=expression(sigma[p]), main="")
-# lines(density(1/sqrt(rgamma(nrow(mfit),0.0001,0.0001)), adjust=2),lty=2)
+par(mfrow=c(1,3))
+plot(density(mfit[,"r"]),xlab=expression(italic("r")), main="")
+lines(density(runif(nrow(mfit),0,2), adjust=2),lty=2)
+plot(density(mfit[,"K"]),xlab=expression(italic("K")), main="")
+lines(density(runif(nrow(mfit),100,10000), adjust=2),lty=2)
+plot(density(mfit[,"sigma_proc"]),xlab=expression(sigma[p]), main="")
+lines(density(1/sqrt(rgamma(nrow(mfit),0.0001,0.0001)), adjust=2),lty=2)
 
 ## Collate predictions
 predictions        <- rbind(fitted_model$predict[[1]],
