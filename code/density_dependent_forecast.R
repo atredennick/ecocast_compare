@@ -37,14 +37,14 @@ library(ecoforecastR)
 # where x is log abundance, a is an intercept, c is the strength of density
 # dependence, and error(t) is distributed as N(0,tau).
 
-sim_gompertz <- function(generations=50, a=1, c=1, tau=0.1, sigma=0.1, Nstart=100){
+sim_gompertz <- function(generations=100, a=0, c=1, tau=sqrt(0.5), sigma=sqrt(0.5), Nstart=1){
   logN <- numeric(generations)
   logN[1] <- log(Nstart)
   for(t in 2:generations){
     logN[t] <- a + c*logN[t-1] + rnorm(1,0,tau)
   }
   logY <- logN + rnorm(generations,0,sigma)
-  return(logY[21:50])
+  return(logY[21:100])
 }
 
 
@@ -52,7 +52,7 @@ sim_gompertz <- function(generations=50, a=1, c=1, tau=0.1, sigma=0.1, Nstart=10
 ####
 ####  SIMULATE A BUNCH OF TIME SERIES ACROSS GRADIENT OF DD (c) ----
 ####
-c_vector <- seq(0.1,1,0.1)
+c_vector <- seq(-0.99,0.99,0.1)
 pop_list <- list()
 for(do_c in c_vector){
   pop_list[[as.character(do_c)]] <- sim_gompertz(c=do_c)
@@ -81,8 +81,11 @@ fit_ss_gompertz <- function(iters=5000, chains=2, data_list){
     ### Parameter model
     a ~ dnorm(0,0.001)
     c ~ dnorm(0,0.001) T(-0.99,0.99)
-    tau ~ dweibull(2,1)
-    sigma ~ dweibull(2,1)
+    tau ~ dgamma(0.001,0.001)
+    sigma ~ dgamma(0.001,0.001)
+    
+    ### Generated quantity
+    c_strength = 1-c
   }
   "
   
@@ -97,12 +100,21 @@ fit_ss_gompertz <- function(iters=5000, chains=2, data_list){
 ####
 ####  FIT THE MODELS AND SAVE ----
 ####
-tmp_data <- pop_list[[10]]
-data_list <- list(y = tmp_data,
-                  nobs = length(tmp_data),
-                  pred_times = length(tmp_data)+10)
-mcmc <- fit_ss_gompertz(data_list = data_list)
-plot(density(mcmc[[1]]))
+pdf("test.pdf")
+par(mfrow=c(4,5))
+for(i in 1:20){
+  dopop <- i
+  tmp_data <- pop_list[[dopop]]
+  data_list <- list(y = tmp_data,
+                    nobs = length(tmp_data),
+                    pred_times = length(tmp_data)+10)
+  mcmc <- fit_ss_gompertz(data_list = data_list)
+  # plot(tmp_data,type="l")
+  plot(density(mcmc[[1]]), xlim=c(-1,1),main="",xlab=expression(hat(c)))
+  abline(v = c_vector[dopop],col="red")
+}
+dev.off()
+
 
 
 
