@@ -10,15 +10,17 @@
 
 rm(list=ls(all.names = TRUE))
 
+##  Set working directory to source file location
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path)) # only for RStudio
+
 
 ####
 ####  Load libraries
 ####
-library(ggplot2)
+library(tidyverse)
 library(ggthemes)
 library(gridExtra)
-library(reshape2)
-library(plyr)
+library(dplyr)
 library(rjags)
 library(coda)
 # library(devtools)
@@ -47,8 +49,13 @@ my_theme <- theme_bw()+
 ####
 ####  Load Data ----------------------------------------------------------------
 ####
+snow_ynp  <- read.csv("../data/west_yellowstone_snotel_summary.csv") %>%
+  select(-X)
 bison_raw <- read.csv("../data/YNP_bison_population_size.csv", row.names = 1)
-bison_dat <- bison_raw[which(!is.na(bison_raw$count.sd)),2:ncol(bison_raw)]
+bison_dat <- bison_raw[which(!is.na(bison_raw$count.sd)),2:ncol(bison_raw)] %>%
+  left_join(snow_ynp, by="year")
+  
+
 
 
 
