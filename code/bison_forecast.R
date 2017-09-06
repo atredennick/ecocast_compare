@@ -1,21 +1,25 @@
-##  R script to fit a population growth model for YNP,
+################################################################################
+##  bison_forecast.R: R script to fit a population growth model for YNP,
 ##  forecast 10 new years, and partition the forecast variance.
 ##
-##  Based on Dietze et al. (forthcoming)
+##  Based on Dietze 2017, Ecological Applications
+##  http://onlinelibrary.wiley.com/doi/10.1002/eap.1589/full
 ##
+##  ____________________________________________________________________________
 ##  Author:       Andrew Tredennick (atredenn@gmail.com)
 ##  Date created: October 19, 2016
-##
+################################################################################
 
+##  Clear everything...
+rm(list = ls(all.names = TRUE))
 
-rm(list=ls(all.names = TRUE))
-
-##  Set working directory to source file location
+##  Set working directory to source file location...
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path)) # only for RStudio
 
 
+
 ####
-####  Load libraries
+####  LOAD LIBRARIES ----
 ####
 library(tidyverse)
 library(ggthemes)
@@ -30,7 +34,7 @@ library(ecoforecastR)
 
 
 ####
-####  Set Up My Plotting Theme -------------------------------------------------
+####  SET MY PLOTTING THEME ----------------------------------------------------
 ####
 my_theme <- theme_bw()+
   theme(panel.grid.major.x = element_blank(), 
@@ -47,15 +51,16 @@ my_theme <- theme_bw()+
 
 
 ####
-####  Load Data ----------------------------------------------------------------
+####  LOAD DATA ----------------------------------------------------------------
 ####
 snow_ynp  <- read.csv("../data/west_yellowstone_snotel_summary.csv") %>%
   select(-X)
 bison_raw <- read.csv("../data/YNP_bison_population_size.csv", row.names = 1)
-bison_dat <- bison_raw[which(!is.na(bison_raw$count.sd)),2:ncol(bison_raw)] %>%
+bison_dat <- bison_raw %>% 
+  dplyr::select(-index) %>%
   left_join(snow_ynp, by="year")
   
-
+bison_dat[which(is.na(bison_dat$count.sd)==T),"count.sd"] <- mean(bison_dat$count.sd, na.rm=T)
 
 
 
@@ -66,34 +71,28 @@ my_model <- "
   model{
 
     #### Variance Priors
-    tau_proc ~ dgamma(0.0001, 0.0001)
-    sigma_proc <- 1/sqrt(tau_proc)
+    sigma_proc ~ dunif(0,10)
+    tau_proc <- 1/sigma_proc^2
     
     #### Fixed Effects Priors
-    r ~ dunif(0,5)
-    K ~ dunif(1,10000)
+    r ~ dnorm(0.234, 1/0.136^2)
+    b ~ dnorm(0,0.0001)
+    b1 ~ dnorm(0,0.0001)
     
     #### Initial Conditions
-    N0 ~ dunif(1,1000)
-    Nmed[1] <- log(max(1, N0 + r * N0 * (1 - N0 / K)))
-    N[1] ~ dlnorm(Nmed[1], tau_proc)
+    z[1] ~ dnorm(Nobs[1], tau_obs[1])
     
     #### Process Model
     for(t in 2:npreds){
-      Nmed[t] <- log(max(1, N[t-1] + r * N[t-1] * (1 - N[t-1] / K)))
-      N[t] ~ dlnorm(Nmed[t], tau_proc) 
+      mu[t] <- max( 1, log( z[t-1]*exp(r + b*z[t-1] + b1*x[t]) ) )
+      z[t] ~ dlnorm(mu[t], tau_proc)
     }
     
     #### Data Model
     ##  SD observations
-    for(t in 1:n){
-      var_obs[t] <- sd_obs[t]*sd_obs[t]
-      shape[t] <- N[t]*N[t]/var_obs[t]
-      rate[t] <- N[t]/var_obs[t]
-      lambda[t] ~ dgamma(shape[t], rate[t])
-      Nobs[t] ~ dpois(lambda[t])
+    for(j in 2:n){
+      Nobs[j] ~ dnorm(z[j], tau_obs[j])
     }
-
   }"
 
 
@@ -103,21 +102,25 @@ my_model <- "
 ####
 
 ##  Prepare data list
-mydat         <- list(Nobs = round(bison_dat$count.mean), 
+mydat         <- list(Nobs = bison_dat$count.mean, 
                       n = nrow(bison_dat),
-                      sd_obs = bison_dat$count.sd,
+                      tau_obs = 1/bison_dat$count.sd^2,
+                      x = c(as.numeric(scale(bison_dat$accum_snow_water_equiv_mm)),
+                            rep(0,10)),
                       npreds = nrow(bison_dat)+10)
-out_variables <- c("r","K","sigma_proc","N")
+out_variables <- c("r","b","b1","sigma_proc","z")
 
 ##  Send to JAGS
 mc3     <- jags.model(file=textConnection(my_model), data=mydat, n.chains=3)
-           update(mc3, n.iter = 10000)
-mc3.out <- coda.samples(model=mc3, variable.names=out_variables, n.iter=50000)
+           update(mc3, n.iter = 5000)
+mc3.out <- coda.samples(model=mc3, variable.names=out_variables, n.iter=5000)
+summary(mc3.out)$stat
+summary(mc3.out)$quantile
 
 ## Split output
 out          <- list(params=NULL, predict=NULL, model=my_model,data=mydat)
 mfit         <- as.matrix(mc3.out,chains=TRUE)
-pred.cols    <- union(grep("N[",colnames(mfit),fixed=TRUE),grep("Nmed[",colnames(mfit),fixed=TRUE))
+pred.cols    <- union(grep("z[",colnames(mfit),fixed=TRUE),grep("mu[",colnames(mfit),fixed=TRUE))
 chain.col    <- which(colnames(mfit)=="CHAIN")
 out$predict  <- mat2mcmc.list(mfit[,c(chain.col,pred.cols)])
 out$params   <- mat2mcmc.list(mfit[,-pred.cols])
