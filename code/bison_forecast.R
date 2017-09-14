@@ -171,8 +171,9 @@ calibration_plot <- ggplot(prediction_df, aes(x=year))+
 ####  Partition Forecast Uncertainty -------------------------------------------
 ####
 ##  Function for the ecological process (population growth)
-iterate_process <- function(Nnow, r, K, sd_proc) { 
-  Ntmp <- Nnow + r * Nnow * (1 - Nnow / K)
+iterate_process <- function(Nnow, xnow, r, b, b1, sd_proc) { 
+  Ntmp <- Nnow*exp(r + b*Nnow + b1*xnow)
+  # Ntmp <- Nnow + r * Nnow * (1 - Nnow / K)
   Ntmp[which(Ntmp < 1)] <- 1
   N    <- rlnorm(length(Nnow), log(Ntmp), sd_proc)
 }
@@ -184,13 +185,14 @@ forecast_steps <- 10
 num_iters      <- 1000
 x              <- sample(predictions[,nrow(bison_dat)], num_iters, replace = TRUE)
 param_summary  <- summary(fitted_model$params)$quantile
-K              <- param_summary[1,3]
-r              <- param_summary[2,3]
-sd_proc        <- param_summary[3,3]
+r              <- param_summary[3,3]
+b              <- param_summary[1,3]
+b1             <- param_summary[2,3]
+sd_proc        <- param_summary[4,3]
 forecasts      <- matrix(data = NA, nrow = num_iters, ncol = forecast_steps)
 
 for(t in 1:forecast_steps){
-  x <- iterate_process(Nnow = x, r = r, K = K, sd_proc = 0)
+  x <- iterate_process(Nnow = x, xnow = 0, r = r, b = b, b1 = b1, sd_proc = 0)
   forecasts[,t] <- x
 }
 varI <- apply(forecasts,2,var)
