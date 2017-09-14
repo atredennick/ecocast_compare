@@ -59,9 +59,9 @@ bison_raw <- read.csv("../data/YNP_bison_population_size.csv", row.names = 1)
 bison_dat <- bison_raw %>% 
   dplyr::select(-index) %>%
   left_join(snow_ynp, by="year")
-  
-bison_dat[which(is.na(bison_dat$count.sd)==T),"count.sd"] <- mean(bison_dat$count.sd, na.rm=T)
 
+na_sds <- which(is.na(bison_dat$count.sd)==T)
+bison_dat[na_sds,"count.sd"] <- max(bison_dat$count.sd, na.rm=T)
 
 
 ####
@@ -127,6 +127,7 @@ out$params   <- mat2mcmc.list(mfit[,-pred.cols])
 fitted_model <- out
 
 ## Collate predictions
+bison_dat[na_sds,"count.sd"] <- NA
 predictions        <- rbind(fitted_model$predict[[1]],
                             fitted_model$predict[[2]],
                             fitted_model$predict[[3]])
