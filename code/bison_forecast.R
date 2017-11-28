@@ -22,9 +22,9 @@ setwd(dirname(rstudioapi::getActiveDocumentContext()$path)) # only for RStudio
 ####  LOAD LIBRARIES ----
 ####
 library(tidyverse)
-library(ggthemes)
-library(gridExtra)
 library(dplyr)
+library(ggthemes)
+library(cowplot)
 library(rjags)
 library(coda)
 # library(devtools)
@@ -60,6 +60,7 @@ bison_dat <- bison_raw %>%
   dplyr::select(-index) %>%
   left_join(snow_ynp, by="year")
 
+##  For years without observation error, set to max observed standard deviation
 na_sds <- which(is.na(bison_dat$count.sd)==T)
 bison_dat[na_sds,"count.sd"] <- max(bison_dat$count.sd, na.rm=T)
 
@@ -102,12 +103,12 @@ my_model <- "
 ####
 
 ##  Prepare data list
-mydat         <- list(Nobs = bison_dat$count.mean, 
-                      n = nrow(bison_dat),
-                      tau_obs = 1/bison_dat$count.sd^2,
+mydat         <- list(Nobs = bison_dat$count.mean, # mean counts
+                      n = nrow(bison_dat), # number of observations
+                      tau_obs = 1/bison_dat$count.sd^2, # transform s.d. to precision
                       x = c(as.numeric(scale(bison_dat$accum_snow_water_equiv_mm)),
-                            rep(0,10)),
-                      npreds = nrow(bison_dat)+10)
+                            rep(0,10)), # snow depth, plus ten years at avg depth (0, since standardized)
+                      npreds = nrow(bison_dat)+10) # number of total predictions (obs + forecast)
 out_variables <- c("r","b","b1","sigma_proc","z")
 
 ##  Send to JAGS
@@ -127,7 +128,7 @@ out$params   <- mat2mcmc.list(mfit[,-pred.cols])
 fitted_model <- out
 
 ## Collate predictions
-bison_dat[na_sds,"count.sd"] <- NA
+bison_dat[na_sds,"count.sd"] <- NA # set the unobserved std. devs. back to NA for plotting
 predictions        <- rbind(fitted_model$predict[[1]],
                             fitted_model$predict[[2]],
                             fitted_model$predict[[3]])
@@ -173,8 +174,7 @@ calibration_plot <- ggplot(prediction_df, aes(x=year))+
 ##  Function for the ecological process (population growth)
 iterate_process <- function(Nnow, xnow, r, b, b1, sd_proc) { 
   Ntmp <- Nnow*exp(r + b*Nnow + b1*xnow)
-  # Ntmp <- Nnow + r * Nnow * (1 - Nnow / K)
-  Ntmp[which(Ntmp < 1)] <- 1
+  Ntmp[which(Ntmp < 1)] <- 1 # catch "bad" values
   N    <- rlnorm(length(Nnow), log(Ntmp), sd_proc)
 }
 
@@ -185,9 +185,9 @@ forecast_steps <- 10
 num_iters      <- 1000
 x              <- sample(predictions[,nrow(bison_dat)], num_iters, replace = TRUE)
 param_summary  <- summary(fitted_model$params)$quantile
-r              <- param_summary[3,3]
 b              <- param_summary[1,3]
 b1             <- param_summary[2,3]
+r              <- param_summary[3,3]
 sd_proc        <- param_summary[4,3]
 forecasts      <- matrix(data = NA, nrow = num_iters, ncol = forecast_steps)
 
@@ -202,13 +202,14 @@ varI <- apply(forecasts,2,var)
 x              <- sample(predictions[,nrow(bison_dat)], num_iters, replace = TRUE)
 params         <- as.matrix(fitted_model$params)
 sample_params  <- sample.int(nrow(params), size = num_iters, replace = TRUE)
-K              <- params[sample_params,1]
-r              <- params[sample_params,2]
+b              <- params[sample_params,1]
+b1             <- params[sample_params,2]
+r              <- params[sample_params,3]
 sd_proc        <- param_summary[3,3]
 forecasts      <- matrix(data = NA, nrow = num_iters, ncol = forecast_steps)
 
 for(t in 1:forecast_steps){
-  x <- iterate_process(Nnow = x, r = r, K = K, sd_proc = 0)
+  x <- iterate_process(Nnow = x, xnow = 0, r = r, b = b, b1 = b1, sd_proc = 0)
   forecasts[,t] <- x
 }
 varIP <- apply(forecasts,2,var)
@@ -218,13 +219,14 @@ varIP <- apply(forecasts,2,var)
 x              <- sample(predictions[,nrow(bison_dat)], num_iters, replace = TRUE)
 params         <- as.matrix(fitted_model$params)
 sample_params  <- sample.int(nrow(params), size = num_iters, replace = TRUE)
-K              <- params[sample_params,1]
-r              <- params[sample_params,2]
-sd_proc       <- params[sample_params,3]
+b              <- params[sample_params,1]
+b1             <- params[sample_params,2]
+r              <- params[sample_params,3]
+sd_proc        <- params[sample_params,4]
 forecasts      <- matrix(data = NA, nrow = num_iters, ncol = forecast_steps)
 
 for(t in 1:forecast_steps){
-  x <- iterate_process(Nnow = x, r = r, K = K, sd_proc = sd_proc)
+  x <- iterate_process(Nnow = x, xnow = 0, r = r, b = b, b1 = b1, sd_proc = sd_proc)
   forecasts[,t] <- x
 }
 varIPE <- apply(forecasts,2,var)
@@ -252,7 +254,9 @@ variance_plot <- ggplot(data=var_rel_preds, aes(x=x))+
 
 
 
+####
+####  COMBINE PLOTS AND SAVE ----
+####
+plot_grid(calibration_plot, variance_plot, nrow = 2, labels = "AUTO")
+ggsave(filename = "../figures/bison_combined.png", width = 4, height = 6, units = "in")
 
-png("../figures/bison_combined.png", width = 4, height = 6, units = "in", res = 300)
-out_plot <- grid.arrange(calibration_plot, variance_plot, ncol=1)
-dev.off()
