@@ -46,7 +46,9 @@ my_theme <- theme_bw()+
         axis.title         = element_text(size=12, family = "Arial Narrow", face = "bold"),
         panel.border       = element_blank(),
         axis.line.x        = element_line(color="black"),
-        axis.line.y        = element_line(color="black"))
+        axis.line.y        = element_line(color="black"),
+        strip.background   = element_blank(),
+        strip.text         = element_text(size=10, color="grey15", family = "Arial Narrow"))
 
 
 
@@ -60,9 +62,45 @@ bison_dat <- bison_raw %>%
   dplyr::select(-index) %>%
   left_join(snow_ynp, by="year")
 
-##  For years without observation error, set to max observed standard deviation
-na_sds <- which(is.na(bison_dat$count.sd)==T)
-bison_dat[na_sds,"count.sd"] <- max(bison_dat$count.sd, na.rm=T)
+
+
+####
+####  PLOT BISON AND SNOW DATA -------------------------------------------------
+####
+plot_data <- bison_dat %>%
+  dplyr::select(year, count.mean, count.sd, accum_snow_water_equiv_mm) %>%
+  dplyr::rename(acc_swe = accum_snow_water_equiv_mm)
+
+bison_growth_data <- bison_dat %>%
+  dplyr::select(year, count.mean) %>%
+  mutate(id = 1)
+bison_growth_data$growth_rate <- ave(bison_growth_data$count.mean, bison_growth_data$id, FUN=function(x) c(0, diff(log(x))))
+
+docolor <- "#278DAF"
+bison_plot <- ggplot(plot_data, aes(x = year, y = count.mean))+
+  geom_line(color = docolor, alpha = 0.6)+
+  geom_point(size=1.5, color = docolor)+
+  geom_errorbar(aes(ymin = count.mean-count.sd, ymax = count.mean+count.sd), width=0.5, size=0.5, color = docolor)+
+  ylab("Number of bison")+
+  xlab("Year")+
+  my_theme
+
+bison_growth <- ggplot(bison_growth_data, aes(x = year, y = growth_rate))+
+  geom_line(color = docolor, alpha = 0.6)+
+  geom_point(size=1.5, color = docolor)+
+  ylab("Population growth rate (r)")+
+  xlab("Year")+
+  my_theme
+
+snow_plot <- ggplot(plot_data, aes(x = year, y = acc_swe))+
+  geom_line(color = docolor, alpha = 0.6)+
+  geom_point(size=1.5, color = docolor)+
+  ylab("Accumlated\nsnow water equivalent (mm)")+
+  xlab("Year")+
+  my_theme
+
+plot_grid(bison_plot, bison_growth, snow_plot, labels = "AUTO", ncol = 3)
+ggsave(filename = "../figures/bison_data_plots.png", height = 3, width = 10, units = "in", dpi = 120)
 
 
 ####
@@ -101,6 +139,9 @@ my_model <- "
 ####
 ####  Fit Bison Forecasting Model ----------------------------------------------
 ####
+##  For years without observation error, set to max observed standard deviation
+na_sds <- which(is.na(bison_dat$count.sd)==T)
+bison_dat[na_sds,"count.sd"] <- max(bison_dat$count.sd, na.rm=T)
 
 ##  Prepare data list
 mydat         <- list(Nobs = bison_dat$count.mean, # mean counts
@@ -151,10 +192,28 @@ prediction_df      <- data.frame(year = c(bison_dat$year, (max(bison_dat$year)+1
 
 
 ####
-####  Plot the calibration data and predictions
+####  PLOT POSTERIOR DISTRIBUTIONS OF PARAMETERS -------------------------------
+####
+post_params <- as.data.frame(as.matrix(fitted_model$params))
+post_params$iteration <- 1:nrow(post_params)
+post_params <- post_params %>%
+  gather(key = parameter, value = estimate, -iteration)
+
+ggplot(post_params, aes(x = estimate, y = ..density..))+
+  geom_histogram(fill = docolor, color = "white", bins = 20)+
+  facet_wrap(~parameter, scales = "free", ncol = 4)+
+  ylab("Posterior density")+
+  xlab("Parameter estimate")+
+  my_theme
+ggsave(filename = "../figures/bison_post_params.png", height = 3, width = 10, units = "in", dpi = 120)
+
+
+
+####
+####  PLOT DATA AND POSTERIOR PREDICTIONS --------------------------------------
 ####
 pred_color <- "#CF4C26"
-obs_color  <- "#0A9AB8"
+obs_color  <- "#278DAF"
 calibration_plot <- ggplot(prediction_df, aes(x=year))+
   geom_ribbon(aes(ymax=upper_prediction, ymin=lower_prediction), fill=pred_color, color=NA, alpha=0.2)+
   geom_line(aes(y=median_prediction), color=pred_color)+
@@ -258,5 +317,5 @@ variance_plot <- ggplot(data=var_rel_preds, aes(x=x))+
 ####  COMBINE PLOTS AND SAVE ----
 ####
 plot_grid(calibration_plot, variance_plot, nrow = 2, labels = "AUTO")
-ggsave(filename = "../figures/bison_combined.png", width = 4, height = 6, units = "in")
+ggsave(filename = "../figures/bison_combined.png", width = 4, height = 6, units = "in", dpi =120)
 
