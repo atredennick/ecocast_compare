@@ -68,8 +68,8 @@ bison_dat <- bison_raw %>%
 ####  PLOT BISON AND SNOW DATA -------------------------------------------------
 ####
 plot_data <- bison_dat %>%
-  dplyr::select(year, count.mean, count.sd, accum_snow_water_equiv_mm) %>%
-  dplyr::rename(acc_swe = accum_snow_water_equiv_mm)
+  dplyr::select(year, count.mean, count.sd, mean_snow_water_equiv_mm) %>%
+  dplyr::rename(avg_swe = mean_snow_water_equiv_mm)
 
 bison_growth_data <- bison_dat %>%
   dplyr::select(year, count.mean) %>%
@@ -92,10 +92,10 @@ bison_growth <- ggplot(bison_growth_data, aes(x = year, y = growth_rate))+
   xlab("Year")+
   my_theme
 
-snow_plot <- ggplot(plot_data, aes(x = year, y = acc_swe))+
+snow_plot <- ggplot(plot_data, aes(x = year, y = avg_swe))+
   geom_line(color = docolor, alpha = 0.6)+
   geom_point(size=1.5, color = docolor)+
-  ylab("Accumlated\nsnow water equivalent (mm)")+
+  ylab("Mean SWE (mm)")+
   xlab("Year")+
   my_theme
 
@@ -106,17 +106,19 @@ ggsave(filename = "../figures/bison_data_plots.png", height = 3, width = 10, uni
 ####
 ####  JAGS State-Space Model ---------------------------------------------------
 ####
+r_mu_prior <- log(1.11) # lambda = 1.11 in Hobbs et al. 2015
+r_sd_prior <- sd(log(rnorm(100000,1.11,0.024))) # sd_lambda = 0.024 in Hobbs et al. 2015
 my_model <- "  
   model{
 
     #### Variance Priors
-    sigma_proc ~ dunif(0,10)
+    sigma_proc ~ dgamma(0.01,0.01)
     tau_proc <- 1/sigma_proc^2
     
     #### Fixed Effects Priors
-    r ~ dnorm(0.234, 1/0.136^2)
-    b ~ dnorm(0,0.0001)
-    b1 ~ dnorm(0,0.0001)
+    r ~ dnorm(0.1, 1/0.02^2) # intrinsic growth rate
+    b ~ dnorm(0,0.0001) # strength of density dependence (r/K)
+    b1 ~ dnorm(0,0.0001) # effect of snow
     
     #### Initial Conditions
     z[1] ~ dnorm(Nobs[1], tau_obs[1])
@@ -147,7 +149,7 @@ bison_dat[na_sds,"count.sd"] <- max(bison_dat$count.sd, na.rm=T)
 mydat         <- list(Nobs = bison_dat$count.mean, # mean counts
                       n = nrow(bison_dat), # number of observations
                       tau_obs = 1/bison_dat$count.sd^2, # transform s.d. to precision
-                      x = c(as.numeric(scale(bison_dat$accum_snow_water_equiv_mm)),
+                      x = c(as.numeric(scale(bison_dat$mean_snow_water_equiv_mm)),
                             rep(0,10)), # snow depth, plus ten years at avg depth (0, since standardized)
                       npreds = nrow(bison_dat)+10) # number of total predictions (obs + forecast)
 out_variables <- c("r","b","b1","sigma_proc","z")
@@ -158,6 +160,8 @@ mc3     <- jags.model(file=textConnection(my_model), data=mydat, n.chains=3)
 mc3.out <- coda.samples(model=mc3, variable.names=out_variables, n.iter=5000)
 summary(mc3.out)$stat
 summary(mc3.out)$quantile
+
+0.18 / 0.00005
 
 ## Split output
 out          <- list(params=NULL, predict=NULL, model=my_model,data=mydat)
@@ -195,12 +199,19 @@ prediction_df      <- data.frame(year = c(bison_dat$year, (max(bison_dat$year)+1
 ####  PLOT POSTERIOR DISTRIBUTIONS OF PARAMETERS -------------------------------
 ####
 post_params <- as.data.frame(as.matrix(fitted_model$params))
-post_params$iteration <- 1:nrow(post_params)
+max_iters <- nrow(post_params)
+post_params$iteration <- 1:max_iters
 post_params <- post_params %>%
-  gather(key = parameter, value = estimate, -iteration)
+  gather(key = parameter, value = estimate, -iteration) %>%
+  mutate(prior = c(rnorm(max_iters,0,1000), # b prior
+                   rnorm(max_iters,0,1000), # b1 prior
+                   rnorm(max_iters,r_mu_prior,r_sd_prior), # r prior
+                   runif(max_iters,0,10))) # sd prior
 
+prior_col <- "#CF4C26"
 ggplot(post_params, aes(x = estimate, y = ..density..))+
   geom_histogram(fill = docolor, color = "white", bins = 20)+
+  geom_line(data = filter(post_params, parameter == "r"),aes(x = prior), stat = "density", color = prior_col)+
   facet_wrap(~parameter, scales = "free", ncol = 4)+
   ylab("Posterior density")+
   xlab("Parameter estimate")+

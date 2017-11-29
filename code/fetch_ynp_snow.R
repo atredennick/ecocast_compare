@@ -33,7 +33,7 @@ library(wux)
 ####
 setwd("../data/")
 snotel.info(path = ".") 
-download.snotel(site = 924)
+download.snotel(site = 924) # West Yellowstone SNOTEL
 file.remove("snotel_metadata.csv")
 
 ynp_snotel <- read.csv("snotel_924.csv", skip = 58) %>%
@@ -48,6 +48,7 @@ ynp_snotel <- read.csv("snotel_924.csv", skip = 58) %>%
   group_by(year) %>%
   summarise(mean_snow_water_equiv_mm  = mean(snow_water_eq_mm, na.rm=TRUE),
             accum_snow_water_equiv_mm = sum(snow_water_eq_mm, na.rm=TRUE),
+            max_snow_water_equiv_mm   = max(snow_water_eq_mm, na.rm=TRUE),
             sd_snow_water_equiv_mm    = sd(snow_water_eq_mm, na.rm=TRUE))
 
 write.csv(ynp_snotel, "west_yellowstone_snotel_summary.csv")
