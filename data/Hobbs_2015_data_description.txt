@@ -1,0 +1,254 @@
+####################
+
+Folder: aerial census data
+
+-------------------------------
+
+File: total_population_size.csv
+
+Column index contains the year number in sequence where 1970 = 1 
+and 2010 = 41.
+
+Column year is the year of the census.
+
+Column count.mean is the average of repeated summer counts.
+
+Column count.sd is the standard deviation of repeated summer 
+counts.
+
+####################
+
+Folder: aerial classification data
+
+------------------------------
+
+File: aerial_class.csv
+
+Column year is the year of the aerial classification.
+
+Column ratio.index is the sequential year number where 1970 = 1 
+and 2010 = 41. Years with missing data do not appear in the 
+sequence
+
+Column mean is the mean proportion of juveniles in the population 
+defined as the count of juvenile animals divided by the total 
+count of animals of all ages.
+
+Column sd is the standard deviation of the proportion of calves 
+in the population.
+
+####################
+
+Folder: ground classification data
+
+------------------------------
+
+File: ground_class_means.csv
+
+Column ground.year is the year the ground classification was 
+conducted.
+
+Column ground.index is the sequential year number where 1 = 1970 
+and 41=2010
+
+Column bull_mean is the mean proportion of yearling and adult 
+males in the population.
+
+Column cow_mean is the mean proportion of adult females in the 
+population.
+
+Column yrlg_mean is the mean proportion of yearling females in 
+the population.
+
+------------------------------
+
+File: ground_class_sd.csv
+
+Column ground.year is the year the ground classification was 
+conducted
+
+Column ground.index is the sequential year number where 1 = 1970 
+and 41=2010
+
+Column bull_sd is the standard deviation of the proportion of 
+yearling and adult males in the population.
+
+Column cow_sd is the standard deviation of the proportion of 
+adult females in the population.
+
+Column yrlg_sd is the standard deviation of the proportion of 
+yearling females in the population.
+
+------------------------------
+
+File: ground_class_alpha.csv
+
+Column ground.year is the year the ground classification was 
+conducted.
+
+Column ground.index is the sequential year number where 1 = 1970 
+and 41=2010.
+
+Column bull_alpha is the parameter of the Dirichlet distribution 
+for the proportion of adult and yearling males in the population.
+
+Column cow_alpha is the parameter of the Dirichlet distribution 
+for the proportion of adult females in the population.
+
+Column yrlg_alpha is the parameter of the Dirichlet distribution 
+for the proportion of yearling females in the population.
+
+Column calf_alpha is the parameter of the Dirichlet distribution 
+for the proportion of juveniles in the population.
+
+------------------------------
+
+####################
+
+Folder: serology data
+
+------------------------------
+
+File: adult_sero.csv
+
+Column index is the sequential year number where 1 = 1970 and 
+41=2010
+
+Column year is the year that serology tests were conducted.
+
+Column boundary.adult.pos is the number of adult females testing 
+positive for exposure to brucellosis.
+
+Column boundary.adult.tests is the number of adult females tested 
+for exposure to brucellosis.
+
+------------------------------
+
+File: calf_sero.csv
+
+Column index is the sequential year number where 1 = 1970 and 
+41=2010
+
+Column year is the year that serology tests were conducted.
+
+Column boundary.calf.pos is the number of juveniles testing 
+positive for exposure to brucellosis.
+
+Column boundary.calf.tests is the number of juveniles tested for 
+exposure to brucellosis.
+
+------------------------------
+
+File: yearling_sero.csv
+
+Column index is the sequential year number where 1 = 1970 and 
+41=2010
+
+Column year is the year that serology tests were conducted.
+
+Column boundary.yrlng.pos is the number of yearling females 
+testing positive for exposure to brucellosis.
+
+Column boundary.yrlng.tests is the number of yearlings tested for 
+exposure to brucellosis.
+
+####################
+
+Folder: removal data
+
+------------------------------
+
+File: removal_count.csv
+
+Column index is the sequential year number where 1 = 1970 and 
+41=2010.
+
+Column year is the year that removals occurred.
+
+Column removal is the total number of animals removed.
+
+Column rm.bull is the number of adult and yearling males removed.
+
+Column rm.calf is the number of juveniles removed.
+
+Column rm.cow.yrlng is the number of yearling females removed.
+
+Column rm.cow.adult is the number of adult females removed.
+
+------------------------------
+
+File: removal_composition.csv
+
+Column index is the sequential year number where 1 = 1970 and 
+41=2010.
+
+Column year is the year that removals occurred.
+
+Column alpha.calf is the parameter of the Dirichlet distribution 
+for the proportion of removals in the juvenile age class.
+
+Column alpha.yrl is the parameter of the Dirichlet distribution 
+for the proportion of removals in the yearling female age class.
+
+Column alpha.cow is the parameter of the Dirichlet distribution 
+for the proportion of removals in the adult female age class.
+
+Column alpha.bull is the parameter of the Dirichlet distribution 
+for the proportion of removals in the adult and yearling male age 
+class.
+
+------------------------------
+
+File: removal.sero.csv
+
+Column year is the year that removals occurred.
+
+Column index is the sequential year number where 1 = 1970 and 
+41=2010.
+
+Column calf_alpha is the first parameter in the beta distribution 
+of the proportion of the calves removed that were seropositive.
+
+Column calf_beta is the second parameter in the beta distribution 
+of the proportion of juveniles removed that were seropositive.
+
+Column yrlg_alpha is the first parameter in the beta distribution 
+of the proportion of the yearling females removed that were 
+seropositive.
+
+Column yrlg_beta is the second parameter in the beta distribution 
+of the proportion of yearling females removed that were 
+seropositive.
+
+Column cow_alpha is the first parameter in the beta distribution 
+of the proportion of the adult females removed that were 
+seropositive.
+
+Column cow_beta is the second parameter in the beta distribution 
+of the proportion of adult females removed that were 
+seropositive.
+
+Column calf_pos is the number of juveniles testing positive for 
+brucellosis. (Years with no removals have positives = 1 and tests 
+= 1.)
+
+Column calf_test is the number of juveniles tested for 
+brucellosis. (Years with no removals have positives = 1 and tests 
+= 1.)
+
+Column yrlg_pos is the number of yearling females testing 
+positive for brucellosis. (Years with no removals have positives 
+= 1 and tests = 1.)
+
+Column yrlg_test is the number of yearling females tested for 
+brucellosis. (Years with no removals have positives = 1 and tests 
+= 1.)
+
+Column cow_pos is the number of adult females testing positive 
+for brucellosis. (Years with no removals have positives = 1 and 
+tests = 1.)
+
+Column cow_test is the number of adult females tested for 
+brucellosis. (Years with no removals have positives = 1 and tests 
+= 1.)
+

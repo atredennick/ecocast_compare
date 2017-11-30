@@ -58,10 +58,10 @@ write.csv(ynp_snotel, "west_yellowstone_snotel_summary.csv")
 ####
 ####  DOWNLOAD AND PROCESS SNOW DEPTH DATA FROM GCMs ----
 ####
-dir.create("../data/CMIP5/", showWarnings = FALSE)
-CMIP5fromESGF(save.to = "/Users/atredenn/repos/ecocast_compare/data/CMIP5/",
-              models = c("CanESM2"),
-              variables = c("tas"),
-              experiments= c("historical"))
+# dir.create("../data/CMIP5/", showWarnings = FALSE)
+# CMIP5fromESGF(save.to = "/Users/atredenn/repos/ecocast_compare/data/CMIP5/",
+#               models = c("CanESM2"),
+#               variables = c("tas"),
+#               experiments= c("historical"))
 
 

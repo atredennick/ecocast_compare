@@ -54,7 +54,7 @@
 # Montana  SNOTEL Site - 6700 ft
 # Reporting Frequency: Daily; Date Range: Period of Record
 #
-# As of: Nov 29, 2017 2:36:39 PM GMT-08:00
+# As of: Nov 30, 2017 12:19:12 PM GMT-08:00
 #
 Date,Snow Water Equivalent (mm) Start of Day Values,Precipitation Accumulation (mm) Start of Day Values,Air Temperature Maximum (degC),Air Temperature Minimum (degC),Air Temperature Average (degC),Precipitation Increment (mm)
 1966-10-01,0,,,,,
@@ -18744,4 +18744,5 @@ Date,Snow Water Equivalent (mm) Start of Day Values,Precipitation Accumulation (
 2017-11-26,64,112,11.2,-3.2,2.5,0
 2017-11-27,61,112,5.6,-7.4,0.8,15
 2017-11-28,71,127,1.1,-12.1,-6.3,0
-2017-11-29,66,127,,,,
+2017-11-29,66,127,1.2,-13.6,-4.2,5
+2017-11-30,69,132,,,,
