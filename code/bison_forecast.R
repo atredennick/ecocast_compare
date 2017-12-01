@@ -229,6 +229,11 @@ ggplot(post_params, aes(x = estimate, y = ..density..))+
   geom_line(data = filter(post_params, parameter == "r"),
             aes(x = prior), 
             stat = "density", 
+            color = "white",
+            size = 1.2)+
+  geom_line(data = filter(post_params, parameter == "r"),
+            aes(x = prior), 
+            stat = "density", 
             color = prior_col)+
   facet_wrap(~parameter, scales = "free", ncol = 4)+
   ylab("Posterior density")+
