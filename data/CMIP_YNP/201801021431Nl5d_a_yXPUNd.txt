@@ -1,0 +1,11 @@
+var: P
+yr1: 2009
+mo1: Jan
+yr2: 2018
+mo2: Jan
+lat1: 44.809
+lat2: 44.809
+lon1: -110.5728
+lon2: -110.5728
+analysis: no
+products: bcca

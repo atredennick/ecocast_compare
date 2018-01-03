@@ -79,7 +79,7 @@
 \usepackage{setspace}
 \usepackage{rotating}
 \usepackage[dvipsnames]{xcolor}
-\usepackage{tgtermes}
+\usepackage{mathptmx}
 \definecolor{mycol}{gray}{0}
 \color{mycol}
 \usepackage{enumitem}
@@ -135,7 +135,7 @@ of variability (Steffen et al. 2015), meaning we are entering a
 no-analog world in which we can no longer look to the past to predict
 the future. We can, however, look to the past to parameterize models
 that allow us to \emph{forecast} the future states of ecological systems
-(Clark et al. 2001; Dietze et al. n.d.). Ecologists are in an excellent
+(Clark et al. 2001, Dietze et al. n.d.). Ecologists are in an excellent
 position to meet this forecasting challenge because we have spent
 decades gaining understanding of the processes that regulate
 populations, communities, and ecosystems. However, we lack a systematic
@@ -207,7 +207,7 @@ upon knowing the source of uncertainty. The premise of this proposal is
 that ecological characteristics of organisms (e.g., life history) are
 related to sources of forecast uncertainty. Specifically, we pose three
 hypotheses motivated by recent reviews of ecological forecasting
-(Petchey et al. 2015; Houlahan et al. 2017).
+(Petchey et al. 2015, Houlahan et al. 2017).
 
 \begin{description}
 
@@ -340,9 +340,13 @@ represent observation error (\(\sigma^2_{\text{o}}\)) and process error
 (\(\sigma^2_{\text{p}}\)). The model is \emph{dynamic} because the
 future state (\(z_t\)) depends on the previous state (\(z_{t-1}\)). For
 simplicity we show the data and process models (Eqs. 3 and 4,
-respectively) with normal likelihoods, but these distributions will vary
-depending on the particular data generating process (Hobbs \& Hooten
-2015). \emph{Discuss limitations re:} Auger-Méthé et al. (2016).
+respectively) with normal likelihoods, but the distribution of the data
+model will vary depending on the particular data generating process
+(Hobbs and Hooten 2015). Using different distributions for the data and
+process models also helps make variance parameters identifiable when
+replicate observations are not available (Hobbs and Hooten 2015), thus
+avoiding a potential pitfall of state-space models (Auger-Méthé et al.
+2016)
 
 \subsubsection{An Example: Yellowstone Bison}
 
@@ -566,11 +570,11 @@ Information Policy
 \section{Time Table of Activities}\begin{description}
 
 \item[October to December 2017] Monthly PI Skype meetings to prepare for first meeting. Begin email exchanges to confirm participants. Write \texttt{R} scripts to download, clean, and aggregate data.
-\item[January 2018] \textit{First meeting for four days at Powell Center}: Identify other appropriate data sets. Decide on model structures for each data set and identify climate data availability. Form two-person analysis teams for each data set. Go through bison analysis example. Define manuscripts.
-\item[February to December 2018] Bi-monthly PI Skype meetings. Continue and finalize data set aquisition and aggregate into single database for analysis teams. Analysis teams, with the PC Fellow, identify appropriate climate drivers for their system and begin fitting state-space models. PC Fellow writes generalizable \texttt{R} functions for analysis teams. PC Fellow will have Skype meetings with each analysis team as needed to complete analyses. Write first drafts of manuscripts.
+\item[January 2018] \textit{First meeting for four days at Powell Center}: Identify other appropriate data sets. Decide on model structures for each data set and identify climate data availability. Form two-person analysis teams for each data set. Define manuscripts.
+\item[February to December 2018] Bi-monthly PI Skype meetings. Continue and finalize data set aquisition and aggregate into single database for analysis teams. Analysis teams, with the PC Fellow, identify appropriate climate drivers for their system and begin fitting state-space models. PC Fellow writes generalizable \texttt{R} functions for analysis teams. PC Fellow Skypes with each analysis team as needed to complete analyses. Write first drafts of manuscripts.
 \item[January 2019] \textit{Second meeting for four days at Powell Center}: Analysis teams present results for feedback. Finalize database and identify any outstanding issues. Evaluate manuscript drafts and form writing teams. Create a \textsc{GitHub} repository for forecasts.
 \item[February to June 2019] Finalize database and forecast repository. Finalize all forecasts and forecast partitions. Continue writing manuscripts. PC Fellow will have at least one Skype meeting with each analysis team during this period.
-\item[July to September 2019] Complete manuscripts and submit for publication. Release database and forecast repository to Powell Center for permanent archiving. In addition to peer-reviewed papers, write a blog post for Dynamic Ecology\footnote{http://dynamicecology.wordpress.com/} on the limits to ecological forecasting to reach an even broader audience.
+\item[July to September 2019] Complete manuscripts and submit for publication. Release database and forecast repository to Powell Center for permanent archiving.
 
 \end{description}
 
@@ -609,86 +613,90 @@ including:
   \emph{Journal of Applied Ecology}.
 \end{enumerate}
 
-\section*{References}\label{references}
-\addcontentsline{toc}{section}{References}
+\section*{Literature Cited}\label{literature-cited}
+\addcontentsline{toc}{section}{Literature Cited}
 
 \hypertarget{refs}{}
 \hypertarget{ref-Auger-Methe2016}{}
-Auger-Méthé, M., Field, C., Albertsen, C.M., Derocher, A.E., Lewis,
-M.A., Jonsen, I.D., et al. (2016). State-space models' dirty little
+Auger-Méthé, M., C. Field, C. M. Albertsen, A. E. Derocher, M. A. Lewis,
+I. D. Jonsen, and J. M. Flemming. 2016. State-space models' dirty little
 secrets: Even simple linear Gaussian models can have estimation
-problems. \emph{Scientific Reports}, 6.
+problems. Scientific Reports 6.
 
 \hypertarget{ref-Bauer2015}{}
-Bauer, P., Thorpe, A. \& Brunet, G. (2015). The quiet revolution of
-numerical weather prediction. \emph{Nature}, 525, 47--55.
+Bauer, P., A. Thorpe, and G. Brunet. 2015. The quiet revolution of
+numerical weather prediction. Nature 525:47--55.
 
 \hypertarget{ref-Botero2015}{}
-Botero, C.A., Weissing, F.J., Wright, J. \& Rubenstein, D.R. (2015).
+Botero, C. A., F. J. Weissing, J. Wright, and D. R. Rubenstein. 2015.
 Evolutionary tipping points in the capacity to adapt to environmental
-change. \emph{Proceedings of the National Academy of Sciences}, 112,
-184--189.
+change. Proceedings of the National Academy of Sciences 112:184--189.
 
 \hypertarget{ref-Clark2001}{}
-Clark, J.S., Carpenter, S.R., Barber, M., Collins, S., Dobson, A.,
-Foley, J.A., et al. (2001). Ecological forecasts: an emerging
-imperative. \emph{Science}, 293, 657--660.
+Clark, J. S., S. R. Carpenter, M. Barber, S. Collins, A. Dobson, J. A.
+Foley, D. M. Lodge, M. Pascual, R. Pielke, W. Pizer, C. Pringle, W. V.
+Reid, K. A. Rose, O. Sala, W. H. Schlesinger, D. H. Wall, and D. Wear.
+2001. Ecological forecasts: an emerging imperative. Science
+293:657--660.
 
 \hypertarget{ref-DelMoral2010}{}
-{del Moral}, R. (2010). Thirty years of permanent vegetation plots,
-Mount St. Helens, Washington, USA. \emph{Ecology}, 91, 2185.
-
-\hypertarget{ref-Dietze2018}{}
-Dietze, M., Fox, A., Beck-Johnson, L., Betancourt, J., Hooten, M.,
-Jarnevitch, C., et al. (n.d.). Iterative near-term ecological
-forecasting: Needs, opportunities, and challenges. \emph{Proceedings of
-the National Academy of Sciences}.
+{del Moral}, R. 2010. Thirty years of permanent vegetation plots, Mount
+St. Helens, Washington, USA. Ecology 91:2185.
 
 \hypertarget{ref-Dietze2017a}{}
-Dietze, M.C. (2017). Prediction in ecology: A first-principles
-framework. \emph{Ecological Applications}, 27, 2048--2060.
+Dietze, M. C. 2017. Prediction in ecology: A first-principles framework.
+Ecological Applications 27:2048--2060.
+
+\hypertarget{ref-Dietze2018}{}
+Dietze, M., A. Fox, L. Beck-Johnson, J. Betancourt, M. Hooten, C.
+Jarnevitch, T. Kiett, M. Kenney, C. Laney, L. Larsen, L. Loescher, C.
+Lunch, P. Pijanowski, J. Randerson, E. Reid, A. T. Tredennick, R.
+Vargas, K. Weathers, and E. P. White. (n.d.). Iterative near-term
+ecological forecasting: Needs, opportunities, and challenges.
+Proceedings of the National Academy of Sciences.
 
 \hypertarget{ref-Gremer2014}{}
-Gremer, J.R. \& Venable, D.L. (2014). Bet hedging in desert winter
+Gremer, J. R., and D. L. Venable. 2014. Bet hedging in desert winter
 annual plants: Optimal germination strategies in a variable environment.
-\emph{Ecology Letters}, 17, 380--387.
+Ecology Letters 17:380--387.
 
 \hypertarget{ref-Hobbs2015}{}
-Hobbs, N.T. \& Hooten, M.B. (2015). \emph{Bayesian Models: A Statistical
-Primer for Ecologists}. Princeton University Press, Princeton.
+Hobbs, N. T., and M. B. Hooten. 2015. Bayesian Models: A Statistical
+Primer for Ecologists. Princeton University Press, Princeton.
 
 \hypertarget{ref-Houlahan2017}{}
-Houlahan, J.E., Mckinney, S.T., Anderson, T.M. \& Mcgill, B.J. (2017).
-The priority of prediction in ecological understanding. \emph{Oikos},
-126, 1--7.
+Houlahan, J. E., S. T. Mckinney, T. M. Anderson, and B. J. Mcgill. 2017.
+The priority of prediction in ecological understanding. Oikos 126:1--7.
 
 \hypertarget{ref-Petchey2015}{}
-Petchey, O.L., Pontarp, M., Massie, T.M., Kéfi, S., Ozgul, A.,
-Weilenmann, M., et al. (2015). The ecological forecast horizon, and
-examples of its uses and determinants. \emph{Ecology Letters}, 18,
-597--611.
+Petchey, O. L., M. Pontarp, T. M. Massie, S. Kéfi, A. Ozgul, M.
+Weilenmann, G. M. Palamara, F. Altermatt, B. Matthews, J. M. Levine, D.
+Z. Childs, B. J. McGill, M. E. Schaepman, B. Schmid, P. Spaak, A. P.
+Beckerman, F. Pennekamp, and I. S. Pearse. 2015. The ecological forecast
+horizon, and examples of its uses and determinants. Ecology Letters
+18:597--611.
 
 \hypertarget{ref-Steffen2015}{}
-Steffen, W., Richardson, K., Rockström, J., Cornell, S., Fetzer, I.,
-Bennett, E., et al. (2015). Planetary boundaries: Guiding human
-development on a changing planet. \emph{Science}, 348, 1217.
-
-\hypertarget{ref-Tredennick2017a}{}
-Tredennick, A.T., Hooten, M.B. \& Adler, P.B. (2017). Do we need
-demographic data to forecast plant population dynamics? \emph{Methods in
-Ecology and Evolution}, 8, 541--551.
+Steffen, W., K. Richardson, J. Rockström, S. Cornell, I. Fetzer, E.
+Bennett, R. Biggs, and S. Carpenter. 2015. Planetary boundaries: Guiding
+human development on a changing planet. Science 348:1217.
 
 \hypertarget{ref-Tredennick2016Ecos}{}
-Tredennick, A.T., Hooten, M.B., Aldridge, C.L., Homer, C.G.,
-Kleinhesselink, A.R. \& Adler, P.B. (2016). Forecasting climate change
-impacts on plant populations over large spatial extents.
-\emph{Ecosphere}, 7, e01525.
+Tredennick, A. T., M. B. Hooten, C. L. Aldridge, C. G. Homer, A. R.
+Kleinhesselink, and P. B. Adler. 2016. Forecasting climate change
+impacts on plant populations over large spatial extents. Ecosphere
+7:e01525.
+
+\hypertarget{ref-Tredennick2017a}{}
+Tredennick, A. T., M. B. Hooten, and P. B. Adler. 2017. Do we need
+demographic data to forecast plant population dynamics? Methods in
+Ecology and Evolution 8:541--551.
 
 \hypertarget{ref-Williams2017a}{}
-Williams, P.J., Hooten, M.B., Womble, J.N., Esslinger, G.G., Bower, M.R.
-\& Hefley, T.J. (2017). An integrated data model to estimate
-spatiotemporal occupancy, abundance, and colonization dynamics.
-\emph{Ecology}, 98, 328--336.
+Williams, P. J., M. B. Hooten, J. N. Womble, G. G. Esslinger, M. R.
+Bower, and T. J. Hefley. 2017. An integrated data model to estimate
+spatiotemporal occupancy, abundance, and colonization dynamics. Ecology
+98:328--336.
 
 
 \end{document}

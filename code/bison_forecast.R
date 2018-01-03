@@ -12,105 +12,183 @@ rm(list=ls(all.names = TRUE))
 
 
 ####
-####  Load libraries
+####  LOAD LIBRARIES -----------------------------------------------------------
 ####
-library(ggplot2)
-library(ggthemes)
-library(gridExtra)
-library(reshape2)
-library(plyr)
-library(rjags)
-library(coda)
-# library(devtools)
+library(tidyverse) # Data science functions
+library(dplyr)     # Data wrangling
+library(ggthemes)  # Pleasing themese for ggplot2
+library(rjags)     # Fitting Bayesian models with JAGS
+library(coda)      # MCMC summaries
+library(ggmcmc)    # MCMC-to-dataframe functions
+library(stringr)
+library(cowplot)
+# library(devtools) # For installing packages from GitHub
 # install_github("atredennick/ecoforecastR") # get latest version
-library(ecoforecastR)
+library(ecoforecastR) # MCMC manipulation (by M. Dietze; modified by A. Tredennick)
 
 
 
 ####
-####  Set Up My Plotting Theme -------------------------------------------------
+####  LOAD DATA ----------------------------------------------------------------
 ####
-my_theme <- theme_bw()+
-  theme(panel.grid.major.x = element_blank(), 
-        panel.grid.minor.x = element_blank(),
-        panel.grid.minor.y = element_blank(),
-        panel.grid.major.y = element_line(color="white"),
-        panel.background   = element_rect(fill = "#EFEFEF"),
-        axis.text          = element_text(size=10, color="grey35", family = "Arial Narrow"),
-        axis.title         = element_text(size=12, family = "Arial Narrow", face = "bold"),
-        panel.border       = element_blank(),
-        axis.line.x        = element_line(color="black"),
-        axis.line.y        = element_line(color="black"))
+snow_ynp  <- read.csv("../data/west_yellowstone_snotel_summary.csv", row.names = 1)
+weather_dat <- read.csv("../data/PRISM_ppt_tmin_tmean_tmax_tdmean_vpdmin_vpdmax_provisional_4km_197001_201711_44.8090_-110.5728.csv", skip = 10)
+bison_raw <- read.csv("../data/YNP_bison_population_size.csv")
 
+##  Reformat weather data from PRISM
+weather_dat <- weather_dat %>%
+  dplyr::select(-tdmean..degrees.F., -vpdmin..hPa., -vpdmax..hPa.) %>%
+  dplyr::rename(date = Date,
+                ppt_in = ppt..inches.,
+                tmin_F = tmin..degrees.F.,
+                tmean_F = tmean..degrees.F.,
+                tmax_F = tmax..degrees.F.) %>%
+  separate(date, into = c("year", "month"), sep = "-")
 
+precip_dat <- weather_dat %>%
+  dplyr::select(year, month, ppt_in) %>%
+  filter(month %in% c("01")) %>%
+  mutate(year = as.integer(year))
 
-####
-####  Load Data ----------------------------------------------------------------
-####
-bison_raw <- read.csv("../data/YNP_bison_population_size.csv", row.names = 1)
-bison_dat <- bison_raw[which(!is.na(bison_raw$count.sd)),2:ncol(bison_raw)]
+##  Reformat bison data and combine with weather data
+bison_dat <- bison_raw %>% 
+  dplyr::select(-ends_with("source")) %>%     # drop the source column
+  mutate(set = ifelse(year < 2011, "training", "validation")) %>% # make new column for data splits
+  left_join(snow_ynp, by="year") %>% # merge in SNOTEL data
+  left_join(precip_dat, by="year")
 
 
 
 ####
 ####  JAGS State-Space Model ---------------------------------------------------
 ####
+r_mu_prior <- log(1.11) # lambda = 1.11 in Hobbs et al. 2015
+r_sd_prior <- sd(log(rnorm(100000,1.11,0.024))) # sd_lambda = 0.024 in Hobbs et al. 2015
+
 my_model <- "  
-  model{
+model{
 
-    #### Variance Priors
-    tau_proc ~ dgamma(0.0001, 0.0001)
-    sigma_proc <- 1/sqrt(tau_proc)
-    
-    #### Fixed Effects Priors
-    r ~ dunif(0,5)
-    K ~ dunif(1,10000)
-    
-    #### Initial Conditions
-    N0 ~ dunif(1,1000)
-    Nmed[1] <- log(max(1, N0 + r * N0 * (1 - N0 / K)))
-    N[1] ~ dlnorm(Nmed[1], tau_proc)
-    
-    #### Process Model
-    for(t in 2:npreds){
-      Nmed[t] <- log(max(1, N[t-1] + r * N[t-1] * (1 - N[t-1] / K)))
-      N[t] ~ dlnorm(Nmed[t], tau_proc) 
-    }
-    
-    #### Data Model
-    ##  SD observations
-    for(t in 1:n){
-      var_obs[t] <- sd_obs[t]*sd_obs[t]
-      shape[t] <- N[t]*N[t]/var_obs[t]
-      rate[t] <- N[t]/var_obs[t]
-      lambda[t] ~ dgamma(shape[t], rate[t])
-      Nobs[t] ~ dpois(lambda[t])
-    }
+#### Variance Priors
+sigma_proc ~ dunif(0,5)
+tau_proc   <- 1/sigma_proc^2
+eta        ~ dunif(0, 50)
 
-  }"
+#### Fixed Effects Priors
+r  ~ dnorm(0.1, 1/0.02^2)  # intrinsic growth rate, informed prior
+b  ~ dnorm(0,1/2^2)I(-2,2) # strength of density dependence, bounded
+b1 ~ dnorm(0,0.0001)       # effect of Jan. precip in year t
+
+#### Initial Conditions
+z[1]    ~ dnorm(Nobs[1], tau_obs[1]) # varies around observed abundance at t = 1
+zlog[1] <- log(z[1]) # set first zlog
+
+#### Process Model
+for(t in 2:npreds){
+# Calculate log integration of extractions
+#e[t] = log( abs( 1 - (E[t] / z[t-1]) ) ) 
+
+# Gompertz growth, on log scale
+mu[t]   <- zlog[t-1] + r + b*(zlog[t-1]) + b1*x[t]
+zlog[t] ~ dnorm(mu[t], tau_proc)
+z[t]    <- exp(zlog[t]) # back transform to arithmetic scale
+}
+
+#### Data Model
+for(j in 2:n){
+p[j]     <- eta/(eta + z[j]) # calculate NB centrality parameter
+Nobs[j]  ~ dnegbin(p[j], eta) # NB likelihood
+#Nobs[j] ~ dnorm(z[j], tau_obs[j])
+}
+
+####  Derived Quantities for Model Evaluation
+for(i in 1:n){
+# For autocorrelation test
+epsilon.obs[i] <- Nobs[i] - z[i]
+
+# Simulate new data
+p2[i]        <- eta/(eta + z[i])
+Nnew [i]     ~ dnegbin(p2[i], eta)
+#Nnew[i] ~ dnorm(z[i], tau_obs[i])
+sqerr[i]     <- ((Nobs[i] - z[i])^2)/Nobs[i]
+sqerr_new[i] <- ((Nnew[i] - z[i])^2)/Nnew[i]
+}
+
+fit     <- sum(sqerr[])
+fit.new <- sum(sqerr_new[])
+pvalue  <- step(fit.new-fit)
+
+}"
 
 
 
 ####
 ####  Fit Bison Forecasting Model ----------------------------------------------
 ####
+##  For years without observation error, set to max observed standard deviation
+na_sds                       <- which(is.na(bison_dat$count.sd)==T)
+bison_dat[na_sds,"count.sd"] <- max(bison_dat$count.sd, na.rm=T)
 
+##  Split into training and validation sets
+training_dat   <- filter(bison_dat, set == "training")
+validation_dat <- filter(bison_dat, set == "validation")
+
+##  Set up SWE knowns (2011-2017), relative to scaling of observations
+ppt_mean     <- mean(training_dat$ppt_in)
+ppt_sd       <- sd(training_dat$ppt_in)
+forecast_ppt <- precip_dat %>%
+  filter(year %in% validation_dat$year) %>%
+  pull(ppt_in)
+scl_fut_ppt  <- (forecast_ppt - ppt_mean) / ppt_sd
+
+##  Set initial values for unkown parameters
+inits <- list(
+  list(sigma_proc = 0.01,
+       r = 0.05,
+       b = -0.001,
+       b1 = -0.5),
+  list(sigma_proc = 0.3,
+       r = 0.4,
+       b = -0.1,
+       b1 = -0.01),
+  list(sigma_proc = 0.1,
+       r = 0.7,
+       b = -0.00001,
+       b1 = -0.2)
+)
+
+
+
+####
+####  FIT AND FORECAST WITH KNOWN JAN PPT --------------------------------------
+####
 ##  Prepare data list
-mydat         <- list(Nobs = round(bison_dat$count.mean), 
-                      n = nrow(bison_dat),
-                      sd_obs = bison_dat$count.sd,
-                      npreds = nrow(bison_dat)+10)
-out_variables <- c("r","K","sigma_proc","N")
+mydat <- list(Nobs    = round(training_dat$count.mean), # mean counts
+              n       = nrow(training_dat), # number of observations
+              tau_obs = 1/training_dat$count.sd^2, # transform s.d. to precision
+              x       = c(as.numeric(scale(training_dat$ppt_in)),scl_fut_ppt), # snow depth, plus forecast years
+              npreds  = nrow(training_dat)+nrow(validation_dat)) # number of total predictions (obs + forecast)
+
+##  Random variables to collect
+out_variables <- c("r", "b", "b1", "sigma_proc", "z", "pvalue", "fit", "fit.new")
 
 ##  Send to JAGS
-mc3     <- jags.model(file=textConnection(my_model), data=mydat, n.chains=3)
-           update(mc3, n.iter = 10000)
-mc3.out <- coda.samples(model=mc3, variable.names=out_variables, n.iter=50000)
+mc3     <- jags.model(file = textConnection(my_model), 
+                      data = mydat, 
+                      n.chains = length(inits), 
+                      n.adapt = 5000, 
+                      inits = inits) 
+update(mc3, n.iter = 10000) 
+mc3.out <- coda.samples(model=mc3, 
+                        variable.names=out_variables, 
+                        n.iter=10000) 
+
+
+
 
 ## Split output
-out          <- list(params=NULL, predict=NULL, model=my_model,data=mydat)
+out          <- list(params=NULL, predict=NULL)
 mfit         <- as.matrix(mc3.out,chains=TRUE)
-pred.cols    <- union(grep("N[",colnames(mfit),fixed=TRUE),grep("Nmed[",colnames(mfit),fixed=TRUE))
+pred.cols    <- union(grep("z[",colnames(mfit),fixed=TRUE),grep("mu[",colnames(mfit),fixed=TRUE))
 chain.col    <- which(colnames(mfit)=="CHAIN")
 out$predict  <- mat2mcmc.list(mfit[,c(chain.col,pred.cols)])
 out$params   <- mat2mcmc.list(mfit[,-pred.cols])
@@ -123,63 +201,101 @@ predictions        <- rbind(fitted_model$predict[[1]],
 median_predictions <- apply(predictions, MARGIN = 2, FUN = "median")
 upper_predictions  <- apply(predictions, MARGIN = 2, FUN = function(x){quantile(x, probs = 0.975)})
 lower_predictions  <- apply(predictions, MARGIN = 2, FUN = function(x){quantile(x, probs = 0.025)})
-prediction_df      <- data.frame(year = c(bison_dat$year, (max(bison_dat$year)+1):(max(bison_dat$year)+10)),
-                                 observation = c(bison_dat$count.mean,rep(NA,10)),
-                                 upper_observation = c(bison_dat$count.mean+bison_dat$count.sd,rep(NA,10)),
-                                 lower_observation = c(bison_dat$count.mean-bison_dat$count.sd,rep(NA,10)),
+prediction_df      <- data.frame(year = bison_dat$year,
+                                 set = bison_dat$set,
+                                 observation = bison_dat$count.mean,
+                                 upper_observation = bison_dat$count.mean+bison_dat$count.sd,
+                                 lower_observation = bison_dat$count.mean-bison_dat$count.sd,
                                  median_prediction = median_predictions,
                                  upper_prediction = upper_predictions,
                                  lower_prediction = lower_predictions)
 
-##  Check parameter chains for convergence and mixing
-# plot(fitted_model$params)
-# gelman.diag(fitted_model$params)
-# heidel.diag(fitted_model$params)
-
 
 
 ####
-####  Plot the calibration data and predictions
+####  PLOT DATA AND POSTERIOR PREDICTIONS --------------------------------------
 ####
 pred_color <- "#CF4C26"
-obs_color  <- "#0A9AB8"
+obs_color  <- "#278DAF"
+pred_color <- "black"
+obs_color  <- "black"
 calibration_plot <- ggplot(prediction_df, aes(x=year))+
-  geom_ribbon(aes(ymax=upper_prediction, ymin=lower_prediction), fill=pred_color, color=NA, alpha=0.2)+
-  geom_line(aes(y=median_prediction), color=pred_color)+
-  geom_errorbar(aes(ymin=lower_observation, ymax=upper_observation), width=0.5, color=obs_color, size=0.2)+
-  geom_point(aes(y=observation), color=obs_color, size=0.5)+
-  geom_vline(aes(xintercept=max(bison_dat$year)), linetype=2,color="grey55")+
+  geom_ribbon(aes(ymax=upper_prediction, ymin=lower_prediction),
+              fill=pred_color, 
+              color=NA, 
+              alpha=0.2)+
+  geom_line(aes(y=median_prediction), color=pred_color, size = 0.2)+
+  geom_errorbar(data = filter(prediction_df, year <2011), aes(x = year, ymin=lower_observation, ymax=upper_observation), 
+                width=0.5, 
+                color=obs_color, 
+                size=0.2)+
+  geom_point(data = filter(prediction_df, year <2011), aes(x = year, y=observation), color=obs_color, size=0.5)+
+  geom_vline(aes(xintercept=2010), linetype=2,color="grey55")+
+  # geom_col(data = bison_dat, aes(x = year, y = wint.removal), color = "grey55", fill = "grey55", width = 0.3)+
+  scale_y_continuous(breaks = seq(0,15000,2500))+
+  # scale_x_continuous(breaks = seq(1970,2015,5))+
   ylab("Number of bison")+
   xlab("Year")+
-  my_theme
-# ggsave(filename = "../figures/bison_calibration.png", width = 4, height = 3, units = "in", dpi=120)
+  theme_few()
 
 
 
 ####
-####  Partition Forecast Uncertainty -------------------------------------------
+####  SET UP GCM PROJECTION MATRIX ---------------------------------------------
 ####
-##  Function for the ecological process (population growth)
-iterate_process <- function(Nnow, r, K, sd_proc) { 
-  Ntmp <- Nnow + r * Nnow * (1 - Nnow / K)
-  Ntmp[which(Ntmp < 1)] <- 1
-  N    <- rlnorm(length(Nnow), log(Ntmp), sd_proc)
+# Set up column names for GCM projection file
+col_names <- c("year",
+               "month",
+               "day",
+               as.character(as.data.frame(read.table("../data/CMIP_YNP/bcca5/COLS_pr.txt"))[,1])
+)
+
+# Read in GCM projections and format as matrix
+gcm_precip <- read_csv("../data/CMIP_YNP/bcca5/pr.csv", col_names = col_names) %>%
+  gather(key = model, value = ppt, -year, -month, -day) %>%
+  separate(model, into = c("model_name", "rep", "scenario"), sep = "[.]") %>%
+  group_by(year, month, model_name, scenario) %>%
+  summarise(total_ppt_mm = sum(ppt),
+            total_ppt_in = total_ppt_mm*0.0393701) %>%
+  ungroup() %>%
+  dplyr::filter(month == 1) %>%
+  dplyr::filter(year %in% c(2011,2012,2013,2014,2015,2016,2017)) %>%
+  dplyr::select(model_name, scenario, year, month, total_ppt_mm, total_ppt_in) %>%
+  dplyr::arrange(model_name, scenario, year, month) %>%
+  dplyr::mutate(stdzd_precip = (total_ppt_in-ppt_mean) / ppt_sd) %>%
+  dplyr::mutate(model_rcp = paste(model_name, scenario,"::")) %>%
+  dplyr::select(model_rcp, year, stdzd_precip) %>%
+  spread(model_rcp, stdzd_precip)
+
+
+
+
+####
+####  PARTITION FORECAST UNCERTAINTY -------------------------------------------
+####
+##  Function for the ecological process (Gompertz population growth)
+iterate_process <- function(Nnow, xnow, r, b, b1, sd_proc) { 
+  mu <- log(Nnow) + r + b*log(Nnow) + b1*xnow # determinstic process; log scale
+  zlog <- rnorm(length(mu), mu, sd_proc) # stochastic process; log scale
+  N <- exp(zlog) # back transform to arithmetic scale
 }
 
 
 ##  Initial condition uncertainty: make forecasts from all MCMC iterations of
 ##    the final year, but use mean parameter values and no process error.
-forecast_steps <- 10
+forecast_steps <- 7
 num_iters      <- 1000
-x              <- sample(predictions[,nrow(bison_dat)], num_iters, replace = TRUE)
+x              <- sample(predictions[,nrow(training_dat)], num_iters, replace = TRUE)
 param_summary  <- summary(fitted_model$params)$quantile
-K              <- param_summary[1,3]
-r              <- param_summary[2,3]
-sd_proc        <- param_summary[3,3]
+r              <- param_summary[6,3]
+b              <- param_summary[1,3]
+b1             <- param_summary[2,3]
+sd_proc        <- param_summary[7,3]
+z              <- scl_fut_ppt
 forecasts      <- matrix(data = NA, nrow = num_iters, ncol = forecast_steps)
 
 for(t in 1:forecast_steps){
-  x <- iterate_process(Nnow = x, r = r, K = K, sd_proc = 0)
+  x <- iterate_process(Nnow = x, xnow = z[t], r, b, b1, sd_proc = 0)
   forecasts[,t] <- x
 }
 varI <- apply(forecasts,2,var)
@@ -189,57 +305,89 @@ varI <- apply(forecasts,2,var)
 x              <- sample(predictions[,nrow(bison_dat)], num_iters, replace = TRUE)
 params         <- as.matrix(fitted_model$params)
 sample_params  <- sample.int(nrow(params), size = num_iters, replace = TRUE)
-K              <- params[sample_params,1]
-r              <- params[sample_params,2]
-sd_proc        <- param_summary[3,3]
+r              <- params[sample_params,"r"]
+b              <- params[sample_params,"b"]
+b1             <- params[sample_params,"b1"]
+sd_proc        <- param_summary[7,3]
+z              <- scl_fut_ppt
 forecasts      <- matrix(data = NA, nrow = num_iters, ncol = forecast_steps)
 
 for(t in 1:forecast_steps){
-  x <- iterate_process(Nnow = x, r = r, K = K, sd_proc = 0)
+  x <- iterate_process(Nnow = x, xnow = z[t], r, b, b1, sd_proc = 0)
   forecasts[,t] <- x
 }
 varIP <- apply(forecasts,2,var)
 
 
-##  Initial conditions, parameter, and process uncertainty
+##  Initial conditions, parameter, and driver uncertainty
 x              <- sample(predictions[,nrow(bison_dat)], num_iters, replace = TRUE)
 params         <- as.matrix(fitted_model$params)
-sample_params  <- sample.int(nrow(params), size = num_iters, replace = TRUE)
-K              <- params[sample_params,1]
-r              <- params[sample_params,2]
-sd_proc       <- params[sample_params,3]
+# sample_params  <- sample.int(nrow(params), size = num_iters, replace = TRUE)
+r              <- params[sample_params,"r"]
+b              <- params[sample_params,"b"]
+b1             <- params[sample_params,"b1"]
+sd_proc        <- params[sample_params,"sigma_proc"]
+zsamps         <- sample(x = ncol(gcm_precip[2:ncol(gcm_precip)]), size = num_iters, replace = TRUE)
+z              <- as.matrix(gcm_precip[2:ncol(gcm_precip)])
 forecasts      <- matrix(data = NA, nrow = num_iters, ncol = forecast_steps)
 
 for(t in 1:forecast_steps){
-  x <- iterate_process(Nnow = x, r = r, K = K, sd_proc = sd_proc)
+  x <- iterate_process(Nnow = x, xnow = as.numeric(z[t,zsamps]), r, b, b1, sd_proc = 0)
   forecasts[,t] <- x
 }
-varIPE <- apply(forecasts,2,var)
+varIPD <- apply(forecasts,2,var)
+
+##  Initial conditions, parameter, driver, and process uncertainty
+x              <- sample(predictions[,nrow(bison_dat)], num_iters, replace = TRUE)
+params         <- as.matrix(fitted_model$params)
+# sample_params  <- sample.int(nrow(params), size = num_iters, replace = TRUE)
+r              <- params[sample_params,"r"]
+b              <- params[sample_params,"b"]
+b1             <- params[sample_params,"b1"]
+sd_proc        <- param_summary[7,3]
+# zsamps         <- sample(x = ncol(gcm_precip[2:ncol(gcm_precip)]), size = num_iters, replace = TRUE)
+z              <- as.matrix(gcm_precip[2:ncol(gcm_precip)])
+forecasts      <- matrix(data = NA, nrow = num_iters, ncol = forecast_steps)
+
+for(t in 1:forecast_steps){
+  x <- iterate_process(Nnow = x, xnow = as.numeric(z[t,zsamps]), r, b, b1, sd_proc = sd_proc)
+  forecasts[,t] <- x
+}
+varIPDE <- apply(forecasts,2,var)
 
 
-V.pred.sim.rel <- apply(rbind(varIPE,varIP,varI),2,function(x) {x/max(x)})
+V.pred.sim     <- rbind(varIPDE,varIPD,varIP,varI)
+V.pred.sim.rel <- apply(V.pred.sim,2,function(x) {x/max(x)})
 
 
 
 ####
-####  Plot the proportion of uncertainty by partition
+####  PLOT THE FORECASTING UNCERTAINTY PARTITION -------------------------------
 ####
 var_rel_preds <- as.data.frame(t(V.pred.sim.rel*100))
 var_rel_preds$x <- 1:nrow(var_rel_preds)
-my_cols <- c("#0A4D5B", "#139AB8", "#39B181")
+my_cols <- c("#0A4D5B", "#139AB8", "#39B181","grey")
+my_cols <- c("black", "grey55", "grey70","grey90")
 variance_plot <- ggplot(data=var_rel_preds, aes(x=x))+
+  geom_ribbon(aes(ymin=0, ymax=varIPDE), fill=my_cols[4])+
+  geom_ribbon(aes(ymin=0, ymax=varIPD), fill=my_cols[3])+
+  geom_ribbon(aes(ymin=0, ymax=varIP), fill=my_cols[2])+
   geom_ribbon(aes(ymin=0, ymax=varI), fill=my_cols[1])+
-  geom_ribbon(aes(ymin=varI, ymax=varIP), fill=my_cols[2])+
-  geom_ribbon(aes(ymin=varIP, ymax=varIPE), fill=my_cols[3])+
   ylab("Percent of uncertainty")+
   xlab("Forecast steps")+
-  scale_x_continuous(breaks=seq(2,forecast_steps,by=2), labels=paste(seq(2,forecast_steps,by=2), "yrs"))+
+  scale_x_continuous(breaks=seq(1,forecast_steps,by=1), 
+                     labels=paste(seq(1,forecast_steps,by=1), "yrs"))+
   scale_y_continuous(labels=paste0(seq(0,100,25),"%"))+
-  my_theme
+  theme_few()
 
 
 
-
-png("../figures/bison_combined.png", width = 4, height = 6, units = "in", res = 120)
-out_plot <- grid.arrange(calibration_plot, variance_plot, ncol=1)
-dev.off()
+####
+####  COMBINE PLOTS AND SAVE ---------------------------------------------------
+####
+plot_grid(calibration_plot, variance_plot, nrow = 2, labels = "AUTO")
+ggsave(filename = "../figures/bison_combined.png",
+       width = 4,
+       height = 6,
+       units = "in",
+       dpi =200)

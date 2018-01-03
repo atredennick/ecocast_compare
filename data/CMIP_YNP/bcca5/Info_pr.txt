@@ -1,0 +1,6 @@
+Period: 2009Jan through 2018Jan
+Latitude bounds: (44.75, 44.875)
+Longitude bounds: (249.375, 249.5)
+
+Rows: [3318] time
+Cols: [132] projection

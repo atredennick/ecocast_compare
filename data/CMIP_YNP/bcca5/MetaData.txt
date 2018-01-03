@@ -1,0 +1,23 @@
+Product:               Bias-corrected constructed-analogs downscaled GCM data
+Variables:             pr        
+Period:                2009Jan through 2018Jan
+Resolution:            1/8 degree
+Latitude bounds:       (44.75, 44.875)
+Longitude bounds:      (-110.625, -110.5)
+Area within bounds:    137 km^2 (approx)
+Dimensions:         
+ Times:                3318
+ Latitudes:            1
+ Longitudes:           1
+ Projections:          132
+
+Location:             (44.809, -110.5728)
+
+Global attributes
+-----------------
+Conventions:           GDT 1.2
+authors:               Bridget Thrasher, Ed Maurer
+description:           Bias-corrected and downscaled GCM data
+creation_date:         2012
+institution:           Climate Analytics Group, Santa Clara U.
+SurfSgnConvention:     Traditional

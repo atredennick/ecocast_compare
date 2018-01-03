@@ -2,7 +2,7 @@
 bibliography: ~/Dropbox/Bibliography/ecocast.bib
 nocite: | 
   @DelMoral2010 @Gremer2014 @Williams2017a @Botero2015
-csl: components/ecology_letters.csl
+csl: components/ecology.csl
 fontsize: 12pt
 geometry: margin=1in
 header-includes:
@@ -10,7 +10,7 @@ header-includes:
   - \usepackage{setspace}
   - \usepackage{rotating}
   - \usepackage[dvipsnames]{xcolor}
-  - \usepackage{tgtermes}
+  - \usepackage{mathptmx}
   - \definecolor{mycol}{gray}{0}
   - \color{mycol}
   - \usepackage{enumitem}
@@ -197,8 +197,8 @@ z_t &\sim \text{Normal}(\mu_t, \sigma^2_{\text{p}}) \\
 where $y_t$ is the observed state at time *t*, $z_t$ is the latent state at time *t*, $\mu_t$ is the determinstic prediction of the state at time *t* given estimated parameters ($\boldsymbol{\theta_p}$) for the specified model function [*f()*], the latent state *z* at time *t*-1, and **x** is a vector of environmental covariates.
 The two error terms represent observation error ($\sigma^2_{\text{o}}$) and process error ($\sigma^2_{\text{p}}$).
 The model is *dynamic* because the future state ($z_t$) depends on the previous state ($z_{t-1}$).
-For simplicity we show the data and process models (Eqs. 3 and 4, respectively) with normal likelihoods, but these distributions will vary depending on the particular data generating process [@Hobbs2015].
-\emph{Discuss limitations re:} @Auger-Methe2016.
+For simplicity we show the data and process models (Eqs. 3 and 4, respectively) with normal likelihoods, but the distribution of the data model will vary depending on the particular data generating process [@Hobbs2015].
+Using different distributions for the data and process models also helps make variance parameters identifiable when replicate observations are not available [@Hobbs2015], thus avoiding a potential pitfall of state-space models [@Auger-Methe2016]
 
 \subsubsection{An Example: Yellowstone Bison}
 We used annual counts of the Yellowston bison from 1975 to 2010 to fit a population growth model using a state-space approach (Equations 3-5).
@@ -282,11 +282,11 @@ $^2$Party responsible for adherence to Powell Center Data and Information Policy
 \begin{description}
 
 \item[October to December 2017] Monthly PI Skype meetings to prepare for first meeting. Begin email exchanges to confirm participants. Write \texttt{R} scripts to download, clean, and aggregate data.
-\item[January 2018] \textit{First meeting for four days at Powell Center}: Identify other appropriate data sets. Decide on model structures for each data set and identify climate data availability. Form two-person analysis teams for each data set. Go through bison analysis example. Define manuscripts.
-\item[February to December 2018] Bi-monthly PI Skype meetings. Continue and finalize data set aquisition and aggregate into single database for analysis teams. Analysis teams, with the PC Fellow, identify appropriate climate drivers for their system and begin fitting state-space models. PC Fellow writes generalizable \texttt{R} functions for analysis teams. PC Fellow will have Skype meetings with each analysis team as needed to complete analyses. Write first drafts of manuscripts.
+\item[January 2018] \textit{First meeting for four days at Powell Center}: Identify other appropriate data sets. Decide on model structures for each data set and identify climate data availability. Form two-person analysis teams for each data set. Define manuscripts.
+\item[February to December 2018] Bi-monthly PI Skype meetings. Continue and finalize data set aquisition and aggregate into single database for analysis teams. Analysis teams, with the PC Fellow, identify appropriate climate drivers for their system and begin fitting state-space models. PC Fellow writes generalizable \texttt{R} functions for analysis teams. PC Fellow Skypes with each analysis team as needed to complete analyses. Write first drafts of manuscripts.
 \item[January 2019] \textit{Second meeting for four days at Powell Center}: Analysis teams present results for feedback. Finalize database and identify any outstanding issues. Evaluate manuscript drafts and form writing teams. Create a \textsc{GitHub} repository for forecasts.
 \item[February to June 2019] Finalize database and forecast repository. Finalize all forecasts and forecast partitions. Continue writing manuscripts. PC Fellow will have at least one Skype meeting with each analysis team during this period.
-\item[July to September 2019] Complete manuscripts and submit for publication. Release database and forecast repository to Powell Center for permanent archiving. In addition to peer-reviewed papers, write a blog post for Dynamic Ecology\footnote{http://dynamicecology.wordpress.com/} on the limits to ecological forecasting to reach an even broader audience.
+\item[July to September 2019] Complete manuscripts and submit for publication. Release database and forecast repository to Powell Center for permanent archiving.
 
 \end{description}
 
@@ -305,4 +305,4 @@ In addition, we expect to produce several publications, including:
 
 
 
-# References
+# Literature Cited
