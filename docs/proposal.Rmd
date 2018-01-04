@@ -1,5 +1,5 @@
 ---
-bibliography: ~/Dropbox/Bibliography/ecocast.bib
+bibliography: /Users/atredenn/Dropbox/Bibliography/ecocast.bib
 nocite: | 
   @DelMoral2010 @Gremer2014 @Williams2017a @Botero2015
 csl: components/ecology.csl
@@ -85,14 +85,14 @@ In ecology, a powerful approach is to combine our detailed knowledge of organism
 @Dietze2017a proposed a first-principles approach to partitioning forecast uncertainty.
 Consider a dynamical model designed to predict some state *y* in the future ($y_{t+1}$) based on the current state ($y_{t}$), an environmental driver(s) ($x$), parameters ($\theta$), and process error ($\epsilon$).
 We can then write a general form of the model as:
-\vspace{-2em}
+\vspace{-0.5em}
 \begin{align}
 y_{t+1} = f(y_t, x_t|\theta) + \epsilon,
 \end{align}
 
 which states that $y$ at time $t+1$ is a function of $y$ and $x$ at time $t$ conditional on the model parameters ($\theta$) plus process error ($\epsilon$).
 Using a Taylor expansion "delta method", @Dietze2017a showed that forecast variance ($Var[y_{t+1}]$) is:
-\vspace{-1em}
+\vspace{-0.5em}
 \begin{align}
 Var[y_{t+1}] = \underbrace{\left(\frac{\delta f}{\delta y} \right)^2}_{\text{stability}} 
                \underbrace{\vphantom{ \left(\frac{\delta f}{\delta y} \right)^2 } Var[y_t]}_{\text{IC uncert.}} +
@@ -181,11 +181,11 @@ Table: Publicly-available abundance time series for plants and animals.
 Using the assembled time series, we will fit Bayesian hierarchical state-space models, which are well-suited for ecological forecasting because they inherently incorporate and propogate the sources of uncertainty we seek to partition: process uncertainty, observation uncertainty, and parameter uncertainty.
 State-space models also explicitly acknowledge that our observations are imperfect, meaning that the state we want to estimate (e.g., abundance of bison in Yellowston) is unknowable, or *latent*.
 A typical state-space model takes the form:
-\vspace{-2em}
+\vspace{-0.5em}
 \begin{align}
 y_t &\sim \text{Normal}(z_t, \sigma^2_{\text{o}}) \\
 z_t &\sim \text{Normal}(\mu_t, \sigma^2_{\text{p}}) \\
-\mu_t &= f(\boldsymbol{\theta_p},z_{t-1},\bold{x}),
+\mu_t &= f(\boldsymbol{\theta_p},z_{t-1},\bold{x}_t),
 \end{align}
 
 \begin{wrapfigure}[30]{r}{0.45\textwidth}

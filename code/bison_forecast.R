@@ -284,7 +284,7 @@ iterate_process <- function(Nnow, xnow, r, b, b1, sd_proc) {
 ##  Initial condition uncertainty: make forecasts from all MCMC iterations of
 ##    the final year, but use mean parameter values and no process error.
 forecast_steps <- 7
-num_iters      <- 1000
+num_iters      <- 5000
 x              <- sample(predictions[,nrow(training_dat)], num_iters, replace = TRUE)
 param_summary  <- summary(fitted_model$params)$quantile
 r              <- param_summary[6,3]
