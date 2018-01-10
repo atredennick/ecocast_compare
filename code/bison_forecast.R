@@ -84,10 +84,13 @@ model{
   
   #### Process Model
   for(t in 2:npreds){
-    # Gompertz growth, on log scale
-    mu[t]   <- zlog[t-1] + r + b*(zlog[t-1]) + b1*x[t]
-    zlog[t] ~ dnorm(mu[t], tau_proc)
-    z[t]    <- exp(zlog[t]) # back transform to arithmetic scale
+    # Calculate log integration of extractions
+      e[t] = log( abs( 1 - (E[t] / z[t-1]) ) ) 
+
+      # Gompertz growth, on log scale
+      mu[t]   <- zlog[t-1] + e[t] + r + b*(zlog[t-1] + e[t]) + b1*x[t]
+      zlog[t] ~ dnorm(mu[t], tau_proc)
+      z[t]    <- exp(zlog[t]) # back transform to arithmetic scale
   }
   
   #### Data Model
@@ -95,23 +98,6 @@ model{
     p[j]     <- eta/(eta + z[j]) # calculate NB centrality parameter
     Nobs[j]  ~ dnegbin(p[j], eta) # NB likelihood
   }
-  
-  ####  Derived Quantities for Model Evaluation
-  for(i in 1:n){
-    # For autocorrelation test
-    epsilon.obs[i] <- Nobs[i] - z[i]
-    
-    # Simulate new data
-    p2[i]        <- eta/(eta + z[i])
-    Nnew [i]     ~ dnegbin(p2[i], eta)
-    #Nnew[i] ~ dnorm(z[i], tau_obs[i])
-    sqerr[i]     <- ((Nobs[i] - z[i])^2)/Nobs[i]
-    sqerr_new[i] <- ((Nnew[i] - z[i])^2)/Nnew[i]
-  }
-  
-  fit     <- sum(sqerr[])
-  fit.new <- sum(sqerr_new[])
-  pvalue  <- step(fit.new-fit)
 
 }"
 
@@ -158,14 +144,18 @@ inits <- list(
 ####  FIT AND FORECAST WITH KNOWN JAN PPT --------------------------------------
 ####
 ##  Prepare data list
+extractions <- training_dat$wint.removal
+extractions[is.na(extractions) == TRUE] <- 0
+
 mydat <- list(Nobs    = round(training_dat$count.mean), # mean counts
+              E       = c(extractions,rep(0,7)),
               n       = nrow(training_dat), # number of observations
               tau_obs = 1/training_dat$count.sd^2, # transform s.d. to precision
               x       = c(as.numeric(scale(training_dat$ppt_in)),scl_fut_ppt), # snow depth, plus forecast years
               npreds  = nrow(training_dat)+nrow(validation_dat)) # number of total predictions (obs + forecast)
 
 ##  Random variables to collect
-out_variables <- c("r", "b", "b1", "sigma_proc", "z", "pvalue", "fit", "fit.new")
+out_variables <- c("r", "b", "b1", "sigma_proc", "z")
 
 ##  Send to JAGS
 mc3     <- jags.model(file = textConnection(my_model), 
@@ -265,12 +255,12 @@ gcm_precip <- read_csv("../data/CMIP_YNP/bcca5/pr.csv", col_names = col_names) %
 
 
 
-
 ####
 ####  PARTITION FORECAST UNCERTAINTY -------------------------------------------
 ####
 ##  Function for the ecological process (Gompertz population growth)
 iterate_process <- function(Nnow, xnow, r, b, b1, sd_proc) { 
+  xnow[xnow>5] <- 5
   mu <- log(Nnow) + r + b*log(Nnow) + b1*xnow # determinstic process; log scale
   zlog <- rnorm(length(mu), mu, sd_proc) # stochastic process; log scale
   N <- exp(zlog) # back transform to arithmetic scale
@@ -280,13 +270,13 @@ iterate_process <- function(Nnow, xnow, r, b, b1, sd_proc) {
 ##  Initial condition uncertainty: make forecasts from all MCMC iterations of
 ##    the final year, but use mean parameter values and no process error.
 forecast_steps <- 7
-num_iters      <- 5000
+num_iters      <- 50000
 x              <- sample(predictions[,nrow(training_dat)], num_iters, replace = TRUE)
 param_summary  <- summary(fitted_model$params)$quantile
-r              <- param_summary[6,3]
+r              <- param_summary[3,3]
 b              <- param_summary[1,3]
 b1             <- param_summary[2,3]
-sd_proc        <- param_summary[7,3]
+sd_proc        <- param_summary[4,3]
 z              <- scl_fut_ppt
 forecasts      <- matrix(data = NA, nrow = num_iters, ncol = forecast_steps)
 
@@ -304,7 +294,7 @@ sample_params  <- sample.int(nrow(params), size = num_iters, replace = TRUE)
 r              <- params[sample_params,"r"]
 b              <- params[sample_params,"b"]
 b1             <- params[sample_params,"b1"]
-sd_proc        <- param_summary[7,3]
+sd_proc        <- param_summary[4,3]
 z              <- scl_fut_ppt
 forecasts      <- matrix(data = NA, nrow = num_iters, ncol = forecast_steps)
 
@@ -318,7 +308,6 @@ varIP <- apply(forecasts,2,var)
 ##  Initial conditions, parameter, and driver uncertainty
 x              <- sample(predictions[,nrow(bison_dat)], num_iters, replace = TRUE)
 params         <- as.matrix(fitted_model$params)
-# sample_params  <- sample.int(nrow(params), size = num_iters, replace = TRUE)
 r              <- params[sample_params,"r"]
 b              <- params[sample_params,"b"]
 b1             <- params[sample_params,"b1"]
@@ -336,12 +325,10 @@ varIPD <- apply(forecasts,2,var)
 ##  Initial conditions, parameter, driver, and process uncertainty
 x              <- sample(predictions[,nrow(bison_dat)], num_iters, replace = TRUE)
 params         <- as.matrix(fitted_model$params)
-# sample_params  <- sample.int(nrow(params), size = num_iters, replace = TRUE)
 r              <- params[sample_params,"r"]
 b              <- params[sample_params,"b"]
 b1             <- params[sample_params,"b1"]
-sd_proc        <- param_summary[7,3]
-# zsamps         <- sample(x = ncol(gcm_precip[2:ncol(gcm_precip)]), size = num_iters, replace = TRUE)
+sd_proc        <- param_summary[4,3]
 z              <- as.matrix(gcm_precip[2:ncol(gcm_precip)])
 forecasts      <- matrix(data = NA, nrow = num_iters, ncol = forecast_steps)
 
