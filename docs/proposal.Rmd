@@ -108,12 +108,13 @@ The variance attributable to any particular factor is a function of how sensitiv
 For example, the Earth's weather is a chaotic system, meaning its dynamics are internally unstable and sensitive to initial conditions uncertainty.
 This is why billions of dollars are spent each year to measure meterological variables -- meterologists learned that the key to reducing forecast error $(Var[y_{t+1}])$ was to reduce the uncertainty of initial conditions ($Var[y_t]$).
 
-In contrast, ecologists are attempting to make actionable forecasts without any knowledge of which term in Eq. 2 dominates forecast error.
+In contrast, ecologists are attempting to make actionable forecasts with little knowledge of which term in Eq. 2 dominates forecast error.
 Knowing which term dominates forecast error in different ecological settings will advance our fundamental understanding of the natural world and immediately impact practical efforts to monitor, model, and predict ecological dynamics.
-Ecological forecasts are central to ecosystem mangament, either explicitly or implicitly, and understanding the sources of forecast error will help make better management decisions by focusing data collection and model improvement efforts on areas that will most reduce forecast uncertainty.
+While it is impossible to partition forecast uncertainty for every species, links among the dominate source of forecast error and species' ecologies might serve as prior information that can guide initial monitoring and modeling schemes.
 
-The goal of this project is to synthesize forecasts of plant and animal populations to advance our fundamental knowledge of the limits to ecological forecasts.
+Thus, the goal of this project is to synthesize forecasts of plant and animal populations to advance our fundamental knowledge of the limits to ecological forecasts.
 We will convene a diverse group of population ecologists to partition forecast uncertainty for several species and systematically link sources of uncertainty to characteristics of the focal populations (e.g., life history traits).
+Doing so will (1) provide actionable information on new ways to improve ongoing ecological forecasts, (2) bridge ecological theory and ecological forecasts, and (3) quantify the current limits to ecological forecasts.
 
 \section{Hypotheses}
 All forecasts are uncertain, and reducing forecast uncertainty hinges upon knowing the source of uncertainty.
@@ -216,7 +217,7 @@ The next step in testing **H1** is to compare Fig. 1B to results from fast-growi
 
 \section{Participants}
 We have assembled a diverse working group, with gender and career stage diversity (Table 2).
-Of the 13 listed participants, five are women and six are early career scientists.
+Of the 14 listed participants, five are women and six are early career scientists.
 
 
 \footnotesize
@@ -284,17 +285,18 @@ $^2$Party responsible for adherence to Powell Center Data and Information Policy
 \section{Time Table of Activities}
 \begin{description}
 
-\item[October to December 2017] Monthly PI Skype meetings to prepare for first meeting. Begin email exchanges to confirm participants. Write \texttt{R} scripts to download, clean, and aggregate data.
-\item[January 2018] \textit{First meeting for four days at Powell Center}: Identify other appropriate data sets. Decide on model structures for each data set and identify climate data availability. Form two-person analysis teams for each data set. Define manuscripts.
-\item[February to December 2018] Bi-monthly PI Skype meetings. Continue and finalize data set aquisition and aggregate into single database for analysis teams. Analysis teams, with the PC Fellow, identify appropriate climate drivers for their system and begin fitting state-space models. PC Fellow writes generalizable \texttt{R} functions for analysis teams. PC Fellow Skypes with each analysis team as needed to complete analyses. Write first drafts of manuscripts.
-\item[January 2019] \textit{Second meeting for four days at Powell Center}: Analysis teams present results for feedback. Finalize database and identify any outstanding issues. Evaluate manuscript drafts and form writing teams. Create a \textsc{GitHub} repository for forecasts.
-\item[February to June 2019] Finalize database and forecast repository. Finalize all forecasts and forecast partitions. Continue writing manuscripts. PC Fellow will have at least one Skype meeting with each analysis team during this period.
-\item[July to September 2019] Complete manuscripts and submit for publication. Release database and forecast repository to Powell Center for permanent archiving.
+\item[October to December 2018] Monthly PI Skype meetings to prepare for first meeting. Begin email exchanges to confirm participants. Write \texttt{R} scripts to download, clean, and aggregate data.
+\item[January 2019] \textit{First meeting for four days at Powell Center}: Identify other appropriate data sets. Decide on model structures for each data set and identify climate data availability. Form two-person analysis teams for each data set. Define manuscripts.
+\item[February to December 2019] Bi-monthly PI Skype meetings. Continue and finalize data set aquisition and aggregate into single database for analysis teams. Analysis teams, with the PC Fellow, identify appropriate climate drivers for their system and begin fitting state-space models. PC Fellow writes generalizable \texttt{R} functions for analysis teams. PC Fellow Skypes with each analysis team as needed to complete analyses. Write first drafts of manuscripts.
+\item[January 2020] \textit{Second meeting for four days at Powell Center}: Analysis teams present results for feedback. Finalize database and identify any outstanding issues. Evaluate manuscript drafts and form writing teams. Create a \textsc{GitHub} repository for forecasts.
+\item[February to June 2020] Finalize database and forecast repository. Finalize all forecasts and forecast partitions. Continue writing manuscripts. PC Fellow will have at least one Skype meeting with each analysis team during this period.
+\item[July to September 2020] Complete manuscripts and submit for publication. Release database and forecast repository to Powell Center for permanent archiving.
 
 \end{description}
 
 \section{Anticipated Results and Benefits}
-The greatest benefit of this project will be the conceptual advance of linking ecological theory to sources of forecast uncertainty.
+Ecological forecasts are central to ecosystem mangament, either explicitly or implicitly, and understanding the sources of forecast error will help make better management decisions by focusing data collection and model improvement efforts on areas that will most reduce forecast uncertainty.
+Another benefit of this project will be the conceptual advance of linking ecological theory to sources of forecast uncertainty.
 We anticipate that research associated with this project will catalyze a new area of research on ecological forecasting.
 The working group participants will gain experience using cutting-edge quantitative techniques.
 The assembled database of plant and animal abundance time series, coupled with environmental covariates, will be a valuable resource for teaching and research, and the repository of population forecasts will provide new opportunities to validate, and improve, forecasts.
