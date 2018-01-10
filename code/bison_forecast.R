@@ -1,7 +1,7 @@
 ##  R script to fit a population growth model for YNP,
 ##  forecast 10 new years, and partition the forecast variance.
 ##
-##  Based on Dietze et al. (forthcoming)
+##  Based on Dietze et al. (2017)
 ##
 ##  Author:       Andrew Tredennick (atredenn@gmail.com)
 ##  Date created: October 19, 2016
@@ -68,54 +68,50 @@ r_sd_prior <- sd(log(rnorm(100000,1.11,0.024))) # sd_lambda = 0.024 in Hobbs et 
 my_model <- "  
 model{
 
-#### Variance Priors
-sigma_proc ~ dunif(0,5)
-tau_proc   <- 1/sigma_proc^2
-eta        ~ dunif(0, 50)
-
-#### Fixed Effects Priors
-r  ~ dnorm(0.1, 1/0.02^2)  # intrinsic growth rate, informed prior
-b  ~ dnorm(0,1/2^2)I(-2,2) # strength of density dependence, bounded
-b1 ~ dnorm(0,0.0001)       # effect of Jan. precip in year t
-
-#### Initial Conditions
-z[1]    ~ dnorm(Nobs[1], tau_obs[1]) # varies around observed abundance at t = 1
-zlog[1] <- log(z[1]) # set first zlog
-
-#### Process Model
-for(t in 2:npreds){
-# Calculate log integration of extractions
-#e[t] = log( abs( 1 - (E[t] / z[t-1]) ) ) 
-
-# Gompertz growth, on log scale
-mu[t]   <- zlog[t-1] + r + b*(zlog[t-1]) + b1*x[t]
-zlog[t] ~ dnorm(mu[t], tau_proc)
-z[t]    <- exp(zlog[t]) # back transform to arithmetic scale
-}
-
-#### Data Model
-for(j in 2:n){
-p[j]     <- eta/(eta + z[j]) # calculate NB centrality parameter
-Nobs[j]  ~ dnegbin(p[j], eta) # NB likelihood
-#Nobs[j] ~ dnorm(z[j], tau_obs[j])
-}
-
-####  Derived Quantities for Model Evaluation
-for(i in 1:n){
-# For autocorrelation test
-epsilon.obs[i] <- Nobs[i] - z[i]
-
-# Simulate new data
-p2[i]        <- eta/(eta + z[i])
-Nnew [i]     ~ dnegbin(p2[i], eta)
-#Nnew[i] ~ dnorm(z[i], tau_obs[i])
-sqerr[i]     <- ((Nobs[i] - z[i])^2)/Nobs[i]
-sqerr_new[i] <- ((Nnew[i] - z[i])^2)/Nnew[i]
-}
-
-fit     <- sum(sqerr[])
-fit.new <- sum(sqerr_new[])
-pvalue  <- step(fit.new-fit)
+  #### Variance Priors
+  sigma_proc ~ dunif(0,5)
+  tau_proc   <- 1/sigma_proc^2
+  eta        ~ dunif(0, 50)
+  
+  #### Fixed Effects Priors
+  r  ~ dnorm(0.1, 1/0.02^2)  # intrinsic growth rate, informed prior
+  b  ~ dnorm(0,1/2^2)I(-2,2) # strength of density dependence, bounded
+  b1 ~ dnorm(0,0.0001)       # effect of Jan. precip in year t
+  
+  #### Initial Conditions
+  z[1]    ~ dnorm(Nobs[1], tau_obs[1]) # varies around observed abundance at t = 1
+  zlog[1] <- log(z[1]) # set first zlog
+  
+  #### Process Model
+  for(t in 2:npreds){
+    # Gompertz growth, on log scale
+    mu[t]   <- zlog[t-1] + r + b*(zlog[t-1]) + b1*x[t]
+    zlog[t] ~ dnorm(mu[t], tau_proc)
+    z[t]    <- exp(zlog[t]) # back transform to arithmetic scale
+  }
+  
+  #### Data Model
+  for(j in 2:n){
+    p[j]     <- eta/(eta + z[j]) # calculate NB centrality parameter
+    Nobs[j]  ~ dnegbin(p[j], eta) # NB likelihood
+  }
+  
+  ####  Derived Quantities for Model Evaluation
+  for(i in 1:n){
+    # For autocorrelation test
+    epsilon.obs[i] <- Nobs[i] - z[i]
+    
+    # Simulate new data
+    p2[i]        <- eta/(eta + z[i])
+    Nnew [i]     ~ dnegbin(p2[i], eta)
+    #Nnew[i] ~ dnorm(z[i], tau_obs[i])
+    sqerr[i]     <- ((Nobs[i] - z[i])^2)/Nobs[i]
+    sqerr_new[i] <- ((Nnew[i] - z[i])^2)/Nnew[i]
+  }
+  
+  fit     <- sum(sqerr[])
+  fit.new <- sum(sqerr_new[])
+  pvalue  <- step(fit.new-fit)
 
 }"
 
@@ -125,7 +121,7 @@ pvalue  <- step(fit.new-fit)
 ####  Fit Bison Forecasting Model ----------------------------------------------
 ####
 ##  For years without observation error, set to max observed standard deviation
-na_sds                       <- which(is.na(bison_dat$count.sd)==T)
+na_sds <- which(is.na(bison_dat$count.sd)==T)
 bison_dat[na_sds,"count.sd"] <- max(bison_dat$count.sd, na.rm=T)
 
 ##  Split into training and validation sets
