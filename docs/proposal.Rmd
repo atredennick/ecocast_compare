@@ -40,6 +40,8 @@ urlcolor: black
 <!---
   - \setlist[description]{topsep=30pt,itemsep=5pt,font={\mdseries\sffamily\color{MidnightBlue}}}
   --->
+\definecolor{blue}{rgb}{0,0,0.7} 
+\newcommand{\new}{\textcolor{blue}}
 
 \pagenumbering{roman}
 
@@ -109,16 +111,16 @@ Var[y_{t+1}] = \underbrace{\left(\frac{\delta f}{\delta y} \right)^2}_{\text{sta
 
 where each additive term follows a pattern of *sensitivity* times *variance* ("IC uncert." refers to "*I*nitial *C*onditions uncertainty").
 The variance attributable to any particular factor is a function of how sensitive the model is to the factor and the variance of that factor.
-For example, the Earth's weather is a chaotic system, meaning its dynamics are internally unstable and sensitive to initial conditions uncertainty.
-This is why billions of dollars are spent each year to measure meterological variables -- meterologists learned that the key to reducing forecast error $(Var[y_{t+1}])$ was to reduce the uncertainty of initial conditions ($Var[y_t]$).
+\new{For example, the Earth's weather is a chaotic system, meaning its dynamics are internally unstable and sensitive to initial conditions uncertainty.
+This is why billions of dollars are spent each year to measure meterological variables -- meterologists learned that the key to reducing forecast error $(Var[y_{t+1}])$ was to reduce the uncertainty of initial conditions ($Var[y_t]$).}
 
-In contrast, ecologists are attempting to make actionable forecasts with little knowledge of which term in Eq. 2 dominates forecast error.
+\new{In contrast, ecologists are attempting to make actionable forecasts with little knowledge of which term in Eq. 2 dominates forecast error.
 Knowing which term dominates forecast error in different ecological settings will advance our fundamental understanding of the natural world and immediately impact practical efforts to monitor, model, and predict ecological dynamics.
-While it is impossible to partition forecast uncertainty for every species on Earth, links among the dominate source of forecast error and species' ecologies might serve as prior information that can guide new monitoring and modeling schemes.
+While it is impossible to partition forecast uncertainty for every species on Earth, links among the dominate source of forecast error and species' life histories might serve as prior information that can guide new monitoring and modeling efforts.}
 
 Thus, \textbf{\emph{the goal of this project is to synthesize forecasts of plant and animal populations to advance our fundamental knowledge of the limits to ecological forecasts}}.
 We will convene a diverse group of population ecologists to partition forecast uncertainty for several species and systematically link sources of uncertainty to characteristics of the focal populations (e.g., life history traits).
-Doing so will (1) provide actionable information on new ways to improve ongoing ecological forecasts, (2) create a bridge between ecological theory and ecological forecasts, and (3) quantify the current limits to ecological forecasts.
+\new{Doing so will (1) provide actionable information on new ways to improve ongoing ecological forecasts, (2) create a bridge between ecological theory and ecological forecasts, and (3) quantify the current limits to ecological forecasts.}
 
 \section{Hypotheses}
 All forecasts are uncertain, and reducing forecast uncertainty hinges upon knowing the source of uncertainty.
@@ -184,27 +186,27 @@ Table: Publicly-available abundance time series for plants and animals.
 
 \subsection{Analysis}
 \subsubsection{Dynamic Forecasting Models}
-Using the assembled time series, we will fit Bayesian hierarchical state-space models, which are well-suited for ecological forecasting because they inherently incorporate and propogate the sources of uncertainty we seek to partition: process uncertainty, observation uncertainty, and parameter uncertainty.
-State-space models also explicitly acknowledge that our observations are imperfect, meaning that the state we want to estimate (e.g., abundance of bison in Yellowston) is unknowable, or *latent*.
-A typical state-space model takes the form:
-\vspace{-1.5em}
-\begin{align}
-y_t &\sim \text{Normal}(z_t, \sigma^2_{\text{o}}) \\
-z_t &\sim \text{Normal}(\mu_t, \sigma^2_{\text{p}}) \\
-\mu_t &= f(\boldsymbol{\theta_p},z_{t-1},\bold{x}_t),
-\end{align}
 
-\begin{wrapfigure}[30]{r}{0.45\textwidth}
+\begin{wrapfigure}[31]{tr}{0.45\textwidth}
   \centering
      \includegraphics[height=4in]{../figures/bison_combined.png}
   \caption{An example state space model fit and forecast (A) and example of forecast uncertainty partitioning (B). In (A), points are observed counts and errorbars show the observed standard deviation; solid line is the median of the posterior distribution of the number of bison in Yellowstone and shaded area shows the 0.025 and 0.975 quantiles from the posterior distribution. Within-sample estimates are constrained by data, whereas the forecasts (past 2010) are not. Panel (B) shows the relative contribution of each source of forecast uncertainty over time.}
 \end{wrapfigure}
 
-where $y_t$ is the observed state at time *t*, $z_t$ is the latent state at time *t*, $\mu_t$ is the determinstic prediction of the state at time *t* given estimated parameters ($\boldsymbol{\theta_p}$) for the specified model function [*f()*], the latent state *z* at time *t*-1, and **x** is a vector of environmental covariates.
+Using the assembled time series, we will fit Bayesian hierarchical state-space models, which are well-suited for ecological forecasting because they inherently incorporate and propogate the sources of uncertainty we seek to partition: process uncertainty, observation uncertainty, and parameter uncertainty.
+State-space models also explicitly acknowledge that our observations are imperfect, meaning that the state we want to estimate (e.g., abundance of bison in Yellowston) is unknowable, or *latent*.
+A typical state-space model takes the form:
+\vspace{-1.5em}
+\begin{align}
+y_t &\sim \text{Normal}(z_t, \sigma^2_{\text{o}}), \\
+z_t &\sim \text{Normal}\left(f(\boldsymbol{\theta},z_{t-1},\bold{x}_t), \sigma^2_{\text{p}}\right),
+\end{align}
+
+where $y_t$ is the observed state at time *t*, $z_t$ is the latent state at time *t*, $\mu_t$ is the determinstic prediction of the state at time *t* given estimated parameters ($\boldsymbol{\theta}$) for the specified model function [*f()*], the latent state *z* at time *t*-1, and **x** is a vector of environmental covariates.
 The two error terms represent observation error ($\sigma^2_{\text{o}}$) and process error ($\sigma^2_{\text{p}}$).
 The model is *dynamic* because the future state ($z_t$) depends on the previous state ($z_{t-1}$).
 For simplicity we show the data and process models (Eqs. 3 and 4, respectively) with normal likelihoods, but the distribution of the data model will vary depending on the particular data generating process [@Hobbs2015].
-Using different distributions for the data and process models also helps make variance parameters identifiable when replicate observations are not available [@Hobbs2015], thus avoiding a potential pitfall of state-space models [@Auger-Methe2016]
+\new{Using different distributions for the data and process models also helps make variance parameters identifiable when replicate observations are not available} [@Hobbs2015], \new{thus avoiding a potential pitfall of state-space models} [@Auger-Methe2016].
 
 \subsubsection{An Example: Yellowstone Bison}
 We used annual counts of the Yellowston bison from 1975 to 2010 to fit a population growth model using a state-space approach (Equations 3-5).
@@ -212,14 +214,18 @@ After fitting the model, we made annual forecasts for 7 years into the future wi
 We made those same forecasts with (*i*) just initial condition uncertainty; (*ii*) initial condition and parameter uncertainty; (*iii*) initial condition, parameter, and driver uncertainty; and (*iv*) initial condition, parameter, driver, and process uncertainty.
 This set of forecasts allows us to partition the relative variance of different sources, taking a numerical approach that is analagous to the analytical approach shown in Equation 2.
 
-The key result is that driver and process uncertainty dominates forecast uncertainty at all horizons (Fig. 1B).
-Parameter uncertainty is relatively constant throughout the forecast horizons.
-Initial condition uncertainty decays very quickly, indicating strong internal population regulation and the lack of chaotic dynamics, which is consistent with our **Hypothesis H1**.
+\new{The key result is that parameter uncertainty dominates forecast uncertainty at all horizons, with a shift toward driver and process error atr later horizons (Fig. 1B).
+Initial condition uncertainty decays very quickly, indicating strong internal population regulation and the lack of chaotic dynamics, which is consistent with our **Hypothesis H1**.}
 The next step in testing **H1** is to compare Fig. 1B to results from fast-growing populations.
 
 \section{Participants}
 We have assembled a diverse working group, with gender and career stage diversity (Table 2).
 Of the 14 listed participants, five are women and six are early career scientists.
+\new{Several participants bring expert knowledge of a particular dataset, some bring analytical experitise, and many bring both.
+Participants will break into analysis teams, each responsible for two or three datasets.
+Analysis teams will work together duing the meetings at the Powell Center to develop a modeling framework for their datasets, which will be presented back to the larger group for discussion.
+The Powell Fellow will be responsible for implementing the modeling approach, with significant contributions from analysis teams.
+At the second meeting, analysis teams will present results, at which point the entire working group will work together to trouble-shoot lingering problems.}
 
 
 \footnotesize
@@ -274,10 +280,7 @@ Of the 14 listed participants, five are women and six are early career scientist
 Table: List of participants.
 
 \vspace{-2em}
-*Confirmed participant  
-$^\dagger$Local (Ft. Collins) participant  
-$^1$Technical liaison to Powell Center computing staff  
-$^2$Party responsible for adherence to Powell Center Data and Information Policy
+*Confirmed participant;  $^\dagger$Local (Ft. Collins) participant; $^1$Technical liaison to Powell Center computing staf; $^2$Party responsible for adherence to Powell Center Data and Information Policy
 
 
 \normalsize
@@ -287,18 +290,18 @@ $^2$Party responsible for adherence to Powell Center Data and Information Policy
 \section{Time Table of Activities}
 \begin{description}
 
-\item[October to December 2018] Monthly PI Skype meetings to prepare for first meeting. Begin email exchanges to confirm participants. Write \texttt{R} scripts to download, clean, and aggregate data.
-\item[January 2019] \textit{First meeting for four days at Powell Center}: Identify other appropriate data sets. Decide on model structures for each data set and identify climate data availability. Form two-person analysis teams for each data set. Define manuscripts.
-\item[February to December 2019] Bi-monthly PI Skype meetings. Continue and finalize data set aquisition and aggregate into single database for analysis teams. Analysis teams, with the PC Fellow, identify appropriate climate drivers for their system and begin fitting state-space models. PC Fellow writes generalizable \texttt{R} functions for analysis teams. PC Fellow Skypes with each analysis team as needed to complete analyses. Write first drafts of manuscripts.
-\item[January 2020] \textit{Second meeting for four days at Powell Center}: Analysis teams present results for feedback. Finalize database and identify any outstanding issues. Evaluate manuscript drafts and form writing teams. Create a GitHub repository for forecasts.
-\item[February to June 2020] Finalize database and forecast repository. Finalize all forecasts and forecast partitions. Continue writing manuscripts. PC Fellow will have at least one Skype meeting with each analysis team during this period.
-\item[July to September 2020] Complete manuscripts and submit for publication. Release database and forecast repository to Powell Center for permanent archiving.
+\item[January to March 2019] Monthly PI Skype meetings to prepare for first meeting. Begin email exchanges to confirm participants. Write \texttt{R} scripts to download, clean, and aggregate data.
+\item[April 2019] \textit{First meeting for four days at Powell Center}: Identify other appropriate data sets. Decide on model structures for each data set and identify climate data availability. Form two-person analysis teams for each data set. Define manuscripts.
+\item[May 2019 to March 2020] Bi-monthly PI Skype meetings. Continue and finalize data set aquisition and aggregate into single database for analysis teams. Analysis teams, with the PC Fellow, identify appropriate climate drivers for their system and begin fitting state-space models. PC Fellow writes generalizable \texttt{R} functions for analysis teams. PC Fellow Skypes with each analysis team as needed to complete analyses. Write first drafts of manuscripts.
+\item[April 2020] \textit{Second meeting for four days at Powell Center}: Analysis teams present results for feedback. Finalize database and identify any outstanding issues. Evaluate manuscript drafts and form writing teams. Create a GitHub repository for forecasts.
+\item[May to September 2020] Finalize database and forecast repository. Finalize all forecasts and forecast partitions. Continue writing manuscripts. PC Fellow will have at least one Skype meeting with each analysis team during this period.
+\item[September to December 2020] Complete manuscripts and submit for publication. Release database and forecast repository to Powell Center for permanent archiving.
 
 \end{description}
 
 \section{Anticipated Results and Benefits}
-Ecological forecasts are central to ecosystem mangament, either explicitly or implicitly.
-\textbf{\emph{Understanding the sources of forecast error will provide actionable information that can guide management decisions by focusing data collection and model improvement efforts on areas that will most reduce forecast uncertainty}} (Box 1).
+\new{Ecological forecasts are central to ecosystem mangament, either explicitly or implicitly.
+\textbf{\emph{Understanding the sources of forecast error will provide actionable information that can guide management decisions by focusing data collection and model improvement efforts on areas that will most reduce forecast uncertainty}} (Box 1).}
 Another benefit of this project will be the conceptual advance of linking ecological theory to sources of forecast uncertainty.
 We anticipate that research associated with this project will catalyze a new area of research on ecological forecasting.
 The working group participants will gain experience using cutting-edge quantitative techniques.
@@ -315,14 +318,13 @@ In addition, we expect to produce several publications, including:
 
 \begin{Box}[tbp]
   \renewcommand{\arraystretch}{1.04}
-  \caption{Immediate and actionable outcomes of this working group, as identified by listed participants. These responses highlight the importance of our proposed work and the listed participants' dedication to the proposed working group agenda.}
+  \caption{Anticipated immediate and actionable outcomes of this working group.}
   \footnotesize
   \begin{description}
-  \item[Inform priors] Linking forecast uncertainty to species' ecologies can allow researchers to use informed priors in Bayesian forecasting models, which can reduce parameter and process uncertainty. (Tom Hobbs)
-  \item[Synergy] Contributes a large number of new case studies to ongoing efforts to assess the common patterns to ecological predictability across different processes and systems (e.g., the \emph{Near-term ecological forecasting initiative}). (Michael Dietze)
-  \item[Resource Allocation] Knowledge of forecast uncertainty lets us use scarce monitoring resources more efficiently by focusing efforts on where we will get the greatest return on investment in terms of reducing uncertainties in our predictions. (Michael Dietze)
-  \item[Research and Development] Knowing the sources of uncertainty will allow us to determine whether more data, more precise data, or different modeling approaches will be most effective for improving our forecasts. (Ethan White)
-  \item[Ecosystem Management] This working group will help improve existing population forecasts, which would immediately feed into advice to the management community. (Heather Lynch)
+  \item[Inform priors] Linking forecast uncertainty to species' ecologies can allow researchers to use informed priors in Bayesian forecasting models, which can reduce parameter and process uncertainty.
+  \item[Synergy] Contributes a large number of new case studies to ongoing efforts to assess the common patterns to ecological predictability across different processes and systems (e.g., the \emph{Near-term ecological forecasting initiative}).
+  \item[Research and Development] Knowing the sources of uncertainty will allow us to determine whether more data, more precise data, or different modeling approaches will be most effective for improving our forecasts. It also lets us use scarce monitoring resources more efficiently by focusing efforts on where we will get the greatest return on investment in terms of reducing uncertainties in our predictions
+  \item[Ecosystem Management] This working group will help improve existing population forecasts, which would immediately feed into advice to the management community.
   \end{description} 
 
   \renewcommand{\arraystretch}{1.0}
