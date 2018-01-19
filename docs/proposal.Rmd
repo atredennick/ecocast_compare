@@ -53,7 +53,7 @@ urlcolor: black
 \vspace{-1.5em}
 \begin{description}
  \item[\textcolor{mycol}{Andrew Tredennick}] (atredenn@gmail.com; 970-443-1599) \\ Utah State University \\ 5230 Old Main Hill, Logan, UT 84332
- \item[\textcolor{mycol}{Mevin Hooten}] (Mevin.Hooten@colostate.edu) \\ United States Geological Survey \\ Colorado State University \\ Fort Collins, CO 80523
+ \item[\textcolor{mycol}{Mevin Hooten}] (Mevin.Hooten@colostate.edu) \\ U.S. Geological Survey \\ Colorado State University \\ Fort Collins, CO 80523
  \item[\textcolor{mycol}{Peter Adler}] (peter.adler@usu.edu) \\ Utah State University \\ 5230 Old Main Hill, Logan, UT 84332
 \end{description}
 \item[Project Summary:] Forecasting the impacts of global environmental change is a major challenge facing ecologists and land managers in the 21\textsuperscript{st} century. However, the potential to translate our deep understanding of ecological systems into skillful forecasts remains unknown. Emerging theory on partitioning forecast uncertainty provides an opportunity to evaluate the current limits to ecological forecasts. We propose to convene a diverse working group of quantitative ecologists, each with detailed knowledge of a particular study system, to develop forecasting models of plant and animal populations. As a team, we will partition the forecast uncertainty for each focal population to test fundamental hypotheses about the relationship between particular sources of uncertainty and population characteristics. We will develop a forecast repository and a synthetic database of population time series coupled with environmental covariates that will be ideal for teaching and research. We anticipate our work will (1) catalyze a new research agenda for ecology focused on identifying what currently limits ecological forecasts and (2) immediately inform ongoing efforts to monitor, model, and predict ecological dynamics.
@@ -94,20 +94,20 @@ Consider a dynamical model designed to predict some state *y* in the future ($y_
 We can then write a general form of the model as:
 \vspace{-3em}
 \begin{align}
-y_{t+1} = f(y_t, x_t|\theta) + \epsilon,
+y_{t+1} = f(y_t, x_t|\theta) + \epsilon_{t+1},
 \end{align}
 \vspace{-0.5em}
 which states that $y$ at time $t+1$ is a function of $y$ and $x$ at time $t$ conditional on the model parameters ($\theta$) plus process error ($\epsilon$).
-@Dietze2017a showed that forecast variance ($Var[y_{t+1}]$) is:
+@Dietze2017a suggests that forecast variance ($Var[y_{t+1}]$) is approximately:
 \vspace{-1em}
 \begin{align}
-Var[y_{t+1}] = \underbrace{\left(\frac{\delta f}{\delta y} \right)^2}_{\text{stability}} 
+Var[y_{t+1}] \approx \underbrace{\left(\frac{\delta f}{\delta y} \right)^2}_{\text{stability}} 
                \underbrace{\vphantom{ \left(\frac{\delta f}{\delta y} \right)^2 } Var[y_t]}_{\text{IC uncert.}} +
                \underbrace{\vphantom{ \left(\frac{\delta f}{\delta y} \right)^2 }\left(\frac{\delta f}{\delta x} \right)^2}_{\text{driver sens.}} 
                \underbrace{\vphantom{ \left(\frac{\delta f}{\delta y} \right)^2 } Var[x_t]}_{\text{driver uncert.}} +
                \underbrace{\vphantom{ \left(\frac{\delta f}{\delta y} \right)^2 }\left(\frac{\delta f}{\delta \theta} \right)^2}_{\text{param sens.}}
                \underbrace{\vphantom{ \left(\frac{\delta f}{\delta y} \right)^2 } Var[\theta]}_{\text{param. uncert.}} +
-               \underbrace{\vphantom{ \left(\frac{\delta f}{\delta y} \right)^2 } Var[\epsilon]}_{\text{process error}},
+               \underbrace{\vphantom{ \left(\frac{\delta f}{\delta y} \right)^2 } Var[\epsilon_{t+1}]}_{\text{process error}},
 \end{align}
 
 where each additive term follows a pattern of *sensitivity* times *variance* ("IC uncert." refers to "*I*nitial *C*onditions uncertainty").
