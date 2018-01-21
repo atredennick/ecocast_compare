@@ -99,7 +99,7 @@
 
 \begin{document}
 
-\definecolor{blue}{rgb}{0,0,0.7} \newcommand{\new}{\textcolor{blue}}
+\definecolor{blue}{rgb}{0,0,0.7}\newcommand{\new}{\textcolor{blue}}
 
 \pagenumbering{roman}
 
@@ -156,19 +156,14 @@ forecast uncertainty. Consider a dynamical model designed to predict
 some state \emph{y} in the future (\(y_{t+1}\)) based on the current
 state (\(y_{t}\)), an environmental driver(s) (\(x\)), parameters
 (\(\theta\)), and process error (\(\epsilon\)). We can then write a
-general form of the model as: \vspace{-3em}
-
-\begin{align}
+general form of the model as: \begin{align}
 y_{t+1} = f(y_t, x_t|\theta) + \epsilon_{t+1},
-\end{align}
-
-\vspace{-0.5em} which states that \(y\) at time \(t+1\) is a function of
+\end{align} which states that \(y\) at time \(t+1\) is a function of
 \(y\) and \(x\) at time \(t\) conditional on the model parameters
-(\(\theta\)) plus process error (\(\epsilon\)). Dietze (2017) suggests
-that forecast variance (\(Var[y_{t+1}]\)) is approximately:
-\vspace{-1em}
-
-\begin{align}
+(\(\theta\)) plus process error (\(\epsilon\)). Ignoring covariance
+among factors, Dietze (2017), following Sobol' (1993) and Cariboni et
+al. (2007), suggests that forecast variance (\(Var[y_{t+1}]\)) is
+approximately: \begin{align}
 Var[y_{t+1}] \approx \underbrace{\left(\frac{\delta f}{\delta y} \right)^2}_{\text{stability}} 
                \underbrace{\vphantom{ \left(\frac{\delta f}{\delta y} \right)^2 } Var[y_t]}_{\text{IC uncert.}} +
                \underbrace{\vphantom{ \left(\frac{\delta f}{\delta y} \right)^2 }\left(\frac{\delta f}{\delta x} \right)^2}_{\text{driver sens.}} 
@@ -179,8 +174,8 @@ Var[y_{t+1}] \approx \underbrace{\left(\frac{\delta f}{\delta y} \right)^2}_{\te
 \end{align}
 
 where each additive term follows a pattern of \emph{sensitivity} times
-\emph{variance} (``IC uncert.'' refers to ``\emph{I}nitial
-\emph{C}onditions uncertainty''). The variance attributable to any
+\emph{variance} and ``IC uncert.'' refers to ``\emph{I}nitial
+\emph{C}onditions uncertainty.'' The variance attributable to any
 particular factor is a function of how sensitive the model is to the
 factor and the variance of that factor. For example, the atmosphere is a
 chaotic system, meaning its dynamics are internally unstable and
@@ -298,7 +293,9 @@ Plant & Mt. St.~Helens plants* & 30 & del Moral (2010)\tabularnewline
 \bottomrule
 \end{longtable}
 
-\vspace{-2em} *These data sets contain observations for many species.
+\vspace{-2em}
+
+*These data sets contain observations for many species.
 
 \normalsize
 
@@ -311,10 +308,7 @@ partition: process uncertainty, observation uncertainty, and parameter
 uncertainty. State-space models also explicitly acknowledge that our
 observations are imperfect, meaning that the state we want to estimate
 (e.g., abundance of bison in Yellowston) is unknowable, or
-\emph{latent}. A typical state-space model takes the form:
-\vspace{-1.5em}
-
-\begin{align}
+\emph{latent}. A typical state-space model takes the form: \begin{align}
 y_t &\sim \text{Normal}(z_t, \sigma^2_{\text{o}}), \\
 z_t &\sim \text{Normal}\left(f(\boldsymbol{\theta},z_{t-1},\bold{x}_t), \sigma^2_{\text{p}}\right),
 \end{align}
@@ -382,188 +376,189 @@ modeling approach, with significant contributions from analysis teams.
 \begin{longtable}[]{@{}llll@{}}
 \caption{List of participants.}\tabularnewline
 \toprule
-\begin{minipage}[b]{0.22\columnwidth}\raggedright\strut
+\begin{minipage}[b]{0.22\columnwidth}\raggedright
 Name\strut
-\end{minipage} & \begin{minipage}[b]{0.22\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[b]{0.22\columnwidth}\raggedright
 Affiliation\strut
-\end{minipage} & \begin{minipage}[b]{0.25\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[b]{0.25\columnwidth}\raggedright
 Expertise\strut
-\end{minipage} & \begin{minipage}[b]{0.19\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[b]{0.19\columnwidth}\raggedright
 Associated Data set\strut
 \end{minipage}\tabularnewline
 \midrule
 \endfirsthead
 \toprule
-\begin{minipage}[b]{0.22\columnwidth}\raggedright\strut
+\begin{minipage}[b]{0.22\columnwidth}\raggedright
 Name\strut
-\end{minipage} & \begin{minipage}[b]{0.22\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[b]{0.22\columnwidth}\raggedright
 Affiliation\strut
-\end{minipage} & \begin{minipage}[b]{0.25\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[b]{0.25\columnwidth}\raggedright
 Expertise\strut
-\end{minipage} & \begin{minipage}[b]{0.19\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[b]{0.19\columnwidth}\raggedright
 Associated Data set\strut
 \end{minipage}\tabularnewline
 \midrule
 \endhead
-\begin{minipage}[t]{0.22\columnwidth}\raggedright\strut
+\begin{minipage}[t]{0.22\columnwidth}\raggedright
 Andrew Tredennick*\(^{1,2}\)\strut
-\end{minipage} & \begin{minipage}[t]{0.22\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[t]{0.22\columnwidth}\raggedright
 Utah State University\\
 \strut
-\end{minipage} & \begin{minipage}[t]{0.25\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[t]{0.25\columnwidth}\raggedright
 Data management/synthesis,\\
 population forecasting\strut
-\end{minipage} & \begin{minipage}[t]{0.19\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[t]{0.19\columnwidth}\raggedright
 n/a\strut
 \end{minipage}\tabularnewline
-\begin{minipage}[t]{0.22\columnwidth}\raggedright\strut
+\begin{minipage}[t]{0.22\columnwidth}\raggedright
 Mevin Hooten*\(^\dagger\)\strut
-\end{minipage} & \begin{minipage}[t]{0.22\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[t]{0.22\columnwidth}\raggedright
 U.S. Geological Survey\\
 \strut
-\end{minipage} & \begin{minipage}[t]{0.25\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[t]{0.25\columnwidth}\raggedright
 Bayesian modeling,\\
 statistical forecasting\strut
-\end{minipage} & \begin{minipage}[t]{0.19\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[t]{0.19\columnwidth}\raggedright
 Sea otter\strut
 \end{minipage}\tabularnewline
-\begin{minipage}[t]{0.22\columnwidth}\raggedright\strut
+\begin{minipage}[t]{0.22\columnwidth}\raggedright
 Peter Adler*\strut
-\end{minipage} & \begin{minipage}[t]{0.22\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[t]{0.22\columnwidth}\raggedright
 Utah State University\\
 \strut
-\end{minipage} & \begin{minipage}[t]{0.25\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[t]{0.25\columnwidth}\raggedright
 population ecology/modeling,\\
 data synthesis\strut
-\end{minipage} & \begin{minipage}[t]{0.19\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[t]{0.19\columnwidth}\raggedright
 Idaho sagebrush\strut
 \end{minipage}\tabularnewline
-\begin{minipage}[t]{0.22\columnwidth}\raggedright\strut
+\begin{minipage}[t]{0.22\columnwidth}\raggedright
 Lauren Buckley*\strut
-\end{minipage} & \begin{minipage}[t]{0.22\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[t]{0.22\columnwidth}\raggedright
 University of Washington\\
 \strut
-\end{minipage} & \begin{minipage}[t]{0.25\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[t]{0.25\columnwidth}\raggedright
 ecological forecasting\\
 climate change\strut
-\end{minipage} & \begin{minipage}[t]{0.19\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[t]{0.19\columnwidth}\raggedright
 Grasshopper spp.\strut
 \end{minipage}\tabularnewline
-\begin{minipage}[t]{0.22\columnwidth}\raggedright\strut
+\begin{minipage}[t]{0.22\columnwidth}\raggedright
 Michael Dietze*\strut
-\end{minipage} & \begin{minipage}[t]{0.22\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[t]{0.22\columnwidth}\raggedright
 Boston University\\
 \strut
-\end{minipage} & \begin{minipage}[t]{0.25\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[t]{0.25\columnwidth}\raggedright
 ecological forecasting,\\
 partitioning uncertainty\strut
-\end{minipage} & \begin{minipage}[t]{0.19\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[t]{0.19\columnwidth}\raggedright
 n/a\strut
 \end{minipage}\tabularnewline
-\begin{minipage}[t]{0.22\columnwidth}\raggedright\strut
+\begin{minipage}[t]{0.22\columnwidth}\raggedright
 George Esslinger*\strut
-\end{minipage} & \begin{minipage}[t]{0.22\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[t]{0.22\columnwidth}\raggedright
 U.S. Geological Survey\\
 Alaska Science Center\strut
-\end{minipage} & \begin{minipage}[t]{0.25\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[t]{0.25\columnwidth}\raggedright
 population monitoring,\\
 GIS analysis\strut
-\end{minipage} & \begin{minipage}[t]{0.19\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[t]{0.19\columnwidth}\raggedright
 Sea otter\strut
 \end{minipage}\tabularnewline
-\begin{minipage}[t]{0.22\columnwidth}\raggedright\strut
+\begin{minipage}[t]{0.22\columnwidth}\raggedright
 Emily Farrer*\strut
-\end{minipage} & \begin{minipage}[t]{0.22\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[t]{0.22\columnwidth}\raggedright
 Tulane University\\
 \strut
-\end{minipage} & \begin{minipage}[t]{0.25\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[t]{0.25\columnwidth}\raggedright
 population modeling,\\
 Bayesian analysis\strut
-\end{minipage} & \begin{minipage}[t]{0.19\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[t]{0.19\columnwidth}\raggedright
 Niwot plants\strut
 \end{minipage}\tabularnewline
-\begin{minipage}[t]{0.22\columnwidth}\raggedright\strut
+\begin{minipage}[t]{0.22\columnwidth}\raggedright
 Jennifer Gremer*\strut
-\end{minipage} & \begin{minipage}[t]{0.22\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[t]{0.22\columnwidth}\raggedright
 University of California,\\
 Davis\strut
-\end{minipage} & \begin{minipage}[t]{0.25\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[t]{0.25\columnwidth}\raggedright
 plant population modeling\\
 data management\strut
-\end{minipage} & \begin{minipage}[t]{0.19\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[t]{0.19\columnwidth}\raggedright
 Winter annuals\strut
 \end{minipage}\tabularnewline
-\begin{minipage}[t]{0.22\columnwidth}\raggedright\strut
+\begin{minipage}[t]{0.22\columnwidth}\raggedright
 Janneke HillRisLambers*\strut
-\end{minipage} & \begin{minipage}[t]{0.22\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[t]{0.22\columnwidth}\raggedright
 University of Washington\strut
-\end{minipage} & \begin{minipage}[t]{0.25\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[t]{0.25\columnwidth}\raggedright
 plant population modeling,\\
 climate change\strut
-\end{minipage} & \begin{minipage}[t]{0.19\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[t]{0.19\columnwidth}\raggedright
 Mt. St.~Helens plants\strut
 \end{minipage}\tabularnewline
-\begin{minipage}[t]{0.22\columnwidth}\raggedright\strut
+\begin{minipage}[t]{0.22\columnwidth}\raggedright
 N. Thompson Hobbs*\(^\dagger\)\strut
-\end{minipage} & \begin{minipage}[t]{0.22\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[t]{0.22\columnwidth}\raggedright
 Colorado State University\\
 \strut
-\end{minipage} & \begin{minipage}[t]{0.25\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[t]{0.25\columnwidth}\raggedright
 population ecology,\\
 state space models\strut
-\end{minipage} & \begin{minipage}[t]{0.19\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[t]{0.19\columnwidth}\raggedright
 Yellowstone bison\strut
 \end{minipage}\tabularnewline
-\begin{minipage}[t]{0.22\columnwidth}\raggedright\strut
+\begin{minipage}[t]{0.22\columnwidth}\raggedright
 Heather Lynch*\strut
-\end{minipage} & \begin{minipage}[t]{0.22\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[t]{0.22\columnwidth}\raggedright
 Stony Brook University\strut
-\end{minipage} & \begin{minipage}[t]{0.25\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[t]{0.25\columnwidth}\raggedright
 population modeling,\\
 population forecasting\strut
-\end{minipage} & \begin{minipage}[t]{0.19\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[t]{0.19\columnwidth}\raggedright
 Antarctic penguins\strut
 \end{minipage}\tabularnewline
-\begin{minipage}[t]{0.22\columnwidth}\raggedright\strut
+\begin{minipage}[t]{0.22\columnwidth}\raggedright
 Ethan White*\strut
-\end{minipage} & \begin{minipage}[t]{0.22\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[t]{0.22\columnwidth}\raggedright
 University of Florida\\
 \strut
-\end{minipage} & \begin{minipage}[t]{0.25\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[t]{0.25\columnwidth}\raggedright
 ecological forecasting,\\
 data synthesis\strut
-\end{minipage} & \begin{minipage}[t]{0.19\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[t]{0.19\columnwidth}\raggedright
 BBS \& Portal Data\strut
 \end{minipage}\tabularnewline
-\begin{minipage}[t]{0.22\columnwidth}\raggedright\strut
+\begin{minipage}[t]{0.22\columnwidth}\raggedright
 Perry Williams*\(^\dagger\)\strut
-\end{minipage} & \begin{minipage}[t]{0.22\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[t]{0.22\columnwidth}\raggedright
 Colorado State University\\
 \strut
-\end{minipage} & \begin{minipage}[t]{0.25\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[t]{0.25\columnwidth}\raggedright
 spatiotemporal modeling,\\
 population forecasts\strut
-\end{minipage} & \begin{minipage}[t]{0.19\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[t]{0.19\columnwidth}\raggedright
 Sea otter\strut
 \end{minipage}\tabularnewline
-\begin{minipage}[t]{0.22\columnwidth}\raggedright\strut
+\begin{minipage}[t]{0.22\columnwidth}\raggedright
 Postdoctoral Fellow\strut
-\end{minipage} & \begin{minipage}[t]{0.22\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[t]{0.22\columnwidth}\raggedright
 TBD\\
 \strut
-\end{minipage} & \begin{minipage}[t]{0.25\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[t]{0.25\columnwidth}\raggedright
 population ecology,\\
 population forecasts\strut
-\end{minipage} & \begin{minipage}[t]{0.19\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[t]{0.19\columnwidth}\raggedright
 n/a\strut
 \end{minipage}\tabularnewline
 \bottomrule
 \end{longtable}
 
-\vspace{-2em} *Confirmed participant; \(^\dagger\)Local (Ft. Collins)
-participant; \(^1\)Technical liaison to Powell Center computing staff;
-\(^2\)Party responsible for adherence to Powell Center Data and
-Information Policy
+\vspace{-2em}
+
+*Confirmed participant; \(^\dagger\)Local (Ft. Collins) participant;
+\(^1\)Technical liaison to Powell Center computing staff; \(^2\)Party
+responsible for adherence to Powell Center Data and Information Policy
 
 \normalsize
 
@@ -626,41 +621,47 @@ including:
   \renewcommand{\arraystretch}{1.0}
 \end{Box}
 
-\section*{Literature Cited}\label{literature-cited}
+\hypertarget{literature-cited}{%
+\section*{Literature Cited}\label{literature-cited}}
 \addcontentsline{toc}{section}{Literature Cited}
 
 \hypertarget{refs}{}
-\hypertarget{ref-Auger-Methe2016}{}
+\leavevmode\hypertarget{ref-Auger-Methe2016}{}%
 Auger-Méthé, M., C. Field, C. M. Albertsen, A. E. Derocher, M. A. Lewis,
 I. D. Jonsen, and J. M. Flemming. 2016. State-space models' dirty little
 secrets: Even simple linear Gaussian models can have estimation
 problems. Scientific Reports 6.
 
-\hypertarget{ref-Bauer2015}{}
+\leavevmode\hypertarget{ref-Bauer2015}{}%
 Bauer, P., A. Thorpe, and G. Brunet. 2015. The quiet revolution of
 numerical weather prediction. Nature 525:47--55.
 
-\hypertarget{ref-Botero2015}{}
+\leavevmode\hypertarget{ref-Botero2015}{}%
 Botero, C. A., F. J. Weissing, J. Wright, and D. R. Rubenstein. 2015.
 Evolutionary tipping points in the capacity to adapt to environmental
 change. Proceedings of the National Academy of Sciences 112:184--189.
 
-\hypertarget{ref-Clark2001}{}
+\leavevmode\hypertarget{ref-Cariboni2007}{}%
+Cariboni, J., D. Gatelli, R. Liska, and A. Saltelli. 2007. The role of
+sensitivity analysis in ecological modelling. Ecological Modelling
+203:167--182.
+
+\leavevmode\hypertarget{ref-Clark2001}{}%
 Clark, J. S., S. R. Carpenter, M. Barber, S. Collins, A. Dobson, J. A.
 Foley, D. M. Lodge, M. Pascual, R. Pielke, W. Pizer, C. Pringle, W. V.
 Reid, K. A. Rose, O. Sala, W. H. Schlesinger, D. H. Wall, and D. Wear.
 2001. Ecological forecasts: an emerging imperative. Science
 293:657--660.
 
-\hypertarget{ref-DelMoral2010}{}
-{del Moral}, R. 2010. Thirty years of permanent vegetation plots, Mount
+\leavevmode\hypertarget{ref-DelMoral2010}{}%
+del Moral, R. 2010. Thirty years of permanent vegetation plots, Mount
 St. Helens, Washington, USA. Ecology 91:2185.
 
-\hypertarget{ref-Dietze2017a}{}
+\leavevmode\hypertarget{ref-Dietze2017a}{}%
 Dietze, M. C. 2017. Prediction in ecology: A first-principles framework.
 Ecological Applications 27:2048--2060.
 
-\hypertarget{ref-Dietze2018}{}
+\leavevmode\hypertarget{ref-Dietze2018}{}%
 Dietze, M., A. Fox, L. Beck-Johnson, J. Betancourt, M. Hooten, C.
 Jarnevitch, T. Kiett, M. Kenney, C. Laney, L. Larsen, L. Loescher, C.
 Lunch, P. Pijanowski, J. Randerson, E. Reid, A. T. Tredennick, R.
@@ -668,20 +669,20 @@ Vargas, K. Weathers, and E. P. White. (n.d.). Iterative near-term
 ecological forecasting: Needs, opportunities, and challenges.
 Proceedings of the National Academy of Sciences.
 
-\hypertarget{ref-Gremer2014}{}
+\leavevmode\hypertarget{ref-Gremer2014}{}%
 Gremer, J. R., and D. L. Venable. 2014. Bet hedging in desert winter
 annual plants: Optimal germination strategies in a variable environment.
 Ecology Letters 17:380--387.
 
-\hypertarget{ref-Hobbs2015}{}
+\leavevmode\hypertarget{ref-Hobbs2015}{}%
 Hobbs, N. T., and M. B. Hooten. 2015. Bayesian Models: A Statistical
 Primer for Ecologists. Princeton University Press, Princeton.
 
-\hypertarget{ref-Houlahan2017}{}
+\leavevmode\hypertarget{ref-Houlahan2017}{}%
 Houlahan, J. E., S. T. Mckinney, T. M. Anderson, and B. J. Mcgill. 2017.
 The priority of prediction in ecological understanding. Oikos 126:1--7.
 
-\hypertarget{ref-Petchey2015}{}
+\leavevmode\hypertarget{ref-Petchey2015}{}%
 Petchey, O. L., M. Pontarp, T. M. Massie, S. Kéfi, A. Ozgul, M.
 Weilenmann, G. M. Palamara, F. Altermatt, B. Matthews, J. M. Levine, D.
 Z. Childs, B. J. McGill, M. E. Schaepman, B. Schmid, P. Spaak, A. P.
@@ -689,23 +690,27 @@ Beckerman, F. Pennekamp, and I. S. Pearse. 2015. The ecological forecast
 horizon, and examples of its uses and determinants. Ecology Letters
 18:597--611.
 
-\hypertarget{ref-Steffen2015}{}
+\leavevmode\hypertarget{ref-Sobol1993}{}%
+Sobol', I. 1993. Sensitivity Estimates for Nonlinear Mathematical
+Models.
+
+\leavevmode\hypertarget{ref-Steffen2015}{}%
 Steffen, W., K. Richardson, J. Rockström, S. Cornell, I. Fetzer, E.
 Bennett, R. Biggs, and S. Carpenter. 2015. Planetary boundaries: Guiding
 human development on a changing planet. Science 348:1217.
 
-\hypertarget{ref-Tredennick2016Ecos}{}
+\leavevmode\hypertarget{ref-Tredennick2016Ecos}{}%
 Tredennick, A. T., M. B. Hooten, C. L. Aldridge, C. G. Homer, A. R.
 Kleinhesselink, and P. B. Adler. 2016. Forecasting climate change
 impacts on plant populations over large spatial extents. Ecosphere
 7:e01525.
 
-\hypertarget{ref-Tredennick2017a}{}
+\leavevmode\hypertarget{ref-Tredennick2017a}{}%
 Tredennick, A. T., M. B. Hooten, and P. B. Adler. 2017. Do we need
 demographic data to forecast plant population dynamics? Methods in
 Ecology and Evolution 8:541--551.
 
-\hypertarget{ref-Williams2017a}{}
+\leavevmode\hypertarget{ref-Williams2017a}{}%
 Williams, P. J., M. B. Hooten, J. N. Womble, G. G. Esslinger, M. R.
 Bower, and T. J. Hefley. 2017. An integrated data model to estimate
 spatiotemporal occupancy, abundance, and colonization dynamics. Ecology

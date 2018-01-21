@@ -92,14 +92,14 @@ The success of meteorological forecasting tells us that basic research on the ca
 @Dietze2017a proposed a first-principles approach to partitioning forecast uncertainty.
 Consider a dynamical model designed to predict some state *y* in the future ($y_{t+1}$) based on the current state ($y_{t}$), an environmental driver(s) ($x$), parameters ($\theta$), and process error ($\epsilon$).
 We can then write a general form of the model as:
-\vspace{-3em}
+<!-- \vspace{-3em} -->
 \begin{align}
 y_{t+1} = f(y_t, x_t|\theta) + \epsilon_{t+1},
 \end{align}
-\vspace{-0.5em}
+<!-- \vspace{-0.5em} -->
 which states that $y$ at time $t+1$ is a function of $y$ and $x$ at time $t$ conditional on the model parameters ($\theta$) plus process error ($\epsilon$).
-@Dietze2017a suggests that forecast variance ($Var[y_{t+1}]$) is approximately:
-\vspace{-1em}
+Ignoring covariance among factors, @Dietze2017a, following @Sobol1993 and @Cariboni2007, suggests that forecast variance ($Var[y_{t+1}]$) is approximately:
+<!-- \vspace{-1em} -->
 \begin{align}
 Var[y_{t+1}] \approx \underbrace{\left(\frac{\delta f}{\delta y} \right)^2}_{\text{stability}} 
                \underbrace{\vphantom{ \left(\frac{\delta f}{\delta y} \right)^2 } Var[y_t]}_{\text{IC uncert.}} +
@@ -110,7 +110,7 @@ Var[y_{t+1}] \approx \underbrace{\left(\frac{\delta f}{\delta y} \right)^2}_{\te
                \underbrace{\vphantom{ \left(\frac{\delta f}{\delta y} \right)^2 } Var[\epsilon_{t+1}]}_{\text{process error}},
 \end{align}
 
-where each additive term follows a pattern of *sensitivity* times *variance* ("IC uncert." refers to "*I*nitial *C*onditions uncertainty").
+where each additive term follows a pattern of *sensitivity* times *variance* and "IC uncert." refers to "*I*nitial *C*onditions uncertainty."
 The variance attributable to any particular factor is a function of how sensitive the model is to the factor and the variance of that factor.
 For example, the atmosphere is a chaotic system, meaning its dynamics are internally unstable and sensitive to initial conditions uncertainty.
 This is why billions of dollars are spent each year to measure meterological variables -- meterologists learned that the key to reducing forecast error $(Var[y_{t+1}])$ was to reduce the uncertainty of initial conditions ($Var[y_t]$).
@@ -190,7 +190,7 @@ Table: Publicly-available abundance time series for plants and animals.
 Using the assembled time series, we will fit Bayesian hierarchical state-space models, which are well-suited for ecological forecasting because they incorporate and propagate the uncertainties we seek to partition: process uncertainty, observation uncertainty, and parameter uncertainty.
 State-space models also explicitly acknowledge that our observations are imperfect, meaning that the state we want to estimate (e.g., abundance of bison in Yellowston) is unknowable, or *latent*.
 A typical state-space model takes the form:
-\vspace{-1.5em}
+<!-- \vspace{-1.5em} -->
 \begin{align}
 y_t &\sim \text{Normal}(z_t, \sigma^2_{\text{o}}), \\
 z_t &\sim \text{Normal}\left(f(\boldsymbol{\theta},z_{t-1},\bold{x}_t), \sigma^2_{\text{p}}\right),
