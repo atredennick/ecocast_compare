@@ -89,8 +89,8 @@ The success of meteorological forecasting tells us that basic research on the ca
 <!-- In ecology, we can accelerate this process by combining our knowledge of diverse organisms and processes with emerging knowledge on forecast uncertainty [@Petchey2015].  -->
 
 
-@Dietze2017a proposed a first-principles approach to partitioning forecast uncertainty.
-Consider a dynamical model designed to predict some state *y* in the future ($y_{t+1}$) based on the current state ($y_{t}$), an environmental driver(s) ($x$), parameters ($\theta$), and process error ($\epsilon$).
+Various approaches have been used to characterize and partition forecast uncertainty [@Sobol1993; @Cariboni2007].
+For example, consider a dynamic model designed to predict some state *y* in the future ($y_{t+1}$) based on the current state ($y_{t}$), an environmental driver(s) ($x$), parameters ($\theta$), and process error ($\epsilon$).
 We can then write a general form of the model as:
 <!-- \vspace{-3em} -->
 \begin{align}
