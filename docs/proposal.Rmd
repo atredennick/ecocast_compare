@@ -323,7 +323,7 @@ In addition, we expect to produce several publications, including:
   \begin{description}
   \item[Inform priors] Linking forecast uncertainty to species' ecologies can allow researchers to use informed priors in Bayesian forecasting models, which can reduce parameter and process uncertainty.
   \item[Synergy] Contributes a large number of new case studies to ongoing efforts to assess the common patterns to ecological predictability across different processes and systems (e.g., the \emph{Near-term ecological forecasting initiative}).
-  \item[Research and Development] Knowing the sources of uncertainty will allow us to determine whether more data, more precise data, or different modeling approaches will be most effective for improving our forecasts. It also lets us use scarce monitoring resources more efficiently by focusing efforts on where we will get the greatest return on investment in terms of reducing uncertainties in our predictions
+  \item[Research and Development] Knowing the sources of uncertainty will allow us to determine whether more data, more precise data, or different modeling approaches will be most effective for improving our forecasts. It also lets us use scarce monitoring resources more efficiently by focusing efforts on where we will get the greatest return on investment in terms of reducing uncertainties in our predictions.
   \item[Ecosystem Management] This working group will help improve existing population forecasts, which would immediately feed into advice to the management community.
   \end{description} 
 
