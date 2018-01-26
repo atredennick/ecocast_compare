@@ -138,7 +138,7 @@ Specifically, we pose three hypotheses motivated by recent reviews of ecological
 
 \end{description}
 
-Testing our hypotheses requires applying a standardized analytical approach to a synthetic data set representative of many species – an activity that can only be done at the Powell Center as a working group. 
+Testing our hypotheses requires applying a standardized analytical approach to a synthetic data set representative of many species – an activity that \emph{\textbf{can only be done at the Powell Center}} as a working group. 
 <!-- These three hypotheses are just a starting point, as the working group will generate additional hypotheses. -->
 
 \section{Proposed Activities}
